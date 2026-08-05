@@ -1,0 +1,2552 @@
+{
+  "FCPS": {
+    "Punjab": {
+      "Anaesthesia": {
+        "program": "FCPS",
+        "quota": "Punjab",
+        "specialty": "Anaesthesia",
+        "avg_closing_merit": 52.2601,
+        "latest_avg_closing": 24.7372,
+        "avg_volatility": 16.4742,
+        "hospital_count": 29,
+        "competitiveness": "low",
+        "rank": 29
+      },
+      "Anatomy": {
+        "program": "FCPS",
+        "quota": "Punjab",
+        "specialty": "Anatomy",
+        "avg_closing_merit": 48.1095,
+        "latest_avg_closing": 26.1593,
+        "avg_volatility": 15.1306,
+        "hospital_count": 4,
+        "competitiveness": "low",
+        "rank": 32
+      },
+      "Cardiac Surgery": {
+        "program": "FCPS",
+        "quota": "Punjab",
+        "specialty": "Cardiac Surgery",
+        "avg_closing_merit": 50.002,
+        "latest_avg_closing": 28.6382,
+        "avg_volatility": 12.3373,
+        "hospital_count": 12,
+        "competitiveness": "low",
+        "rank": 31
+      },
+      "Cardiology": {
+        "program": "FCPS",
+        "quota": "Punjab",
+        "specialty": "Cardiology",
+        "avg_closing_merit": 59.3316,
+        "latest_avg_closing": 29.1535,
+        "avg_volatility": 16.2557,
+        "hospital_count": 15,
+        "competitiveness": "high",
+        "rank": 15
+      },
+      "Chemical Pathology": {
+        "program": "FCPS",
+        "quota": "Punjab",
+        "specialty": "Chemical Pathology",
+        "avg_closing_merit": 56.6802,
+        "latest_avg_closing": 24.0221,
+        "avg_volatility": 19.1946,
+        "hospital_count": 4,
+        "competitiveness": "medium",
+        "rank": 23
+      },
+      "Community Medicine": {
+        "program": "FCPS",
+        "quota": "Punjab",
+        "specialty": "Community Medicine",
+        "avg_closing_merit": 66.4349,
+        "latest_avg_closing": 54.2849,
+        "avg_volatility": 8.5941,
+        "hospital_count": 10,
+        "competitiveness": "very_high",
+        "rank": 4
+      },
+      "Dermatology": {
+        "program": "FCPS",
+        "quota": "Punjab",
+        "specialty": "Dermatology",
+        "avg_closing_merit": 69.1228,
+        "latest_avg_closing": 33.8345,
+        "avg_volatility": 18.8232,
+        "hospital_count": 14,
+        "competitiveness": "very_high",
+        "rank": 2
+      },
+      "Diagnostic Radiology": {
+        "program": "FCPS",
+        "quota": "Punjab",
+        "specialty": "Diagnostic Radiology",
+        "avg_closing_merit": 61.7935,
+        "latest_avg_closing": 30.4406,
+        "avg_volatility": 18.1328,
+        "hospital_count": 26,
+        "competitiveness": "high",
+        "rank": 12
+      },
+      "Emergency Medicine": {
+        "program": "FCPS",
+        "quota": "Punjab",
+        "specialty": "Emergency Medicine",
+        "avg_closing_merit": 42.7965,
+        "latest_avg_closing": 24.2873,
+        "avg_volatility": 10.2826,
+        "hospital_count": 2,
+        "competitiveness": "low",
+        "rank": 34
+      },
+      "Forensic Medicine": {
+        "program": "FCPS",
+        "quota": "Punjab",
+        "specialty": "Forensic Medicine",
+        "avg_closing_merit": 53.8121,
+        "latest_avg_closing": 46.3997,
+        "avg_volatility": 6.7612,
+        "hospital_count": 4,
+        "competitiveness": "medium",
+        "rank": 26
+      },
+      "General Surgery": {
+        "program": "FCPS",
+        "quota": "Punjab",
+        "specialty": "General Surgery",
+        "avg_closing_merit": 59.0526,
+        "latest_avg_closing": 33.0002,
+        "avg_volatility": 13.6051,
+        "hospital_count": 26,
+        "competitiveness": "high",
+        "rank": 16
+      },
+      "Hematology": {
+        "program": "FCPS",
+        "quota": "Punjab",
+        "specialty": "Hematology",
+        "avg_closing_merit": 58.4845,
+        "latest_avg_closing": 33.8674,
+        "avg_volatility": 15.1975,
+        "hospital_count": 10,
+        "competitiveness": "medium",
+        "rank": 19
+      },
+      "Histopathology": {
+        "program": "FCPS",
+        "quota": "Punjab",
+        "specialty": "Histopathology",
+        "avg_closing_merit": 53.2412,
+        "latest_avg_closing": 27.3371,
+        "avg_volatility": 16.5831,
+        "hospital_count": 11,
+        "competitiveness": "medium",
+        "rank": 27
+      },
+      "Medical Oncology": {
+        "program": "FCPS",
+        "quota": "Punjab",
+        "specialty": "Medical Oncology",
+        "avg_closing_merit": 54.1623,
+        "latest_avg_closing": 24.0768,
+        "avg_volatility": 15.8881,
+        "hospital_count": 4,
+        "competitiveness": "medium",
+        "rank": 25
+      },
+      "Medicine": {
+        "program": "FCPS",
+        "quota": "Punjab",
+        "specialty": "Medicine",
+        "avg_closing_merit": 61.4573,
+        "latest_avg_closing": 33.1443,
+        "avg_volatility": 14.9212,
+        "hospital_count": 29,
+        "competitiveness": "high",
+        "rank": 13
+      },
+      "Nephrology": {
+        "program": "FCPS",
+        "quota": "Punjab",
+        "specialty": "Nephrology",
+        "avg_closing_merit": 63.8119,
+        "latest_avg_closing": 26.0665,
+        "avg_volatility": 21.9058,
+        "hospital_count": 12,
+        "competitiveness": "very_high",
+        "rank": 7
+      },
+      "Neuro Surgery": {
+        "program": "FCPS",
+        "quota": "Punjab",
+        "specialty": "Neuro Surgery",
+        "avg_closing_merit": 53.0573,
+        "latest_avg_closing": 23.7881,
+        "avg_volatility": 16.9236,
+        "hospital_count": 15,
+        "competitiveness": "low",
+        "rank": 28
+      },
+      "Neurology": {
+        "program": "FCPS",
+        "quota": "Punjab",
+        "specialty": "Neurology",
+        "avg_closing_merit": 63.7689,
+        "latest_avg_closing": 29.6353,
+        "avg_volatility": 19.2689,
+        "hospital_count": 10,
+        "competitiveness": "very_high",
+        "rank": 8
+      },
+      "Obstetrics & Gynecology": {
+        "program": "FCPS",
+        "quota": "Punjab",
+        "specialty": "Obstetrics & Gynecology",
+        "avg_closing_merit": 66.3477,
+        "latest_avg_closing": 30.825,
+        "avg_volatility": 17.3078,
+        "hospital_count": 25,
+        "competitiveness": "very_high",
+        "rank": 5
+      },
+      "Ophthalmology": {
+        "program": "FCPS",
+        "quota": "Punjab",
+        "specialty": "Ophthalmology",
+        "avg_closing_merit": 58.4415,
+        "latest_avg_closing": 25.9061,
+        "avg_volatility": 18.4732,
+        "hospital_count": 17,
+        "competitiveness": "medium",
+        "rank": 20
+      },
+      "Orthopedic Surgery": {
+        "program": "FCPS",
+        "quota": "Punjab",
+        "specialty": "Orthopedic Surgery",
+        "avg_closing_merit": 61.13,
+        "latest_avg_closing": 26.3705,
+        "avg_volatility": 18.2834,
+        "hospital_count": 21,
+        "competitiveness": "high",
+        "rank": 14
+      },
+      "Otorhinolaryngology ENT": {
+        "program": "FCPS",
+        "quota": "Punjab",
+        "specialty": "Otorhinolaryngology ENT",
+        "avg_closing_merit": 55.4861,
+        "latest_avg_closing": 26.6481,
+        "avg_volatility": 16.4581,
+        "hospital_count": 19,
+        "competitiveness": "medium",
+        "rank": 24
+      },
+      "Pediatric Surgery": {
+        "program": "FCPS",
+        "quota": "Punjab",
+        "specialty": "Pediatric Surgery",
+        "avg_closing_merit": 57.4011,
+        "latest_avg_closing": 23.942,
+        "avg_volatility": 18.8168,
+        "hospital_count": 13,
+        "competitiveness": "medium",
+        "rank": 22
+      },
+      "Pediatrics": {
+        "program": "FCPS",
+        "quota": "Punjab",
+        "specialty": "Pediatrics",
+        "avg_closing_merit": 62.7357,
+        "latest_avg_closing": 29.6744,
+        "avg_volatility": 16.9656,
+        "hospital_count": 30,
+        "competitiveness": "very_high",
+        "rank": 9
+      },
+      "Pharmacology": {
+        "program": "FCPS",
+        "quota": "Punjab",
+        "specialty": "Pharmacology",
+        "avg_closing_merit": 68.8092,
+        "latest_avg_closing": 62.1073,
+        "avg_volatility": 5.5014,
+        "hospital_count": 4,
+        "competitiveness": "very_high",
+        "rank": 3
+      },
+      "Plastic Surgery": {
+        "program": "FCPS",
+        "quota": "Punjab",
+        "specialty": "Plastic Surgery",
+        "avg_closing_merit": 58.509,
+        "latest_avg_closing": 26.9429,
+        "avg_volatility": 17.9384,
+        "hospital_count": 12,
+        "competitiveness": "high",
+        "rank": 18
+      },
+      "Psychiatry": {
+        "program": "FCPS",
+        "quota": "Punjab",
+        "specialty": "Psychiatry",
+        "avg_closing_merit": 52.141,
+        "latest_avg_closing": 23.2244,
+        "avg_volatility": 16.6604,
+        "hospital_count": 12,
+        "competitiveness": "low",
+        "rank": 30
+      },
+      "Pulmonology": {
+        "program": "FCPS",
+        "quota": "Punjab",
+        "specialty": "Pulmonology",
+        "avg_closing_merit": 61.9747,
+        "latest_avg_closing": 29.543,
+        "avg_volatility": 18.9529,
+        "hospital_count": 14,
+        "competitiveness": "high",
+        "rank": 11
+      },
+      "Radiotherapy": {
+        "program": "FCPS",
+        "quota": "Punjab",
+        "specialty": "Radiotherapy",
+        "avg_closing_merit": 64.627,
+        "latest_avg_closing": 25.4728,
+        "avg_volatility": 19.7973,
+        "hospital_count": 1,
+        "competitiveness": "very_high",
+        "rank": 6
+      },
+      "Thoracic Surgery": {
+        "program": "FCPS",
+        "quota": "Punjab",
+        "specialty": "Thoracic Surgery",
+        "avg_closing_merit": 57.6583,
+        "latest_avg_closing": 22.8978,
+        "avg_volatility": 19.3142,
+        "hospital_count": 4,
+        "competitiveness": "medium",
+        "rank": 21
+      },
+      "Urology": {
+        "program": "FCPS",
+        "quota": "Punjab",
+        "specialty": "Urology",
+        "avg_closing_merit": 61.9896,
+        "latest_avg_closing": 27.9346,
+        "avg_volatility": 18.5524,
+        "hospital_count": 17,
+        "competitiveness": "high",
+        "rank": 10
+      },
+      "Biochemistry": {
+        "program": "FCPS",
+        "quota": "Punjab",
+        "specialty": "Biochemistry",
+        "avg_closing_merit": 69.3815,
+        "latest_avg_closing": 53.4556,
+        "avg_volatility": 6.7817,
+        "hospital_count": 2,
+        "competitiveness": "very_high",
+        "rank": 1
+      },
+      "Physiology": {
+        "program": "FCPS",
+        "quota": "Punjab",
+        "specialty": "Physiology",
+        "avg_closing_merit": 58.8562,
+        "latest_avg_closing": 26.8471,
+        "avg_volatility": 21.486,
+        "hospital_count": 3,
+        "competitiveness": "high",
+        "rank": 17
+      },
+      "Cardio Thoracic Anesthesia": {
+        "program": "FCPS",
+        "quota": "Punjab",
+        "specialty": "Cardio Thoracic Anesthesia",
+        "avg_closing_merit": 43.817,
+        "latest_avg_closing": 22.944,
+        "avg_volatility": 21.0372,
+        "hospital_count": 2,
+        "competitiveness": "low",
+        "rank": 33
+      },
+      "Microbiology": {
+        "program": "FCPS",
+        "quota": "Punjab",
+        "specialty": "Microbiology",
+        "avg_closing_merit": 30.4955,
+        "latest_avg_closing": 30.4955,
+        "avg_volatility": 0.0,
+        "hospital_count": 1,
+        "competitiveness": "low",
+        "rank": 35
+      }
+    },
+    "Armed Force ": {
+      "General Surgery": {
+        "program": "FCPS",
+        "quota": "Armed Force ",
+        "specialty": "General Surgery",
+        "avg_closing_merit": 63.7386,
+        "latest_avg_closing": 75.1477,
+        "avg_volatility": 6.8835,
+        "hospital_count": 1,
+        "competitiveness": "high",
+        "rank": 5
+      },
+      "Medicine": {
+        "program": "FCPS",
+        "quota": "Armed Force ",
+        "specialty": "Medicine",
+        "avg_closing_merit": 72.5729,
+        "latest_avg_closing": 76.9167,
+        "avg_volatility": 3.5525,
+        "hospital_count": 1,
+        "competitiveness": "very_high",
+        "rank": 4
+      },
+      "Anaesthesia": {
+        "program": "FCPS",
+        "quota": "Armed Force ",
+        "specialty": "Anaesthesia",
+        "avg_closing_merit": 25.1991,
+        "latest_avg_closing": 21.7416,
+        "avg_volatility": 3.148,
+        "hospital_count": 8,
+        "competitiveness": "high",
+        "rank": 6
+      },
+      "Obstetrics & Gynecology": {
+        "program": "FCPS",
+        "quota": "Armed Force ",
+        "specialty": "Obstetrics & Gynecology",
+        "avg_closing_merit": 75.2292,
+        "latest_avg_closing": 80.1167,
+        "avg_volatility": 6.912,
+        "hospital_count": 1,
+        "competitiveness": "very_high",
+        "rank": 3
+      },
+      "Diagnostic Radiology": {
+        "program": "FCPS",
+        "quota": "Armed Force ",
+        "specialty": "Diagnostic Radiology",
+        "avg_closing_merit": 80.624,
+        "latest_avg_closing": 80.624,
+        "avg_volatility": 0.0,
+        "hospital_count": 1,
+        "competitiveness": "very_high",
+        "rank": 1
+      },
+      "Pediatrics": {
+        "program": "FCPS",
+        "quota": "Armed Force ",
+        "specialty": "Pediatrics",
+        "avg_closing_merit": 77.9658,
+        "latest_avg_closing": 77.9658,
+        "avg_volatility": 0.0,
+        "hospital_count": 1,
+        "competitiveness": "very_high",
+        "rank": 2
+      },
+      "Cardio Thoracic Anesthesia": {
+        "program": "FCPS",
+        "quota": "Armed Force ",
+        "specialty": "Cardio Thoracic Anesthesia",
+        "avg_closing_merit": 18.1797,
+        "latest_avg_closing": 18.1797,
+        "avg_volatility": 0.0,
+        "hospital_count": 2,
+        "competitiveness": "low",
+        "rank": 15
+      },
+      "Clinical Hematology": {
+        "program": "FCPS",
+        "quota": "Armed Force ",
+        "specialty": "Clinical Hematology",
+        "avg_closing_merit": 21.8325,
+        "latest_avg_closing": 21.8325,
+        "avg_volatility": 0.0,
+        "hospital_count": 1,
+        "competitiveness": "low",
+        "rank": 14
+      },
+      "Emergency Medicine": {
+        "program": "FCPS",
+        "quota": "Armed Force ",
+        "specialty": "Emergency Medicine",
+        "avg_closing_merit": 23.8758,
+        "latest_avg_closing": 23.8758,
+        "avg_volatility": 0.0,
+        "hospital_count": 2,
+        "competitiveness": "medium",
+        "rank": 10
+      },
+      "Medical Oncology": {
+        "program": "FCPS",
+        "quota": "Armed Force ",
+        "specialty": "Medical Oncology",
+        "avg_closing_merit": 24.062,
+        "latest_avg_closing": 24.062,
+        "avg_volatility": 0.0,
+        "hospital_count": 2,
+        "competitiveness": "high",
+        "rank": 8
+      },
+      "Neuro Surgery": {
+        "program": "FCPS",
+        "quota": "Armed Force ",
+        "specialty": "Neuro Surgery",
+        "avg_closing_merit": 23.305,
+        "latest_avg_closing": 23.305,
+        "avg_volatility": 0.0,
+        "hospital_count": 1,
+        "competitiveness": "medium",
+        "rank": 12
+      },
+      "Plastic Surgery": {
+        "program": "FCPS",
+        "quota": "Armed Force ",
+        "specialty": "Plastic Surgery",
+        "avg_closing_merit": 24.0513,
+        "latest_avg_closing": 24.0513,
+        "avg_volatility": 0.0,
+        "hospital_count": 4,
+        "competitiveness": "medium",
+        "rank": 9
+      },
+      "Pulmonology": {
+        "program": "FCPS",
+        "quota": "Armed Force ",
+        "specialty": "Pulmonology",
+        "avg_closing_merit": 24.0992,
+        "latest_avg_closing": 24.0992,
+        "avg_volatility": 0.0,
+        "hospital_count": 2,
+        "competitiveness": "high",
+        "rank": 7
+      },
+      "Radiation Oncology ": {
+        "program": "FCPS",
+        "quota": "Armed Force ",
+        "specialty": "Radiation Oncology ",
+        "avg_closing_merit": 22.7443,
+        "latest_avg_closing": 22.7443,
+        "avg_volatility": 0.0,
+        "hospital_count": 2,
+        "competitiveness": "low",
+        "rank": 13
+      },
+      "Thoracic Surgery": {
+        "program": "FCPS",
+        "quota": "Armed Force ",
+        "specialty": "Thoracic Surgery",
+        "avg_closing_merit": 23.3141,
+        "latest_avg_closing": 23.3141,
+        "avg_volatility": 0.0,
+        "hospital_count": 3,
+        "competitiveness": "medium",
+        "rank": 11
+      }
+    },
+    "KPK, Sindh, Balochistan": {
+      "Anaesthesia": {
+        "program": "FCPS",
+        "quota": "KPK, Sindh, Balochistan",
+        "specialty": "Anaesthesia",
+        "avg_closing_merit": 48.3522,
+        "latest_avg_closing": 48.3522,
+        "avg_volatility": 0.0,
+        "hospital_count": 7,
+        "competitiveness": "medium",
+        "rank": 14
+      },
+      "Cardiac Surgery": {
+        "program": "FCPS",
+        "quota": "KPK, Sindh, Balochistan",
+        "specialty": "Cardiac Surgery",
+        "avg_closing_merit": 45.4672,
+        "latest_avg_closing": 45.4672,
+        "avg_volatility": 0.0,
+        "hospital_count": 6,
+        "competitiveness": "low",
+        "rank": 17
+      },
+      "Cardiology": {
+        "program": "FCPS",
+        "quota": "KPK, Sindh, Balochistan",
+        "specialty": "Cardiology",
+        "avg_closing_merit": 55.0252,
+        "latest_avg_closing": 51.6433,
+        "avg_volatility": 3.7316,
+        "hospital_count": 6,
+        "competitiveness": "high",
+        "rank": 8
+      },
+      "Dermatology": {
+        "program": "FCPS",
+        "quota": "KPK, Sindh, Balochistan",
+        "specialty": "Dermatology",
+        "avg_closing_merit": 56.4963,
+        "latest_avg_closing": 56.4963,
+        "avg_volatility": 0.0,
+        "hospital_count": 2,
+        "competitiveness": "very_high",
+        "rank": 4
+      },
+      "Diagnostic Radiology": {
+        "program": "FCPS",
+        "quota": "KPK, Sindh, Balochistan",
+        "specialty": "Diagnostic Radiology",
+        "avg_closing_merit": 60.734,
+        "latest_avg_closing": 60.734,
+        "avg_volatility": 0.0,
+        "hospital_count": 5,
+        "competitiveness": "very_high",
+        "rank": 1
+      },
+      "General Surgery": {
+        "program": "FCPS",
+        "quota": "KPK, Sindh, Balochistan",
+        "specialty": "General Surgery",
+        "avg_closing_merit": 56.411,
+        "latest_avg_closing": 52.064,
+        "avg_volatility": 4.8083,
+        "hospital_count": 9,
+        "competitiveness": "very_high",
+        "rank": 5
+      },
+      "Medicine": {
+        "program": "FCPS",
+        "quota": "KPK, Sindh, Balochistan",
+        "specialty": "Medicine",
+        "avg_closing_merit": 51.7582,
+        "latest_avg_closing": 50.271,
+        "avg_volatility": 4.4302,
+        "hospital_count": 9,
+        "competitiveness": "high",
+        "rank": 11
+      },
+      "Neuro Surgery": {
+        "program": "FCPS",
+        "quota": "KPK, Sindh, Balochistan",
+        "specialty": "Neuro Surgery",
+        "avg_closing_merit": 51.9136,
+        "latest_avg_closing": 53.9732,
+        "avg_volatility": 2.4243,
+        "hospital_count": 5,
+        "competitiveness": "high",
+        "rank": 10
+      },
+      "Obstetrics & Gynecology": {
+        "program": "FCPS",
+        "quota": "KPK, Sindh, Balochistan",
+        "specialty": "Obstetrics & Gynecology",
+        "avg_closing_merit": 55.206,
+        "latest_avg_closing": 56.3778,
+        "avg_volatility": 1.9971,
+        "hospital_count": 9,
+        "competitiveness": "high",
+        "rank": 7
+      },
+      "Ophthalmology": {
+        "program": "FCPS",
+        "quota": "KPK, Sindh, Balochistan",
+        "specialty": "Ophthalmology",
+        "avg_closing_merit": 45.1454,
+        "latest_avg_closing": 41.6687,
+        "avg_volatility": 4.9168,
+        "hospital_count": 6,
+        "competitiveness": "low",
+        "rank": 18
+      },
+      "Orthopedic Surgery": {
+        "program": "FCPS",
+        "quota": "KPK, Sindh, Balochistan",
+        "specialty": "Orthopedic Surgery",
+        "avg_closing_merit": 58.2545,
+        "latest_avg_closing": 58.2545,
+        "avg_volatility": 0.0,
+        "hospital_count": 6,
+        "competitiveness": "very_high",
+        "rank": 3
+      },
+      "Otorhinolaryngology ENT": {
+        "program": "FCPS",
+        "quota": "KPK, Sindh, Balochistan",
+        "specialty": "Otorhinolaryngology ENT",
+        "avg_closing_merit": 45.7212,
+        "latest_avg_closing": 40.3894,
+        "avg_volatility": 7.5403,
+        "hospital_count": 6,
+        "competitiveness": "medium",
+        "rank": 16
+      },
+      "Pediatric Surgery": {
+        "program": "FCPS",
+        "quota": "KPK, Sindh, Balochistan",
+        "specialty": "Pediatric Surgery",
+        "avg_closing_merit": 55.8891,
+        "latest_avg_closing": 55.3445,
+        "avg_volatility": 0.7702,
+        "hospital_count": 4,
+        "competitiveness": "very_high",
+        "rank": 6
+      },
+      "Pediatrics": {
+        "program": "FCPS",
+        "quota": "KPK, Sindh, Balochistan",
+        "specialty": "Pediatrics",
+        "avg_closing_merit": 58.8603,
+        "latest_avg_closing": 59.9984,
+        "avg_volatility": 2.7287,
+        "hospital_count": 9,
+        "competitiveness": "very_high",
+        "rank": 2
+      },
+      "Plastic Surgery": {
+        "program": "FCPS",
+        "quota": "KPK, Sindh, Balochistan",
+        "specialty": "Plastic Surgery",
+        "avg_closing_merit": 54.8468,
+        "latest_avg_closing": 54.8468,
+        "avg_volatility": 0.0,
+        "hospital_count": 1,
+        "competitiveness": "high",
+        "rank": 9
+      },
+      "Psychiatry": {
+        "program": "FCPS",
+        "quota": "KPK, Sindh, Balochistan",
+        "specialty": "Psychiatry",
+        "avg_closing_merit": 49.4782,
+        "latest_avg_closing": 49.4782,
+        "avg_volatility": 0.0,
+        "hospital_count": 3,
+        "competitiveness": "medium",
+        "rank": 13
+      },
+      "Urology": {
+        "program": "FCPS",
+        "quota": "KPK, Sindh, Balochistan",
+        "specialty": "Urology",
+        "avg_closing_merit": 41.24,
+        "latest_avg_closing": 37.34,
+        "avg_volatility": 5.5154,
+        "hospital_count": 5,
+        "competitiveness": "low",
+        "rank": 20
+      },
+      "Pulmonology": {
+        "program": "FCPS",
+        "quota": "KPK, Sindh, Balochistan",
+        "specialty": "Pulmonology",
+        "avg_closing_merit": 46.4908,
+        "latest_avg_closing": 46.4908,
+        "avg_volatility": 0.0,
+        "hospital_count": 5,
+        "competitiveness": "medium",
+        "rank": 15
+      },
+      "Community Medicine": {
+        "program": "FCPS",
+        "quota": "KPK, Sindh, Balochistan",
+        "specialty": "Community Medicine",
+        "avg_closing_merit": 50.5963,
+        "latest_avg_closing": 50.5963,
+        "avg_volatility": 0.0,
+        "hospital_count": 1,
+        "competitiveness": "medium",
+        "rank": 12
+      },
+      "Nephrology": {
+        "program": "FCPS",
+        "quota": "KPK, Sindh, Balochistan",
+        "specialty": "Nephrology",
+        "avg_closing_merit": 42.1655,
+        "latest_avg_closing": 28.4202,
+        "avg_volatility": 19.4388,
+        "hospital_count": 3,
+        "competitiveness": "low",
+        "rank": 19
+      },
+      "Neurology": {
+        "program": "FCPS",
+        "quota": "KPK, Sindh, Balochistan",
+        "specialty": "Neurology",
+        "avg_closing_merit": 33.9086,
+        "latest_avg_closing": 33.9086,
+        "avg_volatility": 0.0,
+        "hospital_count": 1,
+        "competitiveness": "low",
+        "rank": 21
+      }
+    },
+    "AJK, G&B,ICT": {
+      "Anaesthesia": {
+        "program": "FCPS",
+        "quota": "AJK, G&B,ICT",
+        "specialty": "Anaesthesia",
+        "avg_closing_merit": 53.8854,
+        "latest_avg_closing": 53.2261,
+        "avg_volatility": 0.9323,
+        "hospital_count": 7,
+        "competitiveness": "medium",
+        "rank": 13
+      },
+      "Cardiac Surgery": {
+        "program": "FCPS",
+        "quota": "AJK, G&B,ICT",
+        "specialty": "Cardiac Surgery",
+        "avg_closing_merit": 56.5182,
+        "latest_avg_closing": 57.6829,
+        "avg_volatility": 4.068,
+        "hospital_count": 4,
+        "competitiveness": "high",
+        "rank": 9
+      },
+      "Cardiology": {
+        "program": "FCPS",
+        "quota": "AJK, G&B,ICT",
+        "specialty": "Cardiology",
+        "avg_closing_merit": 54.7324,
+        "latest_avg_closing": 48.5057,
+        "avg_volatility": 8.8059,
+        "hospital_count": 5,
+        "competitiveness": "high",
+        "rank": 11
+      },
+      "Dermatology": {
+        "program": "FCPS",
+        "quota": "AJK, G&B,ICT",
+        "specialty": "Dermatology",
+        "avg_closing_merit": 61.412,
+        "latest_avg_closing": 61.412,
+        "avg_volatility": 0.0,
+        "hospital_count": 1,
+        "competitiveness": "very_high",
+        "rank": 3
+      },
+      "Diagnostic Radiology": {
+        "program": "FCPS",
+        "quota": "AJK, G&B,ICT",
+        "specialty": "Diagnostic Radiology",
+        "avg_closing_merit": 51.2359,
+        "latest_avg_closing": 50.4411,
+        "avg_volatility": 1.124,
+        "hospital_count": 8,
+        "competitiveness": "low",
+        "rank": 18
+      },
+      "General Surgery": {
+        "program": "FCPS",
+        "quota": "AJK, G&B,ICT",
+        "specialty": "General Surgery",
+        "avg_closing_merit": 53.6171,
+        "latest_avg_closing": 52.0592,
+        "avg_volatility": 4.161,
+        "hospital_count": 9,
+        "competitiveness": "medium",
+        "rank": 14
+      },
+      "Medicine": {
+        "program": "FCPS",
+        "quota": "AJK, G&B,ICT",
+        "specialty": "Medicine",
+        "avg_closing_merit": 55.8866,
+        "latest_avg_closing": 53.6345,
+        "avg_volatility": 4.151,
+        "hospital_count": 8,
+        "competitiveness": "high",
+        "rank": 10
+      },
+      "Neuro Surgery": {
+        "program": "FCPS",
+        "quota": "AJK, G&B,ICT",
+        "specialty": "Neuro Surgery",
+        "avg_closing_merit": 52.8471,
+        "latest_avg_closing": 47.8645,
+        "avg_volatility": 7.0463,
+        "hospital_count": 6,
+        "competitiveness": "medium",
+        "rank": 16
+      },
+      "Obstetrics & Gynecology": {
+        "program": "FCPS",
+        "quota": "AJK, G&B,ICT",
+        "specialty": "Obstetrics & Gynecology",
+        "avg_closing_merit": 54.5414,
+        "latest_avg_closing": 55.1451,
+        "avg_volatility": 0.8538,
+        "hospital_count": 12,
+        "competitiveness": "medium",
+        "rank": 12
+      },
+      "Ophthalmology": {
+        "program": "FCPS",
+        "quota": "AJK, G&B,ICT",
+        "specialty": "Ophthalmology",
+        "avg_closing_merit": 61.9337,
+        "latest_avg_closing": 61.9337,
+        "avg_volatility": 0.0,
+        "hospital_count": 5,
+        "competitiveness": "very_high",
+        "rank": 2
+      },
+      "Orthopedic Surgery": {
+        "program": "FCPS",
+        "quota": "AJK, G&B,ICT",
+        "specialty": "Orthopedic Surgery",
+        "avg_closing_merit": 56.5311,
+        "latest_avg_closing": 56.5311,
+        "avg_volatility": 0.0,
+        "hospital_count": 8,
+        "competitiveness": "high",
+        "rank": 8
+      },
+      "Otorhinolaryngology ENT": {
+        "program": "FCPS",
+        "quota": "AJK, G&B,ICT",
+        "specialty": "Otorhinolaryngology ENT",
+        "avg_closing_merit": 60.0978,
+        "latest_avg_closing": 64.6262,
+        "avg_volatility": 6.4041,
+        "hospital_count": 3,
+        "competitiveness": "very_high",
+        "rank": 4
+      },
+      "Pediatric Surgery": {
+        "program": "FCPS",
+        "quota": "AJK, G&B,ICT",
+        "specialty": "Pediatric Surgery",
+        "avg_closing_merit": 52.0318,
+        "latest_avg_closing": 50.08,
+        "avg_volatility": 6.484,
+        "hospital_count": 6,
+        "competitiveness": "low",
+        "rank": 17
+      },
+      "Pediatrics": {
+        "program": "FCPS",
+        "quota": "AJK, G&B,ICT",
+        "specialty": "Pediatrics",
+        "avg_closing_merit": 57.4554,
+        "latest_avg_closing": 53.8428,
+        "avg_volatility": 6.9002,
+        "hospital_count": 9,
+        "competitiveness": "very_high",
+        "rank": 6
+      },
+      "Plastic Surgery": {
+        "program": "FCPS",
+        "quota": "AJK, G&B,ICT",
+        "specialty": "Plastic Surgery",
+        "avg_closing_merit": 42.9795,
+        "latest_avg_closing": 37.2372,
+        "avg_volatility": 8.1208,
+        "hospital_count": 3,
+        "competitiveness": "low",
+        "rank": 20
+      },
+      "Psychiatry": {
+        "program": "FCPS",
+        "quota": "AJK, G&B,ICT",
+        "specialty": "Psychiatry",
+        "avg_closing_merit": 49.755,
+        "latest_avg_closing": 43.695,
+        "avg_volatility": 5.4145,
+        "hospital_count": 5,
+        "competitiveness": "low",
+        "rank": 19
+      },
+      "Urology": {
+        "program": "FCPS",
+        "quota": "AJK, G&B,ICT",
+        "specialty": "Urology",
+        "avg_closing_merit": 56.7662,
+        "latest_avg_closing": 56.7662,
+        "avg_volatility": 0.0,
+        "hospital_count": 4,
+        "competitiveness": "high",
+        "rank": 7
+      },
+      "Pulmonology": {
+        "program": "FCPS",
+        "quota": "AJK, G&B,ICT",
+        "specialty": "Pulmonology",
+        "avg_closing_merit": 53.5631,
+        "latest_avg_closing": 52.5987,
+        "avg_volatility": 1.3639,
+        "hospital_count": 4,
+        "competitiveness": "medium",
+        "rank": 15
+      },
+      "Community Medicine": {
+        "program": "FCPS",
+        "quota": "AJK, G&B,ICT",
+        "specialty": "Community Medicine",
+        "avg_closing_merit": 59.934,
+        "latest_avg_closing": 59.934,
+        "avg_volatility": 0.0,
+        "hospital_count": 1,
+        "competitiveness": "very_high",
+        "rank": 5
+      },
+      "Nephrology": {
+        "program": "FCPS",
+        "quota": "AJK, G&B,ICT",
+        "specialty": "Nephrology",
+        "avg_closing_merit": 75.6255,
+        "latest_avg_closing": 75.6255,
+        "avg_volatility": 0.0,
+        "hospital_count": 1,
+        "competitiveness": "very_high",
+        "rank": 1
+      },
+      "Medical Oncology": {
+        "program": "FCPS",
+        "quota": "AJK, G&B,ICT",
+        "specialty": "Medical Oncology",
+        "avg_closing_merit": 34.3089,
+        "latest_avg_closing": 34.3089,
+        "avg_volatility": 0.0,
+        "hospital_count": 1,
+        "competitiveness": "low",
+        "rank": 21
+      }
+    },
+    "Foriegn": {
+      "Cardiac Surgery": {
+        "program": "FCPS",
+        "quota": "Foriegn",
+        "specialty": "Cardiac Surgery",
+        "avg_closing_merit": 40.1638,
+        "latest_avg_closing": 33.4175,
+        "avg_volatility": 9.5407,
+        "hospital_count": 3,
+        "competitiveness": "low",
+        "rank": 18
+      },
+      "Cardiology": {
+        "program": "FCPS",
+        "quota": "Foriegn",
+        "specialty": "Cardiology",
+        "avg_closing_merit": 46.2529,
+        "latest_avg_closing": 44.1334,
+        "avg_volatility": 7.6267,
+        "hospital_count": 4,
+        "competitiveness": "high",
+        "rank": 10
+      },
+      "Dermatology": {
+        "program": "FCPS",
+        "quota": "Foriegn",
+        "specialty": "Dermatology",
+        "avg_closing_merit": 54.0792,
+        "latest_avg_closing": 54.0792,
+        "avg_volatility": 0.0,
+        "hospital_count": 1,
+        "competitiveness": "very_high",
+        "rank": 2
+      },
+      "General Surgery": {
+        "program": "FCPS",
+        "quota": "Foriegn",
+        "specialty": "General Surgery",
+        "avg_closing_merit": 49.5604,
+        "latest_avg_closing": 49.3701,
+        "avg_volatility": 3.632,
+        "hospital_count": 10,
+        "competitiveness": "high",
+        "rank": 8
+      },
+      "Medicine": {
+        "program": "FCPS",
+        "quota": "Foriegn",
+        "specialty": "Medicine",
+        "avg_closing_merit": 50.031,
+        "latest_avg_closing": 48.1846,
+        "avg_volatility": 1.4052,
+        "hospital_count": 10,
+        "competitiveness": "high",
+        "rank": 7
+      },
+      "Neuro Surgery": {
+        "program": "FCPS",
+        "quota": "Foriegn",
+        "specialty": "Neuro Surgery",
+        "avg_closing_merit": 41.2408,
+        "latest_avg_closing": 44.6799,
+        "avg_volatility": 4.8566,
+        "hospital_count": 5,
+        "competitiveness": "low",
+        "rank": 16
+      },
+      "Orthopedic Surgery": {
+        "program": "FCPS",
+        "quota": "Foriegn",
+        "specialty": "Orthopedic Surgery",
+        "avg_closing_merit": 50.8409,
+        "latest_avg_closing": 48.9753,
+        "avg_volatility": 2.6385,
+        "hospital_count": 8,
+        "competitiveness": "high",
+        "rank": 6
+      },
+      "Pediatrics": {
+        "program": "FCPS",
+        "quota": "Foriegn",
+        "specialty": "Pediatrics",
+        "avg_closing_merit": 51.9745,
+        "latest_avg_closing": 48.201,
+        "avg_volatility": 7.0532,
+        "hospital_count": 7,
+        "competitiveness": "very_high",
+        "rank": 5
+      },
+      "Urology": {
+        "program": "FCPS",
+        "quota": "Foriegn",
+        "specialty": "Urology",
+        "avg_closing_merit": 54.8417,
+        "latest_avg_closing": 54.8417,
+        "avg_volatility": 0.0,
+        "hospital_count": 6,
+        "competitiveness": "very_high",
+        "rank": 1
+      },
+      "Anaesthesia": {
+        "program": "FCPS",
+        "quota": "Foriegn",
+        "specialty": "Anaesthesia",
+        "avg_closing_merit": 44.9698,
+        "latest_avg_closing": 44.9698,
+        "avg_volatility": 0.0,
+        "hospital_count": 3,
+        "competitiveness": "medium",
+        "rank": 13
+      },
+      "Diagnostic Radiology": {
+        "program": "FCPS",
+        "quota": "Foriegn",
+        "specialty": "Diagnostic Radiology",
+        "avg_closing_merit": 46.0385,
+        "latest_avg_closing": 46.0385,
+        "avg_volatility": 0.0,
+        "hospital_count": 6,
+        "competitiveness": "medium",
+        "rank": 12
+      },
+      "Obstetrics & Gynecology": {
+        "program": "FCPS",
+        "quota": "Foriegn",
+        "specialty": "Obstetrics & Gynecology",
+        "avg_closing_merit": 47.9916,
+        "latest_avg_closing": 50.1165,
+        "avg_volatility": 3.0051,
+        "hospital_count": 6,
+        "competitiveness": "high",
+        "rank": 9
+      },
+      "Pulmonology": {
+        "program": "FCPS",
+        "quota": "Foriegn",
+        "specialty": "Pulmonology",
+        "avg_closing_merit": 46.1942,
+        "latest_avg_closing": 40.8046,
+        "avg_volatility": 13.3995,
+        "hospital_count": 3,
+        "competitiveness": "medium",
+        "rank": 11
+      },
+      "Pediatric Surgery": {
+        "program": "FCPS",
+        "quota": "Foriegn",
+        "specialty": "Pediatric Surgery",
+        "avg_closing_merit": 41.1723,
+        "latest_avg_closing": 34.1409,
+        "avg_volatility": 5.7735,
+        "hospital_count": 3,
+        "competitiveness": "low",
+        "rank": 17
+      },
+      "Physiology": {
+        "program": "FCPS",
+        "quota": "Foriegn",
+        "specialty": "Physiology",
+        "avg_closing_merit": 44.9468,
+        "latest_avg_closing": 44.9468,
+        "avg_volatility": 0.0,
+        "hospital_count": 1,
+        "competitiveness": "medium",
+        "rank": 14
+      },
+      "Plastic Surgery": {
+        "program": "FCPS",
+        "quota": "Foriegn",
+        "specialty": "Plastic Surgery",
+        "avg_closing_merit": 41.5356,
+        "latest_avg_closing": 40.5859,
+        "avg_volatility": 1.343,
+        "hospital_count": 4,
+        "competitiveness": "medium",
+        "rank": 15
+      },
+      "Community Medicine": {
+        "program": "FCPS",
+        "quota": "Foriegn",
+        "specialty": "Community Medicine",
+        "avg_closing_merit": 53.9708,
+        "latest_avg_closing": 53.9708,
+        "avg_volatility": 0.0,
+        "hospital_count": 1,
+        "competitiveness": "very_high",
+        "rank": 3
+      },
+      "Histopathology": {
+        "program": "FCPS",
+        "quota": "Foriegn",
+        "specialty": "Histopathology",
+        "avg_closing_merit": 53.6148,
+        "latest_avg_closing": 53.6148,
+        "avg_volatility": 0.0,
+        "hospital_count": 1,
+        "competitiveness": "very_high",
+        "rank": 4
+      },
+      "Psychiatry": {
+        "program": "FCPS",
+        "quota": "Foriegn",
+        "specialty": "Psychiatry",
+        "avg_closing_merit": 39.1131,
+        "latest_avg_closing": 39.1131,
+        "avg_volatility": 0.0,
+        "hospital_count": 2,
+        "competitiveness": "low",
+        "rank": 19
+      },
+      "Ophthalmology": {
+        "program": "FCPS",
+        "quota": "Foriegn",
+        "specialty": "Ophthalmology",
+        "avg_closing_merit": 20.7401,
+        "latest_avg_closing": 20.7401,
+        "avg_volatility": 0.0,
+        "hospital_count": 1,
+        "competitiveness": "low",
+        "rank": 20
+      }
+    },
+    "Disable": {
+      "Diagnostic Radiology": {
+        "program": "FCPS",
+        "quota": "Disable",
+        "specialty": "Diagnostic Radiology",
+        "avg_closing_merit": 57.9896,
+        "latest_avg_closing": 59.2551,
+        "avg_volatility": 1.8255,
+        "hospital_count": 11,
+        "competitiveness": "very_high",
+        "rank": 1
+      },
+      "Histopathology": {
+        "program": "FCPS",
+        "quota": "Disable",
+        "specialty": "Histopathology",
+        "avg_closing_merit": 16.3095,
+        "latest_avg_closing": 16.3095,
+        "avg_volatility": 0.0,
+        "hospital_count": 1,
+        "competitiveness": "medium",
+        "rank": 2
+      }
+    },
+    "Placement": {
+      "General Surgery": {
+        "program": "FCPS",
+        "quota": "Placement",
+        "specialty": "General Surgery",
+        "avg_closing_merit": 37.6217,
+        "latest_avg_closing": 37.6217,
+        "avg_volatility": 0.0,
+        "hospital_count": 1,
+        "competitiveness": "very_high",
+        "rank": 1
+      },
+      "Obstetrics & Gynecology": {
+        "program": "FCPS",
+        "quota": "Placement",
+        "specialty": "Obstetrics & Gynecology",
+        "avg_closing_merit": 35.0543,
+        "latest_avg_closing": 33.378,
+        "avg_volatility": 2.5863,
+        "hospital_count": 4,
+        "competitiveness": "medium",
+        "rank": 2
+      }
+    }
+  },
+  "MS": {
+    "Punjab": {
+      "Anaesthesia": {
+        "program": "MS",
+        "quota": "Punjab",
+        "specialty": "Anaesthesia",
+        "avg_closing_merit": 54.9881,
+        "latest_avg_closing": 25.1969,
+        "avg_volatility": 14.1305,
+        "hospital_count": 25,
+        "competitiveness": "high",
+        "rank": 4
+      },
+      "Cardiac Surgery": {
+        "program": "MS",
+        "quota": "Punjab",
+        "specialty": "Cardiac Surgery",
+        "avg_closing_merit": 49.4121,
+        "latest_avg_closing": 25.5115,
+        "avg_volatility": 13.8131,
+        "hospital_count": 9,
+        "competitiveness": "low",
+        "rank": 12
+      },
+      "General Surgery": {
+        "program": "MS",
+        "quota": "Punjab",
+        "specialty": "General Surgery",
+        "avg_closing_merit": 51.3261,
+        "latest_avg_closing": 23.4917,
+        "avg_volatility": 14.4556,
+        "hospital_count": 21,
+        "competitiveness": "medium",
+        "rank": 9
+      },
+      "Neuro Surgery": {
+        "program": "MS",
+        "quota": "Punjab",
+        "specialty": "Neuro Surgery",
+        "avg_closing_merit": 50.1472,
+        "latest_avg_closing": 22.0827,
+        "avg_volatility": 13.7325,
+        "hospital_count": 17,
+        "competitiveness": "low",
+        "rank": 11
+      },
+      "Obstetrics & Gynecology": {
+        "program": "MS",
+        "quota": "Punjab",
+        "specialty": "Obstetrics & Gynecology",
+        "avg_closing_merit": 56.122,
+        "latest_avg_closing": 26.8536,
+        "avg_volatility": 15.7675,
+        "hospital_count": 24,
+        "competitiveness": "very_high",
+        "rank": 2
+      },
+      "Ophthalmology": {
+        "program": "MS",
+        "quota": "Punjab",
+        "specialty": "Ophthalmology",
+        "avg_closing_merit": 56.198,
+        "latest_avg_closing": 23.7381,
+        "avg_volatility": 17.1264,
+        "hospital_count": 17,
+        "competitiveness": "very_high",
+        "rank": 1
+      },
+      "Orthopedic Surgery": {
+        "program": "MS",
+        "quota": "Punjab",
+        "specialty": "Orthopedic Surgery",
+        "avg_closing_merit": 52.7426,
+        "latest_avg_closing": 24.6144,
+        "avg_volatility": 15.2476,
+        "hospital_count": 20,
+        "competitiveness": "medium",
+        "rank": 7
+      },
+      "Otorhinolaryngology ENT": {
+        "program": "MS",
+        "quota": "Punjab",
+        "specialty": "Otorhinolaryngology ENT",
+        "avg_closing_merit": 52.1514,
+        "latest_avg_closing": 24.0307,
+        "avg_volatility": 14.4945,
+        "hospital_count": 20,
+        "competitiveness": "medium",
+        "rank": 8
+      },
+      "Pediatric Surgery": {
+        "program": "MS",
+        "quota": "Punjab",
+        "specialty": "Pediatric Surgery",
+        "avg_closing_merit": 51.2367,
+        "latest_avg_closing": 20.6458,
+        "avg_volatility": 15.4237,
+        "hospital_count": 12,
+        "competitiveness": "low",
+        "rank": 10
+      },
+      "Plastic Surgery": {
+        "program": "MS",
+        "quota": "Punjab",
+        "specialty": "Plastic Surgery",
+        "avg_closing_merit": 54.9892,
+        "latest_avg_closing": 21.809,
+        "avg_volatility": 16.7327,
+        "hospital_count": 10,
+        "competitiveness": "very_high",
+        "rank": 3
+      },
+      "Thoracic Surgery": {
+        "program": "MS",
+        "quota": "Punjab",
+        "specialty": "Thoracic Surgery",
+        "avg_closing_merit": 53.0351,
+        "latest_avg_closing": 21.6912,
+        "avg_volatility": 14.6284,
+        "hospital_count": 2,
+        "competitiveness": "high",
+        "rank": 6
+      },
+      "Urology": {
+        "program": "MS",
+        "quota": "Punjab",
+        "specialty": "Urology",
+        "avg_closing_merit": 54.2474,
+        "latest_avg_closing": 25.4517,
+        "avg_volatility": 15.3934,
+        "hospital_count": 17,
+        "competitiveness": "high",
+        "rank": 5
+      }
+    },
+    "KPK, Sindh, Balochistan": {
+      "Orthopedic Surgery": {
+        "program": "MS",
+        "quota": "KPK, Sindh, Balochistan",
+        "specialty": "Orthopedic Surgery",
+        "avg_closing_merit": 46.4759,
+        "latest_avg_closing": 44.2786,
+        "avg_volatility": 3.4899,
+        "hospital_count": 4,
+        "competitiveness": "high",
+        "rank": 5
+      },
+      "Pediatric Surgery": {
+        "program": "MS",
+        "quota": "KPK, Sindh, Balochistan",
+        "specialty": "Pediatric Surgery",
+        "avg_closing_merit": 45.1787,
+        "latest_avg_closing": 43.6967,
+        "avg_volatility": 2.0959,
+        "hospital_count": 3,
+        "competitiveness": "high",
+        "rank": 6
+      },
+      "General Surgery": {
+        "program": "MS",
+        "quota": "KPK, Sindh, Balochistan",
+        "specialty": "General Surgery",
+        "avg_closing_merit": 48.7293,
+        "latest_avg_closing": 48.7293,
+        "avg_volatility": 0.0,
+        "hospital_count": 6,
+        "competitiveness": "very_high",
+        "rank": 3
+      },
+      "Anaesthesia": {
+        "program": "MS",
+        "quota": "KPK, Sindh, Balochistan",
+        "specialty": "Anaesthesia",
+        "avg_closing_merit": 51.1183,
+        "latest_avg_closing": 54.2563,
+        "avg_volatility": 4.4379,
+        "hospital_count": 2,
+        "competitiveness": "very_high",
+        "rank": 2
+      },
+      "Neuro Surgery": {
+        "program": "MS",
+        "quota": "KPK, Sindh, Balochistan",
+        "specialty": "Neuro Surgery",
+        "avg_closing_merit": 53.5048,
+        "latest_avg_closing": 57.9942,
+        "avg_volatility": 6.3491,
+        "hospital_count": 2,
+        "competitiveness": "very_high",
+        "rank": 1
+      },
+      "Ophthalmology": {
+        "program": "MS",
+        "quota": "KPK, Sindh, Balochistan",
+        "specialty": "Ophthalmology",
+        "avg_closing_merit": 40.9209,
+        "latest_avg_closing": 40.9209,
+        "avg_volatility": 0.0,
+        "hospital_count": 1,
+        "competitiveness": "low",
+        "rank": 10
+      },
+      "Cardiac Surgery": {
+        "program": "MS",
+        "quota": "KPK, Sindh, Balochistan",
+        "specialty": "Cardiac Surgery",
+        "avg_closing_merit": 44.4426,
+        "latest_avg_closing": 45.2563,
+        "avg_volatility": 1.1508,
+        "hospital_count": 3,
+        "competitiveness": "medium",
+        "rank": 8
+      },
+      "Obstetrics & Gynecology": {
+        "program": "MS",
+        "quota": "KPK, Sindh, Balochistan",
+        "specialty": "Obstetrics & Gynecology",
+        "avg_closing_merit": 44.1204,
+        "latest_avg_closing": 44.1204,
+        "avg_volatility": 0.0,
+        "hospital_count": 5,
+        "competitiveness": "medium",
+        "rank": 9
+      },
+      "Otorhinolaryngology ENT": {
+        "program": "MS",
+        "quota": "KPK, Sindh, Balochistan",
+        "specialty": "Otorhinolaryngology ENT",
+        "avg_closing_merit": 48.72,
+        "latest_avg_closing": 48.72,
+        "avg_volatility": 0.0,
+        "hospital_count": 1,
+        "competitiveness": "high",
+        "rank": 4
+      },
+      "Urology": {
+        "program": "MS",
+        "quota": "KPK, Sindh, Balochistan",
+        "specialty": "Urology",
+        "avg_closing_merit": 45.1387,
+        "latest_avg_closing": 45.1387,
+        "avg_volatility": 0.0,
+        "hospital_count": 2,
+        "competitiveness": "medium",
+        "rank": 7
+      },
+      "Plastic Surgery": {
+        "program": "MS",
+        "quota": "KPK, Sindh, Balochistan",
+        "specialty": "Plastic Surgery",
+        "avg_closing_merit": 38.8529,
+        "latest_avg_closing": 38.8529,
+        "avg_volatility": 0.0,
+        "hospital_count": 1,
+        "competitiveness": "low",
+        "rank": 11
+      }
+    },
+    "AJK, G&B,ICT": {
+      "Anaesthesia": {
+        "program": "MS",
+        "quota": "AJK, G&B,ICT",
+        "specialty": "Anaesthesia",
+        "avg_closing_merit": 48.738,
+        "latest_avg_closing": 48.738,
+        "avg_volatility": 0.0,
+        "hospital_count": 10,
+        "competitiveness": "high",
+        "rank": 6
+      },
+      "Cardiac Surgery": {
+        "program": "MS",
+        "quota": "AJK, G&B,ICT",
+        "specialty": "Cardiac Surgery",
+        "avg_closing_merit": 43.2418,
+        "latest_avg_closing": 40.4837,
+        "avg_volatility": 3.9006,
+        "hospital_count": 5,
+        "competitiveness": "low",
+        "rank": 10
+      },
+      "General Surgery": {
+        "program": "MS",
+        "quota": "AJK, G&B,ICT",
+        "specialty": "General Surgery",
+        "avg_closing_merit": 47.4075,
+        "latest_avg_closing": 44.1663,
+        "avg_volatility": 9.5922,
+        "hospital_count": 6,
+        "competitiveness": "medium",
+        "rank": 7
+      },
+      "Urology": {
+        "program": "MS",
+        "quota": "AJK, G&B,ICT",
+        "specialty": "Urology",
+        "avg_closing_merit": 45.1464,
+        "latest_avg_closing": 42.6914,
+        "avg_volatility": 3.4719,
+        "hospital_count": 6,
+        "competitiveness": "medium",
+        "rank": 9
+      },
+      "Orthopedic Surgery": {
+        "program": "MS",
+        "quota": "AJK, G&B,ICT",
+        "specialty": "Orthopedic Surgery",
+        "avg_closing_merit": 55.215,
+        "latest_avg_closing": 55.215,
+        "avg_volatility": 0.0,
+        "hospital_count": 4,
+        "competitiveness": "very_high",
+        "rank": 1
+      },
+      "Pediatric Surgery": {
+        "program": "MS",
+        "quota": "AJK, G&B,ICT",
+        "specialty": "Pediatric Surgery",
+        "avg_closing_merit": 47.2594,
+        "latest_avg_closing": 47.2594,
+        "avg_volatility": 0.0,
+        "hospital_count": 5,
+        "competitiveness": "medium",
+        "rank": 8
+      },
+      "Neuro Surgery": {
+        "program": "MS",
+        "quota": "AJK, G&B,ICT",
+        "specialty": "Neuro Surgery",
+        "avg_closing_merit": 51.9871,
+        "latest_avg_closing": 52.4409,
+        "avg_volatility": 0.6419,
+        "hospital_count": 4,
+        "competitiveness": "very_high",
+        "rank": 3
+      },
+      "Obstetrics & Gynecology": {
+        "program": "MS",
+        "quota": "AJK, G&B,ICT",
+        "specialty": "Obstetrics & Gynecology",
+        "avg_closing_merit": 50.4254,
+        "latest_avg_closing": 47.0189,
+        "avg_volatility": 4.6239,
+        "hospital_count": 5,
+        "competitiveness": "high",
+        "rank": 4
+      },
+      "Ophthalmology": {
+        "program": "MS",
+        "quota": "AJK, G&B,ICT",
+        "specialty": "Ophthalmology",
+        "avg_closing_merit": 49.1039,
+        "latest_avg_closing": 46.7488,
+        "avg_volatility": 3.3305,
+        "hospital_count": 5,
+        "competitiveness": "high",
+        "rank": 5
+      },
+      "Otorhinolaryngology ENT": {
+        "program": "MS",
+        "quota": "AJK, G&B,ICT",
+        "specialty": "Otorhinolaryngology ENT",
+        "avg_closing_merit": 40.8582,
+        "latest_avg_closing": 35.5554,
+        "avg_volatility": 6.3124,
+        "hospital_count": 3,
+        "competitiveness": "low",
+        "rank": 11
+      },
+      "Plastic Surgery": {
+        "program": "MS",
+        "quota": "AJK, G&B,ICT",
+        "specialty": "Plastic Surgery",
+        "avg_closing_merit": 53.6547,
+        "latest_avg_closing": 53.6547,
+        "avg_volatility": 0.0,
+        "hospital_count": 2,
+        "competitiveness": "very_high",
+        "rank": 2
+      }
+    },
+    "Foriegn": {
+      "Cardiac Surgery": {
+        "program": "MS",
+        "quota": "Foriegn",
+        "specialty": "Cardiac Surgery",
+        "avg_closing_merit": 50.2169,
+        "latest_avg_closing": 50.036,
+        "avg_volatility": 0.2559,
+        "hospital_count": 3,
+        "competitiveness": "very_high",
+        "rank": 2
+      },
+      "General Surgery": {
+        "program": "MS",
+        "quota": "Foriegn",
+        "specialty": "General Surgery",
+        "avg_closing_merit": 47.3224,
+        "latest_avg_closing": 42.7123,
+        "avg_volatility": 5.4601,
+        "hospital_count": 5,
+        "competitiveness": "high",
+        "rank": 6
+      },
+      "Neuro Surgery": {
+        "program": "MS",
+        "quota": "Foriegn",
+        "specialty": "Neuro Surgery",
+        "avg_closing_merit": 52.2357,
+        "latest_avg_closing": 52.4252,
+        "avg_volatility": 0.6655,
+        "hospital_count": 3,
+        "competitiveness": "very_high",
+        "rank": 1
+      },
+      "Obstetrics & Gynecology": {
+        "program": "MS",
+        "quota": "Foriegn",
+        "specialty": "Obstetrics & Gynecology",
+        "avg_closing_merit": 47.4057,
+        "latest_avg_closing": 44.5423,
+        "avg_volatility": 2.5428,
+        "hospital_count": 6,
+        "competitiveness": "high",
+        "rank": 5
+      },
+      "Ophthalmology": {
+        "program": "MS",
+        "quota": "Foriegn",
+        "specialty": "Ophthalmology",
+        "avg_closing_merit": 49.9221,
+        "latest_avg_closing": 49.8096,
+        "avg_volatility": 0.159,
+        "hospital_count": 6,
+        "competitiveness": "very_high",
+        "rank": 3
+      },
+      "Pediatric Surgery": {
+        "program": "MS",
+        "quota": "Foriegn",
+        "specialty": "Pediatric Surgery",
+        "avg_closing_merit": 44.1083,
+        "latest_avg_closing": 32.8764,
+        "avg_volatility": 10.2363,
+        "hospital_count": 2,
+        "competitiveness": "low",
+        "rank": 10
+      },
+      "Plastic Surgery": {
+        "program": "MS",
+        "quota": "Foriegn",
+        "specialty": "Plastic Surgery",
+        "avg_closing_merit": 45.7297,
+        "latest_avg_closing": 45.7297,
+        "avg_volatility": 0.0,
+        "hospital_count": 1,
+        "competitiveness": "medium",
+        "rank": 9
+      },
+      "Urology": {
+        "program": "MS",
+        "quota": "Foriegn",
+        "specialty": "Urology",
+        "avg_closing_merit": 43.2282,
+        "latest_avg_closing": 42.2011,
+        "avg_volatility": 1.4526,
+        "hospital_count": 4,
+        "competitiveness": "low",
+        "rank": 11
+      },
+      "Orthopedic Surgery": {
+        "program": "MS",
+        "quota": "Foriegn",
+        "specialty": "Orthopedic Surgery",
+        "avg_closing_merit": 47.1226,
+        "latest_avg_closing": 47.1226,
+        "avg_volatility": 0.0,
+        "hospital_count": 4,
+        "competitiveness": "medium",
+        "rank": 7
+      },
+      "Otorhinolaryngology ENT": {
+        "program": "MS",
+        "quota": "Foriegn",
+        "specialty": "Otorhinolaryngology ENT",
+        "avg_closing_merit": 46.3018,
+        "latest_avg_closing": 46.3018,
+        "avg_volatility": 0.0,
+        "hospital_count": 6,
+        "competitiveness": "medium",
+        "rank": 8
+      },
+      "Anaesthesia": {
+        "program": "MS",
+        "quota": "Foriegn",
+        "specialty": "Anaesthesia",
+        "avg_closing_merit": 47.9172,
+        "latest_avg_closing": 47.9172,
+        "avg_volatility": 0.0,
+        "hospital_count": 4,
+        "competitiveness": "high",
+        "rank": 4
+      }
+    },
+    "Disable": {
+      "Anaesthesia": {
+        "program": "MS",
+        "quota": "Disable",
+        "specialty": "Anaesthesia",
+        "avg_closing_merit": 53.3087,
+        "latest_avg_closing": 54.9378,
+        "avg_volatility": 2.3039,
+        "hospital_count": 4,
+        "competitiveness": "very_high",
+        "rank": 1
+      }
+    }
+  },
+  "MD": {
+    "Punjab": {
+      "Cardiology": {
+        "program": "MD",
+        "quota": "Punjab",
+        "specialty": "Cardiology",
+        "avg_closing_merit": 55.3472,
+        "latest_avg_closing": 31.9829,
+        "avg_volatility": 12.9896,
+        "hospital_count": 18,
+        "competitiveness": "high",
+        "rank": 7
+      },
+      "Dermatology": {
+        "program": "MD",
+        "quota": "Punjab",
+        "specialty": "Dermatology",
+        "avg_closing_merit": 64.3954,
+        "latest_avg_closing": 36.0948,
+        "avg_volatility": 14.331,
+        "hospital_count": 12,
+        "competitiveness": "very_high",
+        "rank": 3
+      },
+      "Diagnostic Radiology": {
+        "program": "MD",
+        "quota": "Punjab",
+        "specialty": "Diagnostic Radiology",
+        "avg_closing_merit": 57.0086,
+        "latest_avg_closing": 29.7807,
+        "avg_volatility": 15.5504,
+        "hospital_count": 25,
+        "competitiveness": "high",
+        "rank": 5
+      },
+      "Emergency Medicine": {
+        "program": "MD",
+        "quota": "Punjab",
+        "specialty": "Emergency Medicine",
+        "avg_closing_merit": 40.2195,
+        "latest_avg_closing": 24.2175,
+        "avg_volatility": 10.8921,
+        "hospital_count": 3,
+        "competitiveness": "low",
+        "rank": 14
+      },
+      "Gastroenterology": {
+        "program": "MD",
+        "quota": "Punjab",
+        "specialty": "Gastroenterology",
+        "avg_closing_merit": 67.3263,
+        "latest_avg_closing": 66.0636,
+        "avg_volatility": 2.8047,
+        "hospital_count": 9,
+        "competitiveness": "very_high",
+        "rank": 1
+      },
+      "Medical Oncology": {
+        "program": "MD",
+        "quota": "Punjab",
+        "specialty": "Medical Oncology",
+        "avg_closing_merit": 54.199,
+        "latest_avg_closing": 24.7555,
+        "avg_volatility": 16.6218,
+        "hospital_count": 3,
+        "competitiveness": "medium",
+        "rank": 10
+      },
+      "Medicine": {
+        "program": "MD",
+        "quota": "Punjab",
+        "specialty": "Medicine",
+        "avg_closing_merit": 52.9717,
+        "latest_avg_closing": 26.1506,
+        "avg_volatility": 13.8203,
+        "hospital_count": 23,
+        "competitiveness": "medium",
+        "rank": 12
+      },
+      "Nephrology": {
+        "program": "MD",
+        "quota": "Punjab",
+        "specialty": "Nephrology",
+        "avg_closing_merit": 56.7992,
+        "latest_avg_closing": 29.2211,
+        "avg_volatility": 15.3967,
+        "hospital_count": 13,
+        "competitiveness": "high",
+        "rank": 6
+      },
+      "Neurology": {
+        "program": "MD",
+        "quota": "Punjab",
+        "specialty": "Neurology",
+        "avg_closing_merit": 51.8907,
+        "latest_avg_closing": 25.6292,
+        "avg_volatility": 15.3721,
+        "hospital_count": 10,
+        "competitiveness": "low",
+        "rank": 13
+      },
+      "Pediatrics": {
+        "program": "MD",
+        "quota": "Punjab",
+        "specialty": "Pediatrics",
+        "avg_closing_merit": 55.0751,
+        "latest_avg_closing": 25.8582,
+        "avg_volatility": 15.256,
+        "hospital_count": 26,
+        "competitiveness": "high",
+        "rank": 8
+      },
+      "Psychiatry": {
+        "program": "MD",
+        "quota": "Punjab",
+        "specialty": "Psychiatry",
+        "avg_closing_merit": 53.9491,
+        "latest_avg_closing": 30.4538,
+        "avg_volatility": 13.5595,
+        "hospital_count": 12,
+        "competitiveness": "medium",
+        "rank": 11
+      },
+      "Pulmonology": {
+        "program": "MD",
+        "quota": "Punjab",
+        "specialty": "Pulmonology",
+        "avg_closing_merit": 54.959,
+        "latest_avg_closing": 30.3393,
+        "avg_volatility": 15.3728,
+        "hospital_count": 12,
+        "competitiveness": "medium",
+        "rank": 9
+      },
+      "Radiotherapy": {
+        "program": "MD",
+        "quota": "Punjab",
+        "specialty": "Radiotherapy",
+        "avg_closing_merit": 63.8452,
+        "latest_avg_closing": 58.0567,
+        "avg_volatility": 8.1862,
+        "hospital_count": 1,
+        "competitiveness": "very_high",
+        "rank": 4
+      },
+      "Endocrinology": {
+        "program": "MD",
+        "quota": "Punjab",
+        "specialty": "Endocrinology",
+        "avg_closing_merit": 65.8949,
+        "latest_avg_closing": 65.8949,
+        "avg_volatility": 0.0,
+        "hospital_count": 1,
+        "competitiveness": "very_high",
+        "rank": 2
+      },
+      "Family Medicine ": {
+        "program": "MD",
+        "quota": "Punjab",
+        "specialty": "Family Medicine ",
+        "avg_closing_merit": 20.6989,
+        "latest_avg_closing": 20.6989,
+        "avg_volatility": 0.0,
+        "hospital_count": 1,
+        "competitiveness": "low",
+        "rank": 15
+      }
+    },
+    "KPK, Sindh, Balochistan": {
+      "Cardiology": {
+        "program": "MD",
+        "quota": "KPK, Sindh, Balochistan",
+        "specialty": "Cardiology",
+        "avg_closing_merit": 45.1581,
+        "latest_avg_closing": 45.1581,
+        "avg_volatility": 0.0,
+        "hospital_count": 4,
+        "competitiveness": "high",
+        "rank": 5
+      },
+      "Medicine": {
+        "program": "MD",
+        "quota": "KPK, Sindh, Balochistan",
+        "specialty": "Medicine",
+        "avg_closing_merit": 45.2023,
+        "latest_avg_closing": 44.2214,
+        "avg_volatility": 2.7433,
+        "hospital_count": 10,
+        "competitiveness": "high",
+        "rank": 4
+      },
+      "Diagnostic Radiology": {
+        "program": "MD",
+        "quota": "KPK, Sindh, Balochistan",
+        "specialty": "Diagnostic Radiology",
+        "avg_closing_merit": 48.0832,
+        "latest_avg_closing": 48.5725,
+        "avg_volatility": 0.6921,
+        "hospital_count": 4,
+        "competitiveness": "very_high",
+        "rank": 1
+      },
+      "Pediatrics": {
+        "program": "MD",
+        "quota": "KPK, Sindh, Balochistan",
+        "specialty": "Pediatrics",
+        "avg_closing_merit": 39.8707,
+        "latest_avg_closing": 39.8999,
+        "avg_volatility": 1.1523,
+        "hospital_count": 9,
+        "competitiveness": "medium",
+        "rank": 7
+      },
+      "Psychiatry": {
+        "program": "MD",
+        "quota": "KPK, Sindh, Balochistan",
+        "specialty": "Psychiatry",
+        "avg_closing_merit": 39.6727,
+        "latest_avg_closing": 37.7232,
+        "avg_volatility": 3.0785,
+        "hospital_count": 5,
+        "competitiveness": "low",
+        "rank": 8
+      },
+      "Pulmonology": {
+        "program": "MD",
+        "quota": "KPK, Sindh, Balochistan",
+        "specialty": "Pulmonology",
+        "avg_closing_merit": 46.2184,
+        "latest_avg_closing": 45.9861,
+        "avg_volatility": 0.3285,
+        "hospital_count": 5,
+        "competitiveness": "very_high",
+        "rank": 2
+      },
+      "General Surgery": {
+        "program": "MD",
+        "quota": "KPK, Sindh, Balochistan",
+        "specialty": "General Surgery",
+        "avg_closing_merit": 40.2974,
+        "latest_avg_closing": 40.2974,
+        "avg_volatility": 0.0,
+        "hospital_count": 1,
+        "competitiveness": "medium",
+        "rank": 6
+      },
+      "Nephrology": {
+        "program": "MD",
+        "quota": "KPK, Sindh, Balochistan",
+        "specialty": "Nephrology",
+        "avg_closing_merit": 45.4303,
+        "latest_avg_closing": 45.4303,
+        "avg_volatility": 0.0,
+        "hospital_count": 1,
+        "competitiveness": "very_high",
+        "rank": 3
+      },
+      "Medical Oncology": {
+        "program": "MD",
+        "quota": "KPK, Sindh, Balochistan",
+        "specialty": "Medical Oncology",
+        "avg_closing_merit": 28.831,
+        "latest_avg_closing": 28.831,
+        "avg_volatility": 0.0,
+        "hospital_count": 1,
+        "competitiveness": "low",
+        "rank": 9
+      }
+    },
+    "AJK, G&B,ICT": {
+      "Cardiology": {
+        "program": "MD",
+        "quota": "AJK, G&B,ICT",
+        "specialty": "Cardiology",
+        "avg_closing_merit": 51.0783,
+        "latest_avg_closing": 48.3329,
+        "avg_volatility": 3.8826,
+        "hospital_count": 6,
+        "competitiveness": "high",
+        "rank": 4
+      },
+      "Dermatology": {
+        "program": "MD",
+        "quota": "AJK, G&B,ICT",
+        "specialty": "Dermatology",
+        "avg_closing_merit": 50.6591,
+        "latest_avg_closing": 50.6591,
+        "avg_volatility": 0.0,
+        "hospital_count": 1,
+        "competitiveness": "high",
+        "rank": 5
+      },
+      "Diagnostic Radiology": {
+        "program": "MD",
+        "quota": "AJK, G&B,ICT",
+        "specialty": "Diagnostic Radiology",
+        "avg_closing_merit": 52.665,
+        "latest_avg_closing": 52.9409,
+        "avg_volatility": 0.3901,
+        "hospital_count": 5,
+        "competitiveness": "very_high",
+        "rank": 2
+      },
+      "Medicine": {
+        "program": "MD",
+        "quota": "AJK, G&B,ICT",
+        "specialty": "Medicine",
+        "avg_closing_merit": 49.0858,
+        "latest_avg_closing": 48.4405,
+        "avg_volatility": 2.6277,
+        "hospital_count": 9,
+        "competitiveness": "medium",
+        "rank": 7
+      },
+      "Pediatrics": {
+        "program": "MD",
+        "quota": "AJK, G&B,ICT",
+        "specialty": "Pediatrics",
+        "avg_closing_merit": 52.1426,
+        "latest_avg_closing": 51.3527,
+        "avg_volatility": 3.4563,
+        "hospital_count": 7,
+        "competitiveness": "very_high",
+        "rank": 3
+      },
+      "Pulmonology": {
+        "program": "MD",
+        "quota": "AJK, G&B,ICT",
+        "specialty": "Pulmonology",
+        "avg_closing_merit": 52.6918,
+        "latest_avg_closing": 52.6918,
+        "avg_volatility": 0.0,
+        "hospital_count": 5,
+        "competitiveness": "very_high",
+        "rank": 1
+      },
+      "General Surgery": {
+        "program": "MD",
+        "quota": "AJK, G&B,ICT",
+        "specialty": "General Surgery",
+        "avg_closing_merit": 50.2,
+        "latest_avg_closing": 50.2,
+        "avg_volatility": 0.0,
+        "hospital_count": 1,
+        "competitiveness": "medium",
+        "rank": 6
+      },
+      "Psychiatry": {
+        "program": "MD",
+        "quota": "AJK, G&B,ICT",
+        "specialty": "Psychiatry",
+        "avg_closing_merit": 47.3981,
+        "latest_avg_closing": 49.079,
+        "avg_volatility": 2.3771,
+        "hospital_count": 5,
+        "competitiveness": "medium",
+        "rank": 8
+      },
+      "Nephrology": {
+        "program": "MD",
+        "quota": "AJK, G&B,ICT",
+        "specialty": "Nephrology",
+        "avg_closing_merit": 35.3706,
+        "latest_avg_closing": 35.3706,
+        "avg_volatility": 0.0,
+        "hospital_count": 4,
+        "competitiveness": "low",
+        "rank": 9
+      },
+      "Neurology": {
+        "program": "MD",
+        "quota": "AJK, G&B,ICT",
+        "specialty": "Neurology",
+        "avg_closing_merit": 29.3605,
+        "latest_avg_closing": 29.3605,
+        "avg_volatility": 0.0,
+        "hospital_count": 1,
+        "competitiveness": "low",
+        "rank": 10
+      }
+    },
+    "Foriegn": {
+      "Cardiology": {
+        "program": "MD",
+        "quota": "Foriegn",
+        "specialty": "Cardiology",
+        "avg_closing_merit": 49.9705,
+        "latest_avg_closing": 49.5062,
+        "avg_volatility": 0.6566,
+        "hospital_count": 7,
+        "competitiveness": "very_high",
+        "rank": 2
+      },
+      "Dermatology": {
+        "program": "MD",
+        "quota": "Foriegn",
+        "specialty": "Dermatology",
+        "avg_closing_merit": 59.5542,
+        "latest_avg_closing": 59.5542,
+        "avg_volatility": 0.0,
+        "hospital_count": 1,
+        "competitiveness": "very_high",
+        "rank": 1
+      },
+      "Diagnostic Radiology": {
+        "program": "MD",
+        "quota": "Foriegn",
+        "specialty": "Diagnostic Radiology",
+        "avg_closing_merit": 47.691,
+        "latest_avg_closing": 47.691,
+        "avg_volatility": 0.0,
+        "hospital_count": 5,
+        "competitiveness": "very_high",
+        "rank": 3
+      },
+      "Medicine": {
+        "program": "MD",
+        "quota": "Foriegn",
+        "specialty": "Medicine",
+        "avg_closing_merit": 44.8403,
+        "latest_avg_closing": 43.3162,
+        "avg_volatility": 2.5853,
+        "hospital_count": 11,
+        "competitiveness": "high",
+        "rank": 4
+      },
+      "Pediatrics": {
+        "program": "MD",
+        "quota": "Foriegn",
+        "specialty": "Pediatrics",
+        "avg_closing_merit": 44.4762,
+        "latest_avg_closing": 44.2344,
+        "avg_volatility": 0.3419,
+        "hospital_count": 9,
+        "competitiveness": "medium",
+        "rank": 6
+      },
+      "Psychiatry": {
+        "program": "MD",
+        "quota": "Foriegn",
+        "specialty": "Psychiatry",
+        "avg_closing_merit": 43.49,
+        "latest_avg_closing": 44.7663,
+        "avg_volatility": 1.805,
+        "hospital_count": 6,
+        "competitiveness": "medium",
+        "rank": 7
+      },
+      "Pulmonology": {
+        "program": "MD",
+        "quota": "Foriegn",
+        "specialty": "Pulmonology",
+        "avg_closing_merit": 44.6623,
+        "latest_avg_closing": 42.7919,
+        "avg_volatility": 2.6452,
+        "hospital_count": 3,
+        "competitiveness": "high",
+        "rank": 5
+      },
+      "Nephrology": {
+        "program": "MD",
+        "quota": "Foriegn",
+        "specialty": "Nephrology",
+        "avg_closing_merit": 42.722,
+        "latest_avg_closing": 41.5993,
+        "avg_volatility": 1.5877,
+        "hospital_count": 4,
+        "competitiveness": "medium",
+        "rank": 8
+      },
+      "Medical Oncology": {
+        "program": "MD",
+        "quota": "Foriegn",
+        "specialty": "Medical Oncology",
+        "avg_closing_merit": 29.1126,
+        "latest_avg_closing": 29.1126,
+        "avg_volatility": 0.0,
+        "hospital_count": 1,
+        "competitiveness": "low",
+        "rank": 9
+      },
+      "Neurology": {
+        "program": "MD",
+        "quota": "Foriegn",
+        "specialty": "Neurology",
+        "avg_closing_merit": 26.6226,
+        "latest_avg_closing": 26.6226,
+        "avg_volatility": 0.0,
+        "hospital_count": 1,
+        "competitiveness": "low",
+        "rank": 10
+      }
+    },
+    "Disable": {
+      "Diagnostic Radiology": {
+        "program": "MD",
+        "quota": "Disable",
+        "specialty": "Diagnostic Radiology",
+        "avg_closing_merit": 49.373,
+        "latest_avg_closing": 48.1195,
+        "avg_volatility": 2.6458,
+        "hospital_count": 8,
+        "competitiveness": "very_high",
+        "rank": 1
+      }
+    }
+  },
+  "MDS": {
+    "Punjab": {
+      "Operative Dentistry": {
+        "program": "MDS",
+        "quota": "Punjab",
+        "specialty": "Operative Dentistry",
+        "avg_closing_merit": 44.8891,
+        "latest_avg_closing": 24.7366,
+        "avg_volatility": 11.0392,
+        "hospital_count": 3,
+        "competitiveness": "medium",
+        "rank": 3
+      },
+      "Oral & Maxillofacial Surgery": {
+        "program": "MDS",
+        "quota": "Punjab",
+        "specialty": "Oral & Maxillofacial Surgery",
+        "avg_closing_merit": 45.5895,
+        "latest_avg_closing": 22.525,
+        "avg_volatility": 13.0215,
+        "hospital_count": 5,
+        "competitiveness": "very_high",
+        "rank": 1
+      },
+      "Orthodontics": {
+        "program": "MDS",
+        "quota": "Punjab",
+        "specialty": "Orthodontics",
+        "avg_closing_merit": 45.5692,
+        "latest_avg_closing": 34.2574,
+        "avg_volatility": 5.6249,
+        "hospital_count": 3,
+        "competitiveness": "high",
+        "rank": 2
+      },
+      "Prosthodontics": {
+        "program": "MDS",
+        "quota": "Punjab",
+        "specialty": "Prosthodontics",
+        "avg_closing_merit": 38.7756,
+        "latest_avg_closing": 23.1686,
+        "avg_volatility": 8.4663,
+        "hospital_count": 2,
+        "competitiveness": "low",
+        "rank": 4
+      }
+    },
+    "Dental": {
+      "Oral & Maxillofacial Surgery": {
+        "program": "MDS",
+        "quota": "Dental",
+        "specialty": "Oral & Maxillofacial Surgery",
+        "avg_closing_merit": 45.242,
+        "latest_avg_closing": 35.6982,
+        "avg_volatility": 13.497,
+        "hospital_count": 2,
+        "competitiveness": "very_high",
+        "rank": 1
+      }
+    },
+    "KPK, Sindh, Balochistan": {
+      "Oral & Maxillofacial Surgery": {
+        "program": "MDS",
+        "quota": "KPK, Sindh, Balochistan",
+        "specialty": "Oral & Maxillofacial Surgery",
+        "avg_closing_merit": 49.2143,
+        "latest_avg_closing": 49.2143,
+        "avg_volatility": 0.0,
+        "hospital_count": 1,
+        "competitiveness": "very_high",
+        "rank": 1
+      }
+    },
+    "AJK, G&B,ICT": {
+      "Oral & Maxillofacial Surgery": {
+        "program": "MDS",
+        "quota": "AJK, G&B,ICT",
+        "specialty": "Oral & Maxillofacial Surgery",
+        "avg_closing_merit": 56.7245,
+        "latest_avg_closing": 56.7245,
+        "avg_volatility": 0.0,
+        "hospital_count": 1,
+        "competitiveness": "very_high",
+        "rank": 1
+      }
+    },
+    "Foriegn": {
+      "Orthodontics": {
+        "program": "MDS",
+        "quota": "Foriegn",
+        "specialty": "Orthodontics",
+        "avg_closing_merit": 56.5377,
+        "latest_avg_closing": 56.5377,
+        "avg_volatility": 0.0,
+        "hospital_count": 1,
+        "competitiveness": "very_high",
+        "rank": 1
+      }
+    }
+  },
+  "FCPS Dentistry": {
+    "Punjab": {
+      "Operative Dentistry": {
+        "program": "FCPS Dentistry",
+        "quota": "Punjab",
+        "specialty": "Operative Dentistry",
+        "avg_closing_merit": 55.2304,
+        "latest_avg_closing": 33.8685,
+        "avg_volatility": 13.5153,
+        "hospital_count": 5,
+        "competitiveness": "very_high",
+        "rank": 1
+      },
+      "Oral & Maxillofacial Surgery": {
+        "program": "FCPS Dentistry",
+        "quota": "Punjab",
+        "specialty": "Oral & Maxillofacial Surgery",
+        "avg_closing_merit": 54.8019,
+        "latest_avg_closing": 24.0496,
+        "avg_volatility": 18.6056,
+        "hospital_count": 7,
+        "competitiveness": "high",
+        "rank": 2
+      },
+      "Orthodontics": {
+        "program": "FCPS Dentistry",
+        "quota": "Punjab",
+        "specialty": "Orthodontics",
+        "avg_closing_merit": 54.5924,
+        "latest_avg_closing": 24.7886,
+        "avg_volatility": 17.2758,
+        "hospital_count": 5,
+        "competitiveness": "medium",
+        "rank": 3
+      },
+      "Prosthodontics": {
+        "program": "FCPS Dentistry",
+        "quota": "Punjab",
+        "specialty": "Prosthodontics",
+        "avg_closing_merit": 43.9528,
+        "latest_avg_closing": 24.7,
+        "avg_volatility": 9.9549,
+        "hospital_count": 2,
+        "competitiveness": "low",
+        "rank": 4
+      }
+    },
+    "Dental": {
+      "Oral & Maxillofacial Surgery": {
+        "program": "FCPS Dentistry",
+        "quota": "Dental",
+        "specialty": "Oral & Maxillofacial Surgery",
+        "avg_closing_merit": 52.6178,
+        "latest_avg_closing": 49.3054,
+        "avg_volatility": 4.6844,
+        "hospital_count": 3,
+        "competitiveness": "high",
+        "rank": 2
+      },
+      "Prosthodontics": {
+        "program": "FCPS Dentistry",
+        "quota": "Dental",
+        "specialty": "Prosthodontics",
+        "avg_closing_merit": 59.1771,
+        "latest_avg_closing": 59.1771,
+        "avg_volatility": 0.0,
+        "hospital_count": 1,
+        "competitiveness": "very_high",
+        "rank": 1
+      },
+      "Operative Dentistry": {
+        "program": "FCPS Dentistry",
+        "quota": "Dental",
+        "specialty": "Operative Dentistry",
+        "avg_closing_merit": 22.3771,
+        "latest_avg_closing": 22.3771,
+        "avg_volatility": 0.0,
+        "hospital_count": 1,
+        "competitiveness": "medium",
+        "rank": 3
+      }
+    },
+    "KPK, Sindh, Balochistan": {
+      "Operative Dentistry": {
+        "program": "FCPS Dentistry",
+        "quota": "KPK, Sindh, Balochistan",
+        "specialty": "Operative Dentistry",
+        "avg_closing_merit": 50.4253,
+        "latest_avg_closing": 50.4253,
+        "avg_volatility": 0.0,
+        "hospital_count": 1,
+        "competitiveness": "very_high",
+        "rank": 1
+      }
+    },
+    "AJK, G&B,ICT": {
+      "Oral & Maxillofacial Surgery": {
+        "program": "FCPS Dentistry",
+        "quota": "AJK, G&B,ICT",
+        "specialty": "Oral & Maxillofacial Surgery",
+        "avg_closing_merit": 64.081,
+        "latest_avg_closing": 64.081,
+        "avg_volatility": 0.0,
+        "hospital_count": 3,
+        "competitiveness": "very_high",
+        "rank": 1
+      },
+      "Operative Dentistry": {
+        "program": "FCPS Dentistry",
+        "quota": "AJK, G&B,ICT",
+        "specialty": "Operative Dentistry",
+        "avg_closing_merit": 35.3588,
+        "latest_avg_closing": 35.3588,
+        "avg_volatility": 0.0,
+        "hospital_count": 1,
+        "competitiveness": "medium",
+        "rank": 2
+      }
+    },
+    "Foriegn": {
+      "Oral & Maxillofacial Surgery": {
+        "program": "FCPS Dentistry",
+        "quota": "Foriegn",
+        "specialty": "Oral & Maxillofacial Surgery",
+        "avg_closing_merit": 56.4032,
+        "latest_avg_closing": 56.4032,
+        "avg_volatility": 0.0,
+        "hospital_count": 1,
+        "competitiveness": "very_high",
+        "rank": 1
+      }
+    }
+  }
+}

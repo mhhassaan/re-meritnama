@@ -1,0 +1,80 @@
+@import "tailwindcss";
+
+:root {
+  --background: #F8F9FC;
+  --foreground: #0F172A;
+  --top-bg-light: #F8F9FC;
+  --top-bg-card-light: #FFFFFF;
+  --top-bg-dark: #0B0E17;
+  --top-bg-card-dark: #131826;
+  --top-accent-blue: #0D9488;
+  --accent-indigo: #0F766E;
+  --accent-sage: #10B981;
+  --accent-hope: #F0A94E;
+  --border-subtle-light: rgba(0, 0, 0, 0.08);
+  --border-subtle-dark: rgba(255, 255, 255, 0.08);
+
+  /* Motion Tokens (transitions.dev scale) */
+  --duration-stagger: 40ms;
+  --duration-micro: 80ms;
+  --duration-quick: 150ms;
+  --duration-fast: 250ms;
+  --duration-medium: 350ms;
+  --duration-slow: 400ms;
+  --duration-very-slow: 500ms;
+  --ease-smooth-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-in-out: ease-in-out;
+  --ease-out: ease-out;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+  --font-serif: var(--font-serif);
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sans), system-ui, -apple-system, sans-serif;
+  overflow-x: hidden;
+}
+
+/* 3D Floating Animation */
+@keyframes floatGlyphSlow {
+  0%, 100% { transform: translateY(0px) rotate(0deg); }
+  50% { transform: translateY(-12px) rotate(3deg); }
+}
+
+@keyframes floatGlyphReverse {
+  0%, 100% { transform: translateY(0px) rotate(0deg); }
+  50% { transform: translateY(10px) rotate(-3deg); }
+}
+
+.animate-float-slow {
+  animation: floatGlyphSlow 6s ease-in-out infinite;
+}
+
+.animate-float-reverse {
+  animation: floatGlyphReverse 7s ease-in-out infinite;
+}
+
+/* Hand-drawn Underline SVG */
+.sketch-underline {
+  position: relative;
+  display: inline-block;
+}
+
+.sketch-underline::after {
+  content: '';
+  position: absolute;
+  left: -4px;
+  right: -4px;
+  bottom: -6px;
+  height: 12px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 20' preserveAspectRatio='none'%3E%3Cpath d='M3,12 C40,4 120,18 197,8' stroke='%230D9488' stroke-width='4' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
+}
