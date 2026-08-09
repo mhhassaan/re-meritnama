@@ -6,6 +6,7 @@ import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 import { ArrowRight } from "lucide-react";
 import BorderGlow from "@/components/ui/BorderGlow";
+import { BRAND } from "@/lib/design/brand";
 
 const CTA_ILLUSTRATIONS = [
   { src: "/illustrations/doctor.svg", alt: "Doctor Candidate" },
@@ -33,22 +34,22 @@ export function FinalCtaSection() {
         <BorderGlow
           edgeSensitivity={30}
           glowColor="175 84 32"
-          backgroundColor="#F3F0E6"
+          backgroundColor={BRAND.creamDeep}
           borderRadius={28}
           glowRadius={40}
           glowIntensity={1.2}
           coneSpread={25}
           animated={true}
-          colors={["#0D9488", "#2DD4BF", "#F0A94E"]}
+          colors={[BRAND.teal, BRAND.mint, BRAND.ivory]}
         >
           <div className="p-10 sm:p-14 flex flex-col md:flex-row items-center justify-between gap-10 border border-stone-200/80 rounded-3xl">
             
             {/* Left: Text copy and action */}
             <div className="space-y-6 max-w-lg text-left">
-              <span className="font-mono text-[11px] font-bold tracking-[0.38em] text-[#0D9488] uppercase">
+              <span className="font-mono text-[11px] font-bold tracking-[0.38em] text-brand-teal uppercase">
                 GET STARTED TODAY
               </span>
-              <h3 className="font-sans text-3xl sm:text-4xl lg:text-5xl font-black text-[#1A2118] tracking-tight leading-[1.1]">
+              <h3 className="font-sans text-3xl sm:text-4xl lg:text-5xl font-black text-brand-ink tracking-tight leading-[1.1]">
                 Ready to see where you stand?
               </h3>
               <p className="font-sans text-stone-600 text-base font-medium leading-relaxed">
@@ -57,8 +58,7 @@ export function FinalCtaSection() {
               <div className="pt-2">
                 <Link
                   href="/app.html"
-                  style={{ backgroundColor: "#115E59", color: "#FFFFFF" }}
-                  className="group inline-flex items-center justify-center gap-2.5 px-8 py-4 rounded-sm bg-[#115E59] text-white font-bold text-base hover:bg-[#134E4A] transition-all shadow-md active:scale-[0.96]"
+                  className="group inline-flex items-center justify-center gap-2.5 px-8 py-4 rounded-sm bg-brand-teal-deep text-white font-bold text-base hover:bg-brand-teal-deeper transition-all shadow-md active:scale-[0.96]"
                 >
                   <span>Launch Candidate App</span>
                   <ArrowRight className="w-5 h-5 text-white transition-transform duration-200 group-hover:translate-x-1" />
@@ -96,7 +96,7 @@ export function FinalCtaSection() {
                     key={idx}
                     onClick={() => setImgIndex(idx)}
                     className={`h-1.5 rounded-full transition-all duration-300 ${
-                      idx === imgIndex ? "w-6 bg-[#0D9488]" : "w-1.5 bg-stone-300 hover:bg-stone-400"
+                      idx === imgIndex ? "w-6 bg-brand-teal" : "w-1.5 bg-stone-300 hover:bg-stone-400"
                     }`}
                   />
                 ))}

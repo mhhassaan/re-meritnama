@@ -1,76 +1,47 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useEffect, useMemo, useState, useRef } from "react";
+import { useSearchParams } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
 import { motion, AnimatePresence, type Variants } from "framer-motion";
 import {
+  AlertCircle,
   ArrowRight,
+  CheckCircle2,
   Eye,
   EyeOff,
-  Lock,
-  Mail,
-  User,
-  ShieldCheck,
-  CheckCircle2,
-  AlertCircle,
-  Upload,
-  Copy,
-  Check,
-  ArrowLeft,
-  Palette,
-  KeyRound,
   FileText,
-  CreditCard,
-  Building2,
-  Sparkles,
+  KeyRound,
+  Mail,
+  Upload,
 } from "lucide-react";
-import {
-  KoboyoApprovedDocument,
-  KoboyoShield,
-  KoboyoCalculator,
-  KoboyoBriefcaseMedical,
-} from "@/components/koboyo-icons";
+import { ThemeToggle } from "@/components/theme-toggle";
+import { createClient } from "@/lib/supabase/client";
+import { AuthHashError } from "@/components/auth/auth-hash-error";
 
 interface AuthViewProps {
   initialMode?: "signin" | "signup" | "request" | "proof";
 }
-
-interface CandidateAuthEntry {
-  pinHash: string;
-  nameFull?: string;
-}
-
-interface CandidateAuthIndex {
-  version: number;
-  candidateCount: number;
-  byEmail: Record<string, CandidateAuthEntry>;
-}
-
-// Background themes supported by MeritNama
-const BG_THEMES = [
-  { id: "bg-default", name: "Ambiance", color: "from-[#0d1626] to-[#0f2825]" },
-  { id: "bg-[#0d1626]", name: "Deep Navy", color: "bg-[#0d1626]" },
-  { id: "bg-[#080d1a]", name: "Aurora Dark", color: "bg-[#080d1a]" },
-  { id: "bg-[#09061a]", name: "Nebula Purple", color: "bg-[#09061a]" },
-  { id: "bg-[#070b14]", name: "Void Dark", color: "bg-[#070b14]" },
-];
 
 export function AuthView({ initialMode = "signin" }: AuthViewProps) {
   const [activeTab, setActiveTab] = useState<"signin" | "request" | "proof">(
     initialMode === "signup" ? "request" : initialMode
   );
 
-  // SHA-256 candidate index loaded from public/data/candidate_auth_index.json
-  const [authIndex, setAuthIndex] = useState<CandidateAuthIndex | null>(null);
-  const [indexLoading, setIndexLoading] = useState(true);
+  // One client per mount; re-creating it on each render would drop the session
+  // listener and re-run auth storage setup.
+  const supabase = useMemo(() => createClient(), []);
 
-  // Background Theme State
-  const [activeBgTheme, setActiveBgTheme] = useState("bg-default");
-  const [showBgPicker, setShowBgPicker] = useState(false);
-
-  // Copy Feedback
-  const [copiedAccount, setCopiedAccount] = useState<string | null>(null);
+  const searchParams = useSearchParams();
+  // Only same-origin relative paths are honoured, so a crafted ?next= cannot
+  // turn sign-in into an open redirect to an attacker's site.
+  const requestedNext = searchParams.get("next") ?? "";
+  const callbackError = searchParams.get("error") ?? "";
+  const nextPath =
+    requestedNext.startsWith("/") && !requestedNext.startsWith("//")
+      ? requestedNext
+      : "/app";
 
   // Form States
   // 1. Sign In Form
@@ -80,6 +51,17 @@ export function AuthView({ initialMode = "signin" }: AuthViewProps) {
   const [signInLoading, setSignInLoading] = useState(false);
   const [signInError, setSignInError] = useState("");
   const [signInSuccess, setSignInSuccess] = useState("");
+  const [resetPending, setResetPending] = useState(false);
+
+  // Supabase returns link failures in the URL fragment, which never reaches the
+  // server. When one is present it explains the failure precisely, so the
+  // callback route's generic "missing token" message is suppressed.
+  const [hasHashError, setHasHashError] = useState(false);
+  useEffect(() => {
+    if (typeof window === "undefined" || !window.location.hash) return;
+    const params = new URLSearchParams(window.location.hash.slice(1));
+    if (params.get("error") || params.get("error_code")) setHasHashError(true);
+  }, []);
 
   // 2. Request Access Form
   const [reqEmail, setReqEmail] = useState("");
@@ -97,134 +79,98 @@ export function AuthView({ initialMode = "signin" }: AuthViewProps) {
   const [proofEmail, setProofEmail] = useState("");
   const [proofMsg, setProofMsg] = useState("");
   const [proofImageBase64, setProofImageBase64] = useState<string>("");
+  const [proofFile, setProofFile] = useState<File | null>(null);
   const [proofLoading, setProofLoading] = useState(false);
   const [proofError, setProofError] = useState("");
   const [proofSuccess, setProofSuccess] = useState("");
 
   const fileInputRef = useRef<HTMLInputElement | null>(null);
 
-  // Load auth index JSON on mount
-  useEffect(() => {
-    fetch("/data/candidate_auth_index.json")
-      .then((res) => res.json())
-      .then((data: CandidateAuthIndex) => {
-        setAuthIndex(data);
-        setIndexLoading(false);
-      })
-      .catch((err) => {
-        console.warn("Could not load candidate_auth_index.json:", err);
-        setIndexLoading(false);
-      });
-
-    // Load theme preference
-    const savedTheme = localStorage.getItem("mn_bg_theme") || "bg-default";
-    setActiveBgTheme(savedTheme);
-  }, []);
-
-  // SHA-256 Helper (matching original auth.js implementation)
-  const hashPin = async (pinStr: string): Promise<string> => {
-    const encoder = new TextEncoder();
-    const hashBuffer = await crypto.subtle.digest("SHA-256", encoder.encode(pinStr.trim()));
-    return Array.from(new Uint8Array(hashBuffer))
-      .map((b) => b.toString(16).padStart(2, "0"))
-      .join("");
-  };
-
-  // Match candidate live when email & applicantId change in Request Access
-  useEffect(() => {
-    if (!authIndex || !reqEmail.trim() || !reqApplicantId.trim()) {
-      setReqMatchedCandidate(null);
-      return;
-    }
-
-    const emailKey = reqEmail.trim().toLowerCase();
-    const candidateEntry = authIndex.byEmail[emailKey];
-
-    if (candidateEntry) {
-      // Async hash test
-      hashPin(reqApplicantId.trim()).then((enteredHash) => {
-        if (enteredHash === candidateEntry.pinHash) {
-          setReqMatchedCandidate({
-            nameFull: candidateEntry.nameFull || emailKey,
-            applicantId: reqApplicantId.trim(),
-          });
-        } else {
-          setReqMatchedCandidate(null);
-        }
-      });
-    } else {
-      setReqMatchedCandidate(null);
-    }
-  }, [reqEmail, reqApplicantId, authIndex]);
-
-  // Handle Sign In Submit
+  // Sign in against Supabase Auth.
+  //
+  // Replaces the original scheme, which hashed a PIN in the browser, compared it
+  // to a publicly-served index, and wrote a 24-hour session into localStorage —
+  // a check performed entirely by code the attacker controls. Supabase issues a
+  // signed token the database itself verifies on every request.
   const handleSignIn = async (e: React.FormEvent) => {
     e.preventDefault();
     setSignInError("");
     setSignInSuccess("");
 
     const email = signInEmail.trim().toLowerCase();
-    const pin = signInPin.trim();
+    const password = signInPin;
 
-    if (!email || !pin) {
-      setSignInError("Please enter both your registered email and PIN.");
+    if (!email || !password) {
+      setSignInError("Please enter both your registered email and password.");
       return;
     }
 
     setSignInLoading(true);
 
-    try {
-      const pinHex = await hashPin(pin);
+    const { data, error } = await supabase.auth.signInWithPassword({
+      email,
+      password,
+    });
 
-      // Verify against candidate auth index if loaded
-      if (authIndex && authIndex.byEmail[email]) {
-        const candidate = authIndex.byEmail[email];
-        if (candidate.pinHash === pinHex) {
-          // Success
-          const session = {
-            email,
-            nameFull: candidate.nameFull,
-            ts: Date.now(),
-            verified: Date.now(),
-          };
-          localStorage.setItem("meritnama_auth_session", JSON.stringify(session));
-          setSignInSuccess(`Welcome back, ${candidate.nameFull || email}!`);
-
-          setTimeout(() => {
-            window.location.href = "/app.html";
-          }, 800);
-          return;
-        } else {
-          setSignInError("Incorrect PIN for this candidate record.");
-          setSignInLoading(false);
-          return;
-        }
-      }
-
-      // Fallback verification for demo or admin accounts
-      if (pin === "123456" || pin.length >= 4) {
-        const session = {
-          email,
-          ts: Date.now(),
-          verified: Date.now(),
-        };
-        localStorage.setItem("meritnama_auth_session", JSON.stringify(session));
-        setSignInSuccess("Sign in verified. Redirecting to portal...");
-        setTimeout(() => {
-          window.location.href = "/app.html";
-        }, 800);
-      } else {
-        setSignInError("Access denied. Invalid email or PIN.");
-        setSignInLoading(false);
-      }
-    } catch (err) {
-      setSignInError("Connection error during PIN verification. Please try again.");
+    if (error) {
+      // One message for wrong password and unknown account alike: distinguishing
+      // them tells an attacker which addresses are registered.
+      setSignInError("Incorrect email or password.");
       setSignInLoading(false);
+      return;
     }
+
+    // Both data tiers require a confirmed address, so signing in without one
+    // would land the user on an app that renders nothing.
+    if (!data.user?.email_confirmed_at) {
+      setSignInError(
+        "Please confirm your email address first — check your inbox for the link we sent."
+      );
+      await supabase.auth.signOut();
+      setSignInLoading(false);
+      return;
+    }
+
+    setSignInSuccess("Signed in. Opening your portal…");
+    // Full navigation rather than a client transition, so the server re-reads
+    // the freshly-set auth cookies.
+    window.location.assign(nextPath);
   };
 
-  // Handle Access Request Submit
-  const handleRequestSubmit = (e: React.FormEvent) => {
+  // Send a password reset link.
+  //
+  // Always reports success, whatever happened. Saying "no account with that
+  // email" would turn this button into a membership oracle — and membership here
+  // means "is an Induction 21 candidate", which is precisely what must not be
+  // confirmable to a stranger.
+  const handleForgotPassword = async () => {
+    setSignInError("");
+    setSignInSuccess("");
+
+    const email = signInEmail.trim().toLowerCase();
+    if (!email) {
+      setSignInError("Enter your email address first, then choose 'Forgot your password?'.");
+      return;
+    }
+
+    setResetPending(true);
+    await supabase.auth.resetPasswordForEmail(email, {
+      redirectTo: `${window.location.origin}/auth/callback?next=/auth/update-password`,
+    });
+    setResetPending(false);
+
+    setSignInSuccess(
+      "If that address has an account, a reset link is on its way. It expires shortly."
+    );
+  };
+
+  // Submit an access request.
+  //
+  // Verification happens on the server: the candidate index is never sent to the
+  // browser. The original fetched `candidate_auth_index.json` — every registered
+  // email plus an unsalted SHA-256 of the applicant id — purely to run this
+  // check client-side.
+  const handleRequestSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setReqError("");
     setReqSuccess("");
@@ -235,76 +181,107 @@ export function AuthView({ initialMode = "signin" }: AuthViewProps) {
     }
 
     setReqLoading(true);
-    setTimeout(() => {
+
+    try {
+      const res = await fetch("/api/access-request", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          email: reqEmail.trim(),
+          applicantId: reqApplicantId.trim(),
+          message: reqMsg.trim(),
+          paymentDeclared: reqPaymentDeclared,
+          paymentAmountPkr: reqPayAmount,
+          paymentReference: reqPayRef.trim(),
+        }),
+      });
+
+      const body = await res.json();
+
+      if (!res.ok) {
+        setReqError(body.error ?? "Could not submit your request. Please try again.");
+        setReqMatchedCandidate(null);
+      } else {
+        // The server echoes the matched name so the candidate can confirm the
+        // right record was found. Nothing else about the record is returned.
+        if (body.nameFull) {
+          setReqMatchedCandidate({
+            nameFull: body.nameFull,
+            applicantId: reqApplicantId.trim(),
+          });
+        }
+        setReqSuccess(body.message ?? "Request submitted.");
+      }
+    } catch {
+      setReqError("Network error. Please check your connection and try again.");
+    } finally {
       setReqLoading(false);
-      setReqSuccess(
-        `Access request submitted for ${reqEmail.trim()} (ID ${reqApplicantId.trim()}). Admin will review your verification.`
-      );
-    }, 1000);
+    }
   };
 
-  // Handle Image Upload Compression (Canvas 800px JPEG matching original auth.js)
+  // Preview only. The ORIGINAL file is uploaded, not a re-encode: the original
+  // downscaled to 800px and re-compressed as JPEG, which is fine for a thumbnail
+  // and useless as evidence — account numbers and transaction ids in a bank
+  // screenshot stop being legible. Size is enforced server-side instead.
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
 
-    const reader = new FileReader();
-    reader.onload = (event) => {
-      const img = new globalThis.Image();
-      img.onload = () => {
-        const MAX = 800;
-        let w = img.width;
-        let h = img.height;
-        if (w > MAX || h > MAX) {
-          if (w > h) {
-            h = Math.round((h * MAX) / w);
-            w = MAX;
-          } else {
-            w = Math.round((w * MAX) / h);
-            h = MAX;
-          }
-        }
-        const canvas = document.createElement("canvas");
-        canvas.width = w;
-        canvas.height = h;
-        const ctx = canvas.getContext("2d");
-        if (ctx) {
-          ctx.drawImage(img, 0, 0, w, h);
-          setProofImageBase64(canvas.toDataURL("image/jpeg", 0.75));
-        }
-      };
-      img.src = event.target?.result as string;
-    };
-    reader.readAsDataURL(file);
+    setProofError("");
+    setProofFile(file);
+
+    if (file.type.startsWith("image/")) {
+      const reader = new FileReader();
+      reader.onload = (event) => setProofImageBase64(String(event.target?.result ?? ""));
+      reader.readAsDataURL(file);
+    } else {
+      setProofImageBase64("");
+    }
   };
 
   // Handle Proof Submit
-  const handleProofSubmit = (e: React.FormEvent) => {
+  // Submit payment proof.
+  //
+  // Multipart rather than a base64 JSON body: a bank screenshot is evidence and
+  // is uploaded intact. The server re-validates size and sniffs the real file
+  // type, since both are attacker-controlled here.
+  const handleProofSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setProofError("");
     setProofSuccess("");
 
     if (!proofEmail.trim()) {
-      setProofError("Please enter your email used for the access request.");
+      setProofError("Please enter the email you used for your access request.");
       return;
     }
-    if (!proofImageBase64 && !proofMsg.trim()) {
-      setProofError("Please upload a payment screenshot or write a message.");
+    if (!proofFile && !proofMsg.trim()) {
+      setProofError("Attach a payment screenshot, or write a message.");
       return;
     }
 
     setProofLoading(true);
-    setTimeout(() => {
-      setProofLoading(false);
-      setProofSuccess(`Payment proof submitted for ${proofEmail.trim()}. Admin review in progress.`);
-    }, 1000);
-  };
 
-  // Copy helper
-  const copyToClipboard = (text: string, label: string) => {
-    navigator.clipboard.writeText(text);
-    setCopiedAccount(label);
-    setTimeout(() => setCopiedAccount(null), 2000);
+    try {
+      const body = new FormData();
+      body.set("email", proofEmail.trim());
+      body.set("message", proofMsg.trim());
+      if (proofFile) body.set("file", proofFile);
+
+      const res = await fetch("/api/payment-proof", { method: "POST", body });
+      const result = await res.json();
+
+      if (!res.ok) {
+        setProofError(result.error ?? "Could not submit your payment proof.");
+      } else {
+        setProofSuccess(result.message ?? "Payment proof received.");
+        setProofFile(null);
+        setProofImageBase64("");
+      }
+    } catch {
+      setProofError("Network error. Please check your connection and try again.");
+    } finally {
+      setProofLoading(false);
+    }
   };
 
   const containerVariants: Variants = {
@@ -326,16 +303,27 @@ export function AuthView({ initialMode = "signin" }: AuthViewProps) {
   };
 
   return (
-    <div className="flex min-h-screen w-full flex-col bg-[#FAF9F5] font-sans text-[#1A2118] antialiased selection:bg-teal-200 selection:text-teal-950 lg:flex-row">
-      
+    <div className="relative flex min-h-screen w-full flex-col bg-background font-sans text-foreground antialiased selection:bg-accent-quiet selection:text-accent-strong lg:flex-row">
+      {/* Auth is the entry point to the app rather than a marketing page, so it
+          is theme-aware and carries its own theme control. */}
+      <div className="absolute right-4 top-4 z-30 sm:right-6 sm:top-6">
+        <ThemeToggle />
+      </div>
+
+
       {/* ── LEFT PANEL: Clean Minimal Gradient Mesh, Upper-Middle Logo & Text ── */}
-      <div className="relative flex w-full flex-col justify-start items-center overflow-hidden bg-[#0F2825] p-8 md:p-12 lg:w-1/2 min-h-[50vh] lg:min-h-screen text-white select-none pt-24 sm:pt-36 lg:pt-48">
+      {/* Below `lg` the two panels stack, so the brand panel sizes to its own
+          content instead of claiming half the viewport — it previously pushed
+          the sign-in form entirely below the fold on a phone. The `lg:pt-48`
+          value is unchanged, preserving the side-by-side baseline alignment
+          with the form panel. */}
+      <div className="relative flex w-full flex-col justify-start items-center overflow-hidden bg-brand-midnight px-8 pb-10 pt-14 md:px-12 lg:w-1/2 lg:min-h-screen lg:p-12 text-white select-none sm:pt-20 lg:pt-48">
         
         {/* Pure Multi-Layered Custom Color Palette Gradient Mesh (No Photo Image) */}
-        <div className="pointer-events-none absolute inset-0 z-0 bg-gradient-to-b from-[#0B1E1C] via-[#0F2825] to-[#081312]">
-          <div className="absolute -top-1/4 left-1/2 -translate-x-1/2 w-[700px] h-[550px] bg-gradient-to-b from-[#0D9488]/30 via-[#143733]/20 to-transparent blur-[120px] rounded-full pointer-events-none" />
-          <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[800px] h-[500px] bg-gradient-to-t from-[#061210] via-[#0D9488]/20 to-transparent blur-[140px] pointer-events-none" />
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-[#2DD4BF]/10 blur-[160px] rounded-full pointer-events-none" />
+        <div className="pointer-events-none absolute inset-0 z-0 bg-gradient-to-b from-brand-midnight-deep via-brand-midnight to-brand-midnight-abyss">
+          <div className="absolute -top-1/4 left-1/2 -translate-x-1/2 w-[700px] h-[550px] bg-gradient-to-b from-brand-teal/30 via-brand-midnight-raised/20 to-transparent blur-[120px] rounded-full pointer-events-none" />
+          <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[800px] h-[500px] bg-gradient-to-t from-brand-midnight-abyss via-brand-teal/20 to-transparent blur-[140px] pointer-events-none" />
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-brand-mint/10 blur-[160px] rounded-full pointer-events-none" />
         </div>
 
         {/* Elevated Logo & Text Content */}
@@ -352,7 +340,7 @@ export function AuthView({ initialMode = "signin" }: AuthViewProps) {
             />
           </Link>
 
-          <p className="mb-3 text-base md:text-lg font-medium text-[#E8E0CA]/90 font-sans tracking-wide">
+          <p className="mb-3 text-base md:text-lg font-medium text-brand-ivory/90 font-sans tracking-wide">
             You can easily
           </p>
           <h1 className="font-sans text-2xl sm:text-4xl lg:text-5xl font-semibold leading-[1.2] tracking-tight text-white">
@@ -366,7 +354,10 @@ export function AuthView({ initialMode = "signin" }: AuthViewProps) {
       </div>
 
       {/* ── RIGHT PANEL: Auth Card Form (Watermelon auth-10 layout + MeritNama DESIGN_GUIDELINES.md) ── */}
-      <div className="flex w-full flex-col justify-start items-center p-6 sm:p-12 lg:w-1/2 lg:p-16 pt-24 sm:pt-36 lg:pt-48 min-h-screen">
+      {/* In dark the form panel's background and the brand panel's midnight are
+          near-identical, so the split-panel structure needs an explicit seam or
+          it reads as one flat surface. */}
+      <div className="flex w-full flex-col justify-start items-center border-t border-border p-6 pt-8 sm:p-12 sm:pt-10 lg:w-1/2 lg:min-h-screen lg:border-t-0 lg:border-l lg:p-16 lg:pt-48">
         <motion.div
           variants={containerVariants}
           initial="hidden"
@@ -375,20 +366,20 @@ export function AuthView({ initialMode = "signin" }: AuthViewProps) {
         >
           {/* 3 Auth Navigation Tabs with Watermelon auth-10 layoutId sliding spring pill */}
           <motion.div variants={itemVariants} className="mb-8">
-            <div className="relative grid grid-cols-3 gap-1 rounded-lg bg-stone-200/80 p-1 font-mono text-[11px] font-bold border border-stone-300/70">
+            <div className="relative grid grid-cols-3 gap-1 rounded-lg bg-surface-sunken/80 p-1 font-mono text-[11px] font-bold border border-border-strong/70">
               <button
                 type="button"
                 onClick={() => setActiveTab("signin")}
                 className={`relative z-10 rounded-md px-2.5 py-2 text-center transition-colors duration-150 ${
                   activeTab === "signin"
-                    ? "text-[#115E59] font-extrabold"
-                    : "text-stone-600 hover:text-[#171717]"
+                    ? "text-accent-strong font-extrabold"
+                    : "text-fg-muted hover:text-foreground"
                 }`}
               >
                 {activeTab === "signin" && (
                   <motion.div
                     layoutId="activeTabPill"
-                    className="absolute inset-0 z-[-1] rounded-md bg-white shadow-sm border border-stone-200/80"
+                    className="absolute inset-0 z-[-1] rounded-md bg-surface shadow-sm border border-border/80"
                     transition={{ type: "spring", stiffness: 550, damping: 35 }}
                   />
                 )}
@@ -399,14 +390,14 @@ export function AuthView({ initialMode = "signin" }: AuthViewProps) {
                 onClick={() => setActiveTab("request")}
                 className={`relative z-10 rounded-md px-2.5 py-2 text-center transition-colors duration-150 ${
                   activeTab === "request"
-                    ? "text-[#115E59] font-extrabold"
-                    : "text-stone-600 hover:text-[#171717]"
+                    ? "text-accent-strong font-extrabold"
+                    : "text-fg-muted hover:text-foreground"
                 }`}
               >
                 {activeTab === "request" && (
                   <motion.div
                     layoutId="activeTabPill"
-                    className="absolute inset-0 z-[-1] rounded-md bg-white shadow-sm border border-stone-200/80"
+                    className="absolute inset-0 z-[-1] rounded-md bg-surface shadow-sm border border-border/80"
                     transition={{ type: "spring", stiffness: 550, damping: 35 }}
                   />
                 )}
@@ -417,14 +408,14 @@ export function AuthView({ initialMode = "signin" }: AuthViewProps) {
                 onClick={() => setActiveTab("proof")}
                 className={`relative z-10 rounded-md px-2.5 py-2 text-center transition-colors duration-150 ${
                   activeTab === "proof"
-                    ? "text-[#115E59] font-extrabold"
-                    : "text-stone-600 hover:text-[#171717]"
+                    ? "text-accent-strong font-extrabold"
+                    : "text-fg-muted hover:text-foreground"
                 }`}
               >
                 {activeTab === "proof" && (
                   <motion.div
                     layoutId="activeTabPill"
-                    className="absolute inset-0 z-[-1] rounded-md bg-white shadow-sm border border-stone-200/80"
+                    className="absolute inset-0 z-[-1] rounded-md bg-surface shadow-sm border border-border/80"
                     transition={{ type: "spring", stiffness: 550, damping: 35 }}
                   />
                 )}
@@ -446,22 +437,22 @@ export function AuthView({ initialMode = "signin" }: AuthViewProps) {
                   transition={{ duration: 0.09 }}
                 >
                   <motion.div variants={itemVariants} className="mb-6">
-                    <h2 className="font-sans text-2xl sm:text-3xl font-extrabold tracking-tight text-[#171717]">
+                    <h2 className="font-sans text-2xl sm:text-3xl font-extrabold tracking-tight text-foreground">
                       Private Access
                     </h2>
-                    <p className="font-sans text-sm text-stone-500 font-medium mt-1.5">
-                      Enter your registered candidate email and PIN (Applicant ID) to unlock full models.
+                    <p className="font-sans text-sm text-fg-subtle font-medium mt-1.5">
+                      Enter your registered email and password to open your candidate portal.
                     </p>
                   </motion.div>
 
                   <form onSubmit={handleSignIn} className="flex flex-col gap-4">
                     {/* Email Address */}
                     <motion.div variants={itemVariants} className="flex flex-col gap-1.5">
-                      <label htmlFor="signInEmail" className="font-sans text-xs font-bold uppercase tracking-wider text-stone-700">
+                      <label htmlFor="signInEmail" className="font-sans text-xs font-bold uppercase tracking-wider text-fg-muted">
                         Email Address
                       </label>
                       <div className="relative">
-                        <Mail className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-stone-400" />
+                        <Mail className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-fg-subtle" />
                         <input
                           id="signInEmail"
                           type="email"
@@ -471,48 +462,61 @@ export function AuthView({ initialMode = "signin" }: AuthViewProps) {
                           placeholder="your@email.com"
                           value={signInEmail}
                           onChange={(e) => setSignInEmail(e.target.value)}
-                          className="w-full rounded-sm border border-stone-300/90 bg-white pl-10 pr-4 py-3 font-mono text-sm text-[#171717] placeholder:text-stone-400 focus:border-[#0D9488] focus:outline-none focus:ring-1 focus:ring-[#0D9488] transition-all"
+                          className="w-full rounded-sm border border-border-strong/90 bg-surface pl-10 pr-4 py-3 font-mono text-sm text-foreground placeholder:text-fg-subtle focus:border-accent focus:outline-none focus:ring-1 focus:ring-accent transition-all"
                         />
                       </div>
                     </motion.div>
 
-                    {/* PIN Input */}
+                    {/* Password Input */}
                     <motion.div variants={itemVariants} className="flex flex-col gap-1.5">
-                      <label htmlFor="signInPin" className="font-sans text-xs font-bold uppercase tracking-wider text-stone-700">
-                        Candidate PIN
+                      <label htmlFor="signInPin" className="font-sans text-xs font-bold uppercase tracking-wider text-fg-muted">
+                        Password
                       </label>
                       <div className="relative">
-                        <KeyRound className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-stone-400" />
+                        <KeyRound className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-fg-subtle" />
                         <input
                           id="signInPin"
                           type={showPin ? "text" : "password"}
                           required
-                          placeholder="••••••"
+                          autoComplete="current-password"
+                          placeholder="••••••••"
                           value={signInPin}
                           onChange={(e) => setSignInPin(e.target.value)}
-                          className="w-full rounded-sm border border-stone-300/90 bg-white pl-10 pr-10 py-3 font-mono text-sm text-[#171717] placeholder:text-stone-400 focus:border-[#0D9488] focus:outline-none focus:ring-1 focus:ring-[#0D9488] transition-all"
+                          className="w-full rounded-sm border border-border-strong/90 bg-surface pl-10 pr-10 py-3 font-mono text-sm text-foreground placeholder:text-fg-subtle focus:border-accent focus:outline-none focus:ring-1 focus:ring-accent transition-all"
                         />
                         <button
                           type="button"
                           onClick={() => setShowPin(!showPin)}
-                          className="absolute right-3.5 top-1/2 -translate-y-1/2 text-stone-400 hover:text-stone-600"
+                          className="absolute right-3.5 top-1/2 -translate-y-1/2 text-fg-subtle hover:text-fg-muted"
                         >
                           {showPin ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                         </button>
                       </div>
                     </motion.div>
 
-                    {/* Feedback Messages */}
+                    {/* Feedback Messages.
+                        `callbackError` carries failures from the emailed-link
+                        handler (expired or already-used links), which would
+                        otherwise vanish on redirect with no explanation. */}
+                    <AuthHashError />
+
+                    {!signInError && callbackError && !hasHashError && (
+                      <motion.div variants={itemVariants} className="flex items-center gap-2 rounded-sm border border-status-danger bg-status-danger-quiet p-3 text-xs font-medium text-status-danger">
+                        <AlertCircle className="h-4 w-4 shrink-0 text-status-danger" />
+                        <span>{callbackError}</span>
+                      </motion.div>
+                    )}
+
                     {signInError && (
-                      <motion.div variants={itemVariants} className="flex items-center gap-2 rounded-sm border border-red-200 bg-red-50 p-3 text-xs font-medium text-red-700">
-                        <AlertCircle className="h-4 w-4 shrink-0 text-red-500" />
+                      <motion.div variants={itemVariants} className="flex items-center gap-2 rounded-sm border border-status-danger bg-status-danger-quiet p-3 text-xs font-medium text-status-danger">
+                        <AlertCircle className="h-4 w-4 shrink-0 text-status-danger" />
                         <span>{signInError}</span>
                       </motion.div>
                     )}
 
                     {signInSuccess && (
-                      <motion.div variants={itemVariants} className="flex items-center gap-2 rounded-sm border border-emerald-200 bg-emerald-50 p-3 text-xs font-medium text-emerald-800">
-                        <CheckCircle2 className="h-4 w-4 shrink-0 text-emerald-600" />
+                      <motion.div variants={itemVariants} className="flex items-center gap-2 rounded-sm border border-status-safe bg-status-safe-quiet p-3 text-xs font-medium text-status-safe">
+                        <CheckCircle2 className="h-4 w-4 shrink-0 text-status-safe" />
                         <span>{signInSuccess}</span>
                       </motion.div>
                     )}
@@ -523,13 +527,12 @@ export function AuthView({ initialMode = "signin" }: AuthViewProps) {
                         type="submit"
                         disabled={signInLoading}
                         whileTap={{ scale: 0.97 }}
-                        style={{ backgroundColor: "#115E59" }}
-                        className="group relative flex min-h-[46px] w-full items-center justify-center gap-2 rounded-sm px-5 py-3 text-sm font-bold text-white shadow-md transition-colors duration-150 ease-out hover:bg-[#134E4A] disabled:opacity-75"
+                        className="group relative flex min-h-[46px] w-full items-center justify-center gap-2 rounded-sm bg-accent-strong px-5 py-3 text-sm font-bold text-white shadow-md transition-colors duration-150 ease-out hover:bg-accent-hover disabled:opacity-75"
                       >
                         {signInLoading ? (
                           <span className="flex items-center gap-2 font-mono text-xs">
                             <span className="h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent" />
-                            <span>VERIFYING SHA-256 PIN...</span>
+                            <span>SIGNING IN...</span>
                           </span>
                         ) : (
                           <>
@@ -541,12 +544,23 @@ export function AuthView({ initialMode = "signin" }: AuthViewProps) {
                     </motion.div>
                   </form>
 
-                  <motion.p variants={itemVariants} className="mt-6 text-center font-sans text-xs font-medium text-stone-500">
+                  <motion.p variants={itemVariants} className="mt-5 text-center font-sans text-xs font-medium text-fg-subtle">
+                    <button
+                      type="button"
+                      onClick={handleForgotPassword}
+                      disabled={resetPending}
+                      className="font-bold text-accent hover:underline cursor-pointer disabled:opacity-60"
+                    >
+                      {resetPending ? "Sending reset link…" : "Forgot your password?"}
+                    </button>
+                  </motion.p>
+
+                  <motion.p variants={itemVariants} className="mt-3 text-center font-sans text-xs font-medium text-fg-subtle">
                     Don&apos;t have credentials yet?{" "}
                     <button
                       type="button"
                       onClick={() => setActiveTab("request")}
-                      className="font-bold text-[#0D9488] hover:underline cursor-pointer"
+                      className="font-bold text-accent hover:underline cursor-pointer"
                     >
                       Request candidate access
                     </button>
@@ -564,10 +578,10 @@ export function AuthView({ initialMode = "signin" }: AuthViewProps) {
                   transition={{ duration: 0.09 }}
                 >
                   <motion.div variants={itemVariants} className="mb-6">
-                    <h2 className="font-sans text-2xl sm:text-3xl font-extrabold tracking-tight text-[#171717]">
+                    <h2 className="font-sans text-2xl sm:text-3xl font-extrabold tracking-tight text-foreground">
                       Request Access
                     </h2>
-                    <p className="font-sans text-sm text-stone-500 font-medium mt-1.5">
+                    <p className="font-sans text-sm text-fg-subtle font-medium mt-1.5">
                       Induction 21 candidates — verify your portal email & Applicant ID.
                     </p>
                   </motion.div>
@@ -575,11 +589,11 @@ export function AuthView({ initialMode = "signin" }: AuthViewProps) {
                   <form onSubmit={handleRequestSubmit} className="flex flex-col gap-4">
                     {/* Portal Email */}
                     <motion.div variants={itemVariants} className="flex flex-col gap-1.5">
-                      <label htmlFor="reqEmail" className="font-sans text-xs font-bold uppercase tracking-wider text-stone-700">
+                      <label htmlFor="reqEmail" className="font-sans text-xs font-bold uppercase tracking-wider text-fg-muted">
                         Portal Email Address
                       </label>
                       <div className="relative">
-                        <Mail className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-stone-400" />
+                        <Mail className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-fg-subtle" />
                         <input
                           id="reqEmail"
                           type="email"
@@ -589,19 +603,19 @@ export function AuthView({ initialMode = "signin" }: AuthViewProps) {
                           placeholder="same as induction portal"
                           value={reqEmail}
                           onChange={(e) => setReqEmail(e.target.value)}
-                          className="w-full rounded-sm border border-stone-300/90 bg-white pl-10 pr-4 py-3 font-mono text-sm text-[#171717] placeholder:text-stone-400 focus:border-[#0D9488] focus:outline-none focus:ring-1 focus:ring-[#0D9488] transition-all"
+                          className="w-full rounded-sm border border-border-strong/90 bg-surface pl-10 pr-4 py-3 font-mono text-sm text-foreground placeholder:text-fg-subtle focus:border-accent focus:outline-none focus:ring-1 focus:ring-accent transition-all"
                         />
                       </div>
                     </motion.div>
 
                     {/* Applicant ID */}
                     <motion.div variants={itemVariants} className="flex flex-col gap-1.5">
-                      <label htmlFor="reqApplicantId" className="font-sans text-xs font-bold uppercase tracking-wider text-stone-700 flex justify-between">
+                      <label htmlFor="reqApplicantId" className="font-sans text-xs font-bold uppercase tracking-wider text-fg-muted flex justify-between">
                         <span>Applicant ID</span>
-                        <span className="font-mono text-[10px] text-[#0D9488] font-bold">e.g. 39244</span>
+                        <span className="font-mono text-[10px] text-accent font-bold">e.g. 39244</span>
                       </label>
                       <div className="relative">
-                        <FileText className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-stone-400" />
+                        <FileText className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-fg-subtle" />
                         <input
                           id="reqApplicantId"
                           type="text"
@@ -609,7 +623,7 @@ export function AuthView({ initialMode = "signin" }: AuthViewProps) {
                           placeholder="39244"
                           value={reqApplicantId}
                           onChange={(e) => setReqApplicantId(e.target.value)}
-                          className="w-full rounded-sm border border-stone-300/90 bg-white pl-10 pr-4 py-3 font-mono text-sm text-[#171717] placeholder:text-stone-400 focus:border-[#0D9488] focus:outline-none focus:ring-1 focus:ring-[#0D9488] transition-all"
+                          className="w-full rounded-sm border border-border-strong/90 bg-surface pl-10 pr-4 py-3 font-mono text-sm text-foreground placeholder:text-fg-subtle focus:border-accent focus:outline-none focus:ring-1 focus:ring-accent transition-all"
                         />
                       </div>
                     </motion.div>
@@ -618,25 +632,25 @@ export function AuthView({ initialMode = "signin" }: AuthViewProps) {
                     {reqMatchedCandidate && (
                       <motion.div
                         variants={itemVariants}
-                        className="rounded-md border border-teal-600/40 bg-[#f0fdfa] p-3.5 text-xs text-[#0F2825]"
+                        className="rounded-md border border-accent/40 bg-accent-quiet p-3.5 text-xs text-foreground"
                       >
-                        <div className="flex items-center gap-2 font-bold text-[#0D9488]">
-                          <CheckCircle2 className="h-4 w-4 text-[#0D9488]" />
+                        <div className="flex items-center gap-2 font-bold text-accent">
+                          <CheckCircle2 className="h-4 w-4 text-accent" />
                           <span>GAZETTE RECORD MATCHED</span>
                         </div>
-                        <p className="font-sans font-bold text-sm text-[#171717] mt-1">
+                        <p className="font-sans font-bold text-sm text-foreground mt-1">
                           {reqMatchedCandidate.nameFull}
                         </p>
-                        <p className="font-mono text-[11px] text-stone-600">
-                          Applicant ID: <strong className="text-[#0D9488]">{reqMatchedCandidate.applicantId}</strong>
+                        <p className="font-mono text-[11px] text-fg-muted">
+                          Applicant ID: <strong className="text-accent">{reqMatchedCandidate.applicantId}</strong>
                         </p>
                       </motion.div>
                     )}
 
                     {/* Message to Admin */}
                     <motion.div variants={itemVariants} className="flex flex-col gap-1.5">
-                      <label htmlFor="reqMsg" className="font-sans text-xs font-bold uppercase tracking-wider text-stone-700">
-                        Message to Admin <span className="font-normal text-stone-400">(Optional)</span>
+                      <label htmlFor="reqMsg" className="font-sans text-xs font-bold uppercase tracking-wider text-fg-muted">
+                        Message to Admin <span className="font-normal text-fg-subtle">(Optional)</span>
                       </label>
                       <textarea
                         id="reqMsg"
@@ -645,21 +659,21 @@ export function AuthView({ initialMode = "signin" }: AuthViewProps) {
                         placeholder="Use this for access issues, complaints, or questions."
                         value={reqMsg}
                         onChange={(e) => setReqMsg(e.target.value)}
-                        className="w-full rounded-sm border border-stone-300/90 bg-white px-3.5 py-2.5 font-sans text-xs text-[#171717] placeholder:text-stone-400 focus:border-[#0D9488] focus:outline-none resize-none"
+                        className="w-full rounded-sm border border-border-strong/90 bg-surface px-3.5 py-2.5 font-sans text-xs text-foreground placeholder:text-fg-subtle focus:border-accent focus:outline-none resize-none"
                       />
                     </motion.div>
 
                     {/* Feedback */}
                     {reqError && (
-                      <motion.div variants={itemVariants} className="flex items-center gap-2 rounded-sm border border-red-200 bg-red-50 p-3 text-xs font-medium text-red-700">
-                        <AlertCircle className="h-4 w-4 shrink-0 text-red-500" />
+                      <motion.div variants={itemVariants} className="flex items-center gap-2 rounded-sm border border-status-danger bg-status-danger-quiet p-3 text-xs font-medium text-status-danger">
+                        <AlertCircle className="h-4 w-4 shrink-0 text-status-danger" />
                         <span>{reqError}</span>
                       </motion.div>
                     )}
 
                     {reqSuccess && (
-                      <motion.div variants={itemVariants} className="flex items-center gap-2 rounded-sm border border-emerald-200 bg-emerald-50 p-3 text-xs font-medium text-emerald-800">
-                        <CheckCircle2 className="h-4 w-4 shrink-0 text-emerald-600" />
+                      <motion.div variants={itemVariants} className="flex items-center gap-2 rounded-sm border border-status-safe bg-status-safe-quiet p-3 text-xs font-medium text-status-safe">
+                        <CheckCircle2 className="h-4 w-4 shrink-0 text-status-safe" />
                         <span>{reqSuccess}</span>
                       </motion.div>
                     )}
@@ -669,8 +683,7 @@ export function AuthView({ initialMode = "signin" }: AuthViewProps) {
                         type="submit"
                         disabled={reqLoading}
                         whileTap={{ scale: 0.97 }}
-                        style={{ backgroundColor: "#115E59" }}
-                        className="group relative flex min-h-[46px] w-full items-center justify-center gap-2 rounded-sm px-5 py-3 text-sm font-bold text-white shadow-md transition-colors duration-150 ease-out hover:bg-[#134E4A] disabled:opacity-75"
+                        className="group relative flex min-h-[46px] w-full items-center justify-center gap-2 rounded-sm bg-accent-strong px-5 py-3 text-sm font-bold text-white shadow-md transition-colors duration-150 ease-out hover:bg-accent-hover disabled:opacity-75"
                       >
                         {reqLoading ? (
                           <span className="flex items-center gap-2 font-mono text-xs">
@@ -699,10 +712,10 @@ export function AuthView({ initialMode = "signin" }: AuthViewProps) {
                   transition={{ duration: 0.09 }}
                 >
                   <motion.div variants={itemVariants} className="mb-6">
-                    <h2 className="font-sans text-2xl sm:text-3xl font-extrabold tracking-tight text-[#171717]">
+                    <h2 className="font-sans text-2xl sm:text-3xl font-extrabold tracking-tight text-foreground">
                       Submit Payment Proof
                     </h2>
-                    <p className="font-sans text-sm text-stone-500 font-medium mt-1.5">
+                    <p className="font-sans text-sm text-fg-subtle font-medium mt-1.5">
                       Upload a screenshot or photo of your payment transaction for admin review.
                     </p>
                   </motion.div>
@@ -710,11 +723,11 @@ export function AuthView({ initialMode = "signin" }: AuthViewProps) {
                   <form onSubmit={handleProofSubmit} className="flex flex-col gap-4">
                     {/* Email */}
                     <motion.div variants={itemVariants} className="flex flex-col gap-1.5">
-                      <label htmlFor="proofEmail" className="font-sans text-xs font-bold uppercase tracking-wider text-stone-700">
+                      <label htmlFor="proofEmail" className="font-sans text-xs font-bold uppercase tracking-wider text-fg-muted">
                         Email Used for Access Request
                       </label>
                       <div className="relative">
-                        <Mail className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-stone-400" />
+                        <Mail className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-fg-subtle" />
                         <input
                           id="proofEmail"
                           type="email"
@@ -724,31 +737,31 @@ export function AuthView({ initialMode = "signin" }: AuthViewProps) {
                           placeholder="your@email.com"
                           value={proofEmail}
                           onChange={(e) => setProofEmail(e.target.value)}
-                          className="w-full rounded-sm border border-stone-300/90 bg-white pl-10 pr-4 py-3 font-mono text-sm text-[#171717] placeholder:text-stone-400 focus:border-[#0D9488] focus:outline-none focus:ring-1 focus:ring-[#0D9488] transition-all"
+                          className="w-full rounded-sm border border-border-strong/90 bg-surface pl-10 pr-4 py-3 font-mono text-sm text-foreground placeholder:text-fg-subtle focus:border-accent focus:outline-none focus:ring-1 focus:ring-accent transition-all"
                         />
                       </div>
                     </motion.div>
 
                     {/* Screenshot Upload Drop Area */}
                     <motion.div variants={itemVariants} className="flex flex-col gap-1.5">
-                      <label className="font-sans text-xs font-bold uppercase tracking-wider text-stone-700">
+                      <label className="font-sans text-xs font-bold uppercase tracking-wider text-fg-muted">
                         Payment Screenshot / Photo
                       </label>
                       <div
                         onClick={() => fileInputRef.current?.click()}
-                        className="cursor-pointer flex flex-col items-center justify-center rounded-md border-2 border-dashed border-stone-300 bg-stone-50 p-5 text-center hover:border-[#0D9488] hover:bg-teal-50/30 transition-all"
+                        className="cursor-pointer flex flex-col items-center justify-center rounded-md border-2 border-dashed border-border-strong bg-surface-sunken p-5 text-center hover:border-accent hover:bg-accent-quiet/30 transition-all"
                       >
-                        <Upload className="h-6 w-6 text-[#0D9488] mb-1.5" />
-                        <p className="font-sans text-xs font-bold text-stone-700">
-                          Click to upload screenshot
+                        <Upload className="h-6 w-6 text-accent mb-1.5" />
+                        <p className="font-sans text-xs font-bold text-fg-muted">
+                          Click to attach your payment screenshot
                         </p>
-                        <p className="font-mono text-[10px] text-stone-400 mt-0.5">
-                          JPEG / PNG auto-compressed (Canvas 800px)
+                        <p className="font-mono text-[10px] text-fg-subtle mt-0.5">
+                          JPG, PNG, WebP or PDF · up to 5 MB · sent as-is
                         </p>
                         <input
                           ref={fileInputRef}
                           type="file"
-                          accept="image/*"
+                          accept="image/jpeg,image/png,image/webp,application/pdf"
                           onChange={handleFileChange}
                           className="hidden"
                         />
@@ -756,7 +769,7 @@ export function AuthView({ initialMode = "signin" }: AuthViewProps) {
 
                       {/* Image Preview */}
                       {proofImageBase64 && (
-                        <div className="mt-2 rounded-md border border-teal-600/40 bg-stone-900 p-2 overflow-hidden max-h-48 flex justify-center">
+                        <div className="mt-2 rounded-md border border-accent/40 bg-brand-midnight-deep p-2 overflow-hidden max-h-48 flex justify-center">
                           <img
                             src={proofImageBase64}
                             alt="Payment Proof Preview"
@@ -768,7 +781,7 @@ export function AuthView({ initialMode = "signin" }: AuthViewProps) {
 
                     {/* Message */}
                     <motion.div variants={itemVariants} className="flex flex-col gap-1.5">
-                      <label htmlFor="proofMsg" className="font-sans text-xs font-bold uppercase tracking-wider text-stone-700">
+                      <label htmlFor="proofMsg" className="font-sans text-xs font-bold uppercase tracking-wider text-fg-muted">
                         Additional Details / Message
                       </label>
                       <textarea
@@ -778,21 +791,21 @@ export function AuthView({ initialMode = "signin" }: AuthViewProps) {
                         placeholder="Any details about your payment transaction..."
                         value={proofMsg}
                         onChange={(e) => setProofMsg(e.target.value)}
-                        className="w-full rounded-sm border border-stone-300/90 bg-white px-3.5 py-2.5 font-sans text-xs text-[#171717] placeholder:text-stone-400 focus:border-[#0D9488] focus:outline-none resize-none"
+                        className="w-full rounded-sm border border-border-strong/90 bg-surface px-3.5 py-2.5 font-sans text-xs text-foreground placeholder:text-fg-subtle focus:border-accent focus:outline-none resize-none"
                       />
                     </motion.div>
 
                     {/* Feedback */}
-                    {reqError && (
-                      <motion.div variants={itemVariants} className="flex items-center gap-2 rounded-sm border border-red-200 bg-red-50 p-3 text-xs font-medium text-red-700">
-                        <AlertCircle className="h-4 w-4 shrink-0 text-red-500" />
-                        <span>{reqError}</span>
+                    {proofError && (
+                      <motion.div variants={itemVariants} className="flex items-center gap-2 rounded-sm border border-status-danger bg-status-danger-quiet p-3 text-xs font-medium text-status-danger">
+                        <AlertCircle className="h-4 w-4 shrink-0 text-status-danger" />
+                        <span>{proofError}</span>
                       </motion.div>
                     )}
 
                     {proofSuccess && (
-                      <motion.div variants={itemVariants} className="flex items-center gap-2 rounded-sm border border-emerald-200 bg-emerald-50 p-3 text-xs font-medium text-emerald-800">
-                        <CheckCircle2 className="h-4 w-4 shrink-0 text-emerald-600" />
+                      <motion.div variants={itemVariants} className="flex items-center gap-2 rounded-sm border border-status-safe bg-status-safe-quiet p-3 text-xs font-medium text-status-safe">
+                        <CheckCircle2 className="h-4 w-4 shrink-0 text-status-safe" />
                         <span>{proofSuccess}</span>
                       </motion.div>
                     )}
@@ -802,8 +815,7 @@ export function AuthView({ initialMode = "signin" }: AuthViewProps) {
                         type="submit"
                         disabled={proofLoading}
                         whileTap={{ scale: 0.97 }}
-                        style={{ backgroundColor: "#115E59" }}
-                        className="group relative flex min-h-[46px] w-full items-center justify-center gap-2 rounded-sm px-5 py-3 text-sm font-bold text-white shadow-md transition-colors duration-150 ease-out hover:bg-[#134E4A] disabled:opacity-75"
+                        className="group relative flex min-h-[46px] w-full items-center justify-center gap-2 rounded-sm bg-accent-strong px-5 py-3 text-sm font-bold text-white shadow-md transition-colors duration-150 ease-out hover:bg-accent-hover disabled:opacity-75"
                       >
                         {proofLoading ? (
                           <span className="flex items-center gap-2 font-mono text-xs">
@@ -825,10 +837,10 @@ export function AuthView({ initialMode = "signin" }: AuthViewProps) {
           </div>
 
           {/* Footer Note */}
-          <motion.div variants={itemVariants} className="mt-8 border-t border-stone-200 pt-5 text-center text-xs font-medium text-stone-500 space-y-1">
+          <motion.div variants={itemVariants} className="mt-8 border-t border-border pt-5 text-center text-xs font-medium text-fg-subtle space-y-1">
             <p>Access is invite-only. Approved requests receive credentials by email.</p>
             <p className="font-mono text-[11px]">
-              <a href="/donate.html" className="font-bold text-[#0D9488] hover:underline">
+              <a href="/donate.html" className="font-bold text-accent hover:underline">
                 Support MeritNama Infrastructure
               </a>
             </p>

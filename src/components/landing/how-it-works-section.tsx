@@ -46,7 +46,7 @@ function AccordionRow({
   const reduce = useReducedMotion();
 
   return (
-    <div className="border-b border-[#e5e5e5] last:border-b-0">
+    <div className="border-b border-stone-200 last:border-b-0">
       {/* ── Row header ── */}
       <button
         onClick={onToggle}
@@ -55,8 +55,7 @@ function AccordionRow({
       >
         {/* Title */}
         <span
-          className="flex-1 font-sans text-3xl sm:text-4xl lg:text-[2.6rem] font-extrabold tracking-tight leading-[1.1] transition-colors duration-300"
-          style={{ color: isOpen ? "#171717" : "#737373" }}
+          className={`flex-1 font-sans text-3xl sm:text-4xl lg:text-[2.6rem] font-extrabold tracking-tight leading-[1.1] transition-colors duration-300 ${isOpen ? "text-brand-ink" : "text-brand-ink-muted"}`}
         >
           {step.title}
         </span>
@@ -81,8 +80,7 @@ function AccordionRow({
               <div className="flex-1 pr-4 sm:pr-8 space-y-5 min-w-0">
               {/* Eyebrow label */}
               <p
-                className="font-mono text-[10px] font-bold tracking-[0.38em] uppercase"
-                style={{ color: "#0D9488" }}
+                className="font-mono text-[10px] font-bold tracking-[0.38em] uppercase text-brand-teal"
               >
                 {step.eyebrow}
               </p>
@@ -97,12 +95,12 @@ function AccordionRow({
               {/* Underline CTA */}
               <Link
                 href={step.cta.href}
-                className="inline-flex items-center gap-1.5 text-[13px] font-bold text-[#171717] group/link pt-2"
+                className="inline-flex items-center gap-1.5 text-[13px] font-bold text-brand-ink group/link pt-2"
               >
-                <span className="border-b border-stone-300 pb-px transition-colors duration-200 group-hover/link:border-[#0D9488] group-hover/link:text-[#0D9488]">
+                <span className="border-b border-stone-300 pb-px transition-colors duration-200 group-hover/link:border-brand-teal group-hover/link:text-brand-teal">
                   {step.cta.label}
                 </span>
-                <ArrowUpRight className="w-4 h-4 transition-all duration-200 group-hover/link:translate-x-0.5 group-hover/link:-translate-y-0.5 group-hover/link:text-[#0D9488]" />
+                <ArrowUpRight className="w-4 h-4 transition-all duration-200 group-hover/link:translate-x-0.5 group-hover/link:-translate-y-0.5 group-hover/link:text-brand-teal" />
               </Link>
               </div>
 
@@ -149,9 +147,9 @@ export function HowItWorksSection() {
         {/* ── LEFT: Sticky header aligned with top accordion heading ── */}
         <div className="md:sticky md:top-32 space-y-8 pt-10 sm:pt-10">
           {/* Headline */}
-          <h2 className="font-sans text-4xl sm:text-5xl lg:text-6xl font-black text-[#171717] tracking-tight leading-[1.05]">
+          <h2 className="font-sans text-4xl sm:text-5xl lg:text-6xl font-black text-brand-ink tracking-tight leading-[1.05]">
             How It<br />
-            <span className="font-sans font-black text-[#0D9488]">Works</span>
+            <span className="font-sans font-black text-brand-teal">Works</span>
           </h2>
 
           {/* Sub-copy */}
@@ -165,7 +163,7 @@ export function HowItWorksSection() {
               href="/app.html"
               className="inline-flex items-center gap-2 group/cta"
             >
-              <span className="font-mono text-[11px] font-bold tracking-[0.3em] uppercase border-b border-stone-400 pb-1 transition-colors duration-200 group-hover/cta:border-[#0D9488] group-hover/cta:text-[#0D9488]">
+              <span className="font-mono text-[11px] font-bold tracking-[0.3em] uppercase border-b border-stone-400 pb-1 transition-colors duration-200 group-hover/cta:border-brand-teal group-hover/cta:text-brand-teal">
                 START CALCULATING
               </span>
             </Link>
@@ -173,7 +171,7 @@ export function HowItWorksSection() {
         </div>
 
         {/* ── RIGHT: Expanded Accordion list ── */}
-        <div className="border-t border-[#e5e5e5]">
+        <div className="border-t border-stone-200">
           {STEPS.map((step, i) => (
             <AccordionRow
               key={i}

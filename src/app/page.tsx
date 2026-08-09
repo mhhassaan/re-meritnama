@@ -80,7 +80,7 @@ export default function Home() {
   };
 
   return (
-    <div ref={containerRef} className="min-h-screen bg-[#FAF9F5] text-[#1A2118] selection:bg-amber-200 selection:text-amber-950 font-sans antialiased">
+    <div ref={containerRef} className="min-h-screen bg-brand-cream text-brand-ink selection:bg-brand-ivory selection:text-brand-teal-deeper font-sans antialiased">
       {/* Hero Section */}
       <HeroSection heroImageRef={heroImageRef} handleNavClick={handleNavClick} />
 

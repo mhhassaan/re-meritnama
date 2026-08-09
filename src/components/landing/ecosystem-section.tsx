@@ -30,7 +30,7 @@ const ECOSYSTEM_CARDS: EcosystemCardData[] = [
     telemetryLabel: "PMDC Gazette Hash",
     telemetryIcon: Shield,
     statusBadge: "SHA-256 Verified",
-    statusBadgeColor: "text-[#2DD4BF]",
+    statusBadgeColor: "text-brand-mint",
   },
   {
     title: "Residency Preference Sandbox",
@@ -39,7 +39,7 @@ const ECOSYSTEM_CARDS: EcosystemCardData[] = [
     telemetryLabel: "Attempt Deductions",
     telemetryIcon: Calculator,
     statusBadge: "Auto-Calculated",
-    statusBadgeColor: "text-[#2DD4BF]",
+    statusBadgeColor: "text-brand-mint",
   },
   {
     title: "Post-Residency Jobs Board",
@@ -48,7 +48,7 @@ const ECOSYSTEM_CARDS: EcosystemCardData[] = [
     telemetryLabel: "Active Postings",
     telemetryIcon: Briefcase,
     statusBadge: "Senior Registrars",
-    statusBadgeColor: "text-[#2DD4BF]",
+    statusBadgeColor: "text-brand-mint",
   },
   {
     title: "Queue Delta & Live Round Tracker",
@@ -57,7 +57,7 @@ const ECOSYSTEM_CARDS: EcosystemCardData[] = [
     telemetryLabel: "Live Rank Deltas",
     telemetryIcon: Activity,
     statusBadge: "Round 1 & 2 Live",
-    statusBadgeColor: "text-[#2DD4BF]",
+    statusBadgeColor: "text-brand-mint",
   },
   {
     title: "Attempt Deduction Rules Engine",
@@ -66,7 +66,7 @@ const ECOSYSTEM_CARDS: EcosystemCardData[] = [
     telemetryLabel: "PHF Policy Standard",
     telemetryIcon: CheckCircle2,
     statusBadge: "100% Verified",
-    statusBadgeColor: "text-[#2DD4BF]",
+    statusBadgeColor: "text-brand-mint",
   },
   {
     title: "War Room Telemetry Grid",
@@ -75,7 +75,7 @@ const ECOSYSTEM_CARDS: EcosystemCardData[] = [
     telemetryLabel: "42 Punjab Hospitals",
     telemetryIcon: Radio,
     statusBadge: "Active Telemetry",
-    statusBadgeColor: "text-[#2DD4BF]",
+    statusBadgeColor: "text-brand-mint",
   },
 ];
 
@@ -99,19 +99,19 @@ export function EcosystemSection() {
   });
 
   return (
-    <section ref={sectionRef} id="ecosystem" className="relative bg-[#0F2825] text-white h-[220vh]">
+    <section ref={sectionRef} id="ecosystem" className="relative bg-brand-midnight text-white h-[220vh]">
       {/* Sticky Viewport pinned while user scrolls through relaxed 220vh runway */}
       <div className="sticky top-0 h-screen flex flex-col justify-center overflow-hidden py-8 px-6 sm:px-10">
         
         {/* Background Ambient Glow */}
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[500px] bg-[#0D9488]/10 blur-[140px] pointer-events-none rounded-full" />
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[500px] bg-brand-teal/10 blur-[140px] pointer-events-none rounded-full" />
 
         <div className="max-w-7xl mx-auto w-full relative z-10">
           
           {/* Header with Koboyo Sparkle Stars */}
           <div className="gsap-reveal text-center max-w-2xl mx-auto mb-10 space-y-3">
-            <div className="flex items-center justify-center gap-2 text-[#E8E0CA]">
-              <span className="font-mono text-[11px] font-bold tracking-[0.38em] text-[#E8E0CA] uppercase">
+            <div className="flex items-center justify-center gap-2 text-brand-ivory">
+              <span className="font-mono text-[11px] font-bold tracking-[0.38em] text-brand-ivory uppercase">
                 EXTENDED SUITE
               </span>
             </div>
@@ -125,11 +125,14 @@ export function EcosystemSection() {
           </div>
 
           {/* Prominent Logo & Duplicated Loop Horizontal Cards Track */}
-          <div className="relative overflow-hidden py-2">
-            {/* Gradient Edge Masks for Feature Cards */}
-            <div className="absolute top-0 bottom-0 left-0 w-28 bg-gradient-to-r from-[#0F2825] via-[#0F2825]/90 to-transparent z-20 pointer-events-none" />
-            <div className="absolute top-0 bottom-0 right-0 w-28 bg-gradient-to-l from-[#0F2825] via-[#0F2825]/90 to-transparent z-20 pointer-events-none" />
-
+          {/* Edge fade is an alpha mask on the track, not an opaque gradient
+              overlay. An overlay only spans its own width (112px) while a card
+              is 340-390px wide, so a partially-visible card had a wash drawn
+              across its title and read as a rendering fault. Masking fades the
+              card itself, so it leaves the runway cleanly at any scroll offset. */}
+          <div
+            className="relative overflow-hidden py-2 [mask-image:linear-gradient(to_right,transparent_0%,black_14%,black_86%,transparent_100%)] [-webkit-mask-image:linear-gradient(to_right,transparent_0%,black_14%,black_86%,transparent_100%)]"
+          >
             <motion.div
               style={{ x: smoothX }}
               className="flex gap-6 sm:gap-7 w-max transform-gpu will-change-transform"
@@ -145,15 +148,15 @@ export function EcosystemSection() {
                         key={`${setIndex}-${idx}`}
                         whileHover={{ y: -6, scale: 1.02 }}
                         transition={{ type: "spring", stiffness: 220, damping: 20 }}
-                        className="w-[340px] sm:w-[390px] h-[340px] shrink-0 rounded-3xl bg-[#143733]/95 border border-transparent p-7 flex flex-col justify-between relative overflow-hidden group shadow-xl select-none"
+                        className="w-[340px] sm:w-[390px] h-[340px] shrink-0 rounded-3xl bg-brand-midnight-raised/95 border border-transparent p-7 flex flex-col justify-between relative overflow-hidden group shadow-xl select-none"
                       >
                         {/* Top Header Row with Prominent Hero Icon Badge */}
                         <div>
                           <div className="flex items-center justify-between gap-4 mb-5">
-                            <div className="w-13 h-13 sm:w-14 sm:h-14 rounded-2xl bg-teal-900/80 border border-teal-600/60 flex items-center justify-center shrink-0 text-[#E8E0CA] group-hover:scale-110 group-hover:border-[#E8E0CA]/80 transition-all duration-300 shadow-md">
-                              <IconComponent className="h-7 w-auto text-[#E8E0CA] sm:h-8" />
+                            <div className="w-13 h-13 sm:w-14 sm:h-14 rounded-2xl bg-teal-900/80 border border-teal-600/60 flex items-center justify-center shrink-0 text-brand-ivory group-hover:scale-110 group-hover:border-brand-ivory/80 transition-all duration-300 shadow-md">
+                              <IconComponent className="h-7 w-auto text-brand-ivory sm:h-8" />
                             </div>
-                            <ArrowUpRight className="w-5 h-5 text-stone-400 group-hover:text-[#E8E0CA] transition-colors shrink-0" />
+                            <ArrowUpRight className="w-5 h-5 text-stone-400 group-hover:text-brand-ivory transition-colors shrink-0" />
                           </div>
 
                           {/* Title & Description */}
@@ -166,12 +169,12 @@ export function EcosystemSection() {
                         </div>
 
                         {/* Standardized Bottom Telemetry Footer */}
-                        <div className="w-full bg-[#0B1E1C] rounded-md border border-teal-900/80 p-3 px-3.5 font-mono text-xs text-stone-300 flex items-center justify-between shadow-inner mt-3">
+                        <div className="w-full bg-brand-midnight-deep rounded-md border border-teal-900/80 p-3 px-3.5 font-mono text-xs text-stone-300 flex items-center justify-between shadow-inner mt-3">
                           <span className="flex items-center gap-2 font-bold text-stone-300 text-[11px]">
-                            <TelemetryIcon className="w-3.5 h-3.5 text-[#E8E0CA] shrink-0" />
+                            <TelemetryIcon className="w-3.5 h-3.5 text-brand-ivory shrink-0" />
                             {card.telemetryLabel}
                           </span>
-                          <span className={`text-[11px] font-bold ${card.statusBadgeColor || "text-[#2DD4BF]"}`}>
+                          <span className={`text-[11px] font-bold ${card.statusBadgeColor || "text-brand-mint"}`}>
                             {card.statusBadge}
                           </span>
                         </div>

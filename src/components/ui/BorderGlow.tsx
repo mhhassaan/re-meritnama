@@ -2,6 +2,7 @@
 
 import React, { useRef, useCallback, useEffect, ReactNode } from "react";
 import "./BorderGlow.css";
+import { BRAND } from "@/lib/design/brand";
 
 function parseHSL(hslStr: string) {
   const match = hslStr.match(/([\d.]+)\s*([\d.]+)%?\s*([\d.]+)%?/);
@@ -100,13 +101,13 @@ export default function BorderGlow({
   className = "",
   edgeSensitivity = 30,
   glowColor = "175 84 32",
-  backgroundColor = "#F3F0E6",
+  backgroundColor = BRAND.creamDeep,
   borderRadius = 28,
   glowRadius = 40,
   glowIntensity = 1.0,
   coneSpread = 25,
   animated = false,
-  colors = ["#0D9488", "#2DD4BF", "#F0A94E"],
+  colors = [BRAND.teal, BRAND.mint, BRAND.ivory],
   fillOpacity = 0.5,
 }: BorderGlowProps) {
   const cardRef = useRef<HTMLDivElement>(null);

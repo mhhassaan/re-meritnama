@@ -1,20 +1,120 @@
 @import "tailwindcss";
 
-:root {
-  --background: #F8F9FC;
-  --foreground: #0F172A;
-  --top-bg-light: #F8F9FC;
-  --top-bg-card-light: #FFFFFF;
-  --top-bg-dark: #0B0E17;
-  --top-bg-card-dark: #131826;
-  --top-accent-blue: #0D9488;
-  --accent-indigo: #0F766E;
-  --accent-sage: #10B981;
-  --accent-hope: #F0A94E;
-  --border-subtle-light: rgba(0, 0, 0, 0.08);
-  --border-subtle-dark: rgba(255, 255, 255, 0.08);
+/* ============================================================================
+   MeritNama Design Tokens
+   ----------------------------------------------------------------------------
+   Single source of truth for color, motion, and categorical systems.
+   Authority: DESIGN_GUIDELINES.md. Components must reference these tokens
+   (e.g. `bg-surface`, `text-accent`, `text-specialty-surgical`) rather than
+   hardcoding hex values.
 
-  /* Motion Tokens (transitions.dev scale) */
+   Layers, in order:
+     1. Brand ramp      — fixed hues, identical in both themes.
+     2. Semantic tokens — surface/text/border roles. Flip per theme.
+     3. Status system   — safe / target / reach / danger. Meaning-bearing.
+     4. Specialty system— discipline families, NOT one hue per specialty.
+     5. Sim registers   — cascade (verified) vs. placement (quick estimate).
+     6. Motion tokens   — durations and easings.
+
+   Theme resolution follows three states: an explicit user choice stamps
+   `data-theme` on <html>; with nothing stamped, `prefers-color-scheme`
+   decides. Every semantic token is defined on bare `:root` first so no color
+   has its only definition inside a media query.
+   ========================================================================== */
+
+:root {
+  /* --- 1. Brand ramp (theme-invariant) ------------------------------------ */
+  --brand-cream: #faf9f5; /* warm paper base */
+  --brand-white: #ffffff;
+  --brand-cream-deep: #f3f0e6; /* recessed band on the cream base */
+  --brand-midnight: #0f2825; /* midnight dark teal */
+  --brand-midnight-deep: #0b1e1c; /* telemetry pills, deepest surface */
+  --brand-midnight-raised: #143733; /* raised card on midnight */
+  --brand-midnight-abyss: #081312; /* deepest gradient-mesh stop */
+  --brand-mist: #a8b8b5; /* muted text on permanently-dark surfaces, where
+                            the theme-flipping --fg-muted would be wrong */
+
+  /* Ink scale for permanently-light surfaces (the marketing pages). Mirrors
+     the semantic --foreground / --fg-muted values but never flips, so the
+     landing keeps its committed light look while the app surfaces stay
+     theme-aware. */
+  --brand-ink: #171717;
+  --brand-ink-muted: #737373;
+  --brand-teal: #0d9488; /* primary interactive teal */
+  --brand-teal-deep: #115e59; /* primary action button fill */
+  --brand-teal-deeper: #134e4a; /* action button hover */
+  --brand-mint: #2dd4bf; /* live / verified telemetry */
+  --brand-ivory: #e8e0ca; /* reserved warm accent — see note below */
+
+  /* Warm ivory is the ONLY warm accent, and it is reserved: hope/encouragement
+     moments, celebration, and softening a discouraging result. Using it as
+     general decoration destroys its signal. */
+
+  /* --- 2. Semantic tokens — light theme ----------------------------------- */
+  --background: var(--brand-cream);
+  --surface: var(--brand-white);
+  --surface-raised: var(--brand-white);
+  --surface-sunken: var(--brand-cream-deep);
+
+  --foreground: #171717;
+  --fg-muted: #737373;
+  --fg-subtle: #a3a29c;
+  --fg-on-accent: #ffffff;
+
+  --accent: var(--brand-teal);
+  --accent-strong: var(--brand-teal-deep);
+  --accent-hover: var(--brand-teal-deeper);
+  --accent-quiet: rgba(13, 148, 136, 0.1);
+
+  /* Reserved warm accent, resolved per theme so it stays legible on cream. */
+  --hope: #a8802f;
+  --hope-quiet: rgba(232, 224, 202, 0.45);
+
+  --border: rgba(0, 0, 0, 0.08);
+  --border-strong: rgba(0, 0, 0, 0.16);
+  --ring: rgba(13, 148, 136, 0.45);
+
+  /* --- 3. Status system --------------------------------------------------- */
+  /* safe / target / reach are a probability scale, not decoration.
+     `reach` deliberately sits in the warm family, NOT red — a reach is
+     aspirational, not an error. `danger` is the only red and is used
+     exclusively for destructive actions and true failures. */
+  --status-safe: #10b981;
+  --status-safe-quiet: rgba(16, 185, 129, 0.12);
+  --status-target: var(--brand-teal);
+  --status-target-quiet: rgba(13, 148, 136, 0.12);
+  --status-reach: #b8862b;
+  --status-reach-quiet: rgba(184, 134, 43, 0.14);
+  --status-danger: #ef4444;
+  --status-danger-quiet: rgba(239, 68, 68, 0.12);
+  --status-live: var(--brand-mint);
+  --status-verified: var(--brand-mint);
+
+  /* --- 4. Specialty discipline families ----------------------------------- */
+  /* ~30 specialties is past the point where distinct hues stay accessible.
+     Color carries the DISCIPLINE FAMILY only; specialty-level distinction
+     comes from icon and label. Hues avoid the teal 170-185 band (reads as
+     UI chrome, not category) and the danger red band. */
+  --specialty-surgical: #c2603f; /* General/Ortho/Neuro/Uro/Plastic/ENT/Ophth/CTS */
+  --specialty-womens: #b4538c; /* Obs & Gyn */
+  --specialty-medical: #3b6fb5; /* Medicine, Cardio, Nephro, Gastro, Pulmo, Derm, Psych, Peds */
+  --specialty-diagnostic: #7a5aa8; /* Radiology, Pathology, Micro, Chem Path, Haematology */
+  --specialty-acute: #b8862b; /* Anaesthesia, Critical Care, Emergency */
+  --specialty-dental: #6e8b3d; /* MDS / FCPSD */
+  --specialty-community: #5e7a8c; /* Community Medicine, Public Health */
+
+  /* --- 5. Simulation confidence registers --------------------------------- */
+  /* The full cascade (round-accurate, consent-aware, checked against real
+     Round 2 outcomes) and the single-pass placement estimate carry genuinely
+     different confidence. Nothing may render them identically — a candidate
+     under stress must never mistake a quick estimate for the verified run.
+     This distinction holds in analytics, flagship features, AND pinned cards. */
+  --sim-cascade: var(--brand-teal);
+  --sim-cascade-quiet: rgba(13, 148, 136, 0.1);
+  --sim-estimate: #8b8681;
+  --sim-estimate-quiet: rgba(139, 134, 129, 0.1);
+
+  /* --- 6. Motion (transitions.dev scale) ---------------------------------- */
   --duration-stagger: 40ms;
   --duration-micro: 80ms;
   --duration-quick: 150ms;
@@ -25,14 +125,291 @@
   --ease-smooth-out: cubic-bezier(0.22, 1, 0.36, 1);
   --ease-in-out: ease-in-out;
   --ease-out: ease-out;
+  /* --- 7. Chart tokens (@bklit registry) ---------------------------------- */
+  /* The shadcn CLI injects a neutral greyscale ramp and a `.dark` class block.
+     Both were replaced: this project has no `.dark` class (theme resolution is
+     `data-theme` plus `prefers-color-scheme`), and an off-brand grey ramp
+     alongside the specialty system would read as a second, competing palette.
+
+     Chrome tokens are DERIVED from the semantic tokens, so they flip with the
+     theme automatically and no chart colour needs restating in a dark block.
+     Only the sequential scale, which must run light-to-dark on a light ground
+     and dark-to-light on a dark one, is redefined per theme. */
+  --chart-background: var(--surface);
+  --chart-foreground: var(--foreground);
+  --chart-foreground-muted: var(--fg-muted);
+  --chart-grid: var(--border);
+  --chart-crosshair: var(--fg-subtle);
+  --chart-brush-border: var(--border-strong);
+  --chart-label: var(--fg-muted);
+
+  --chart-marker-background: var(--surface-raised);
+  --chart-marker-border: var(--border-strong);
+  --chart-marker-foreground: var(--foreground);
+  --chart-marker-badge-background: var(--accent-quiet);
+  --chart-marker-badge-foreground: var(--accent);
+
+  --chart-segment-background: var(--surface-sunken);
+  --chart-segment-line: var(--border-strong);
+
+  /* Tooltips follow the surface rather than being permanently dark, so they
+     stay legible in both themes instead of inverting in one of them. */
+  --chart-tooltip-background: var(--surface-raised);
+  --chart-tooltip-foreground: var(--foreground);
+  --chart-tooltip-muted: var(--fg-muted);
+
+  /* Categorical series palette. Reuses the specialty discipline hues, which
+     are already tuned to be distinguishable and to avoid the teal chrome band
+     and the danger red band. `--chart-1` is the accent because a single-series
+     chart uses it via `--chart-line-primary`. */
+  --chart-1: var(--accent);
+  --chart-2: var(--specialty-medical);
+  --chart-3: var(--specialty-diagnostic);
+  --chart-4: var(--specialty-acute);
+  --chart-5: var(--specialty-womens);
+  --chart-line-primary: var(--chart-1);
+  --chart-line-secondary: var(--chart-2);
+
+  /* Sequential scale, for heatmaps and choropleths. Ordered, not categorical —
+     never use these to distinguish series. */
+  --chart-scale-01: #d6ece9;
+  --chart-scale-02: #a8d8d2;
+  --chart-scale-03: #6fbdb4;
+  --chart-scale-04: #3a9a90;
+  --chart-scale-05: #115e59;
+  --chart-scale-pattern-color: var(--surface-sunken);
+
+  /* shadcn-registry components expect this shadcn base name. */
+  --muted-foreground: var(--fg-muted);
 }
 
+/* --- Dark theme: system preference, unless explicitly set to light -------- */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --background: var(--brand-midnight);
+    --surface: var(--brand-midnight-raised);
+    --surface-raised: #17403b;
+    --surface-sunken: var(--brand-midnight-deep);
+
+    --foreground: #ffffff;
+    --fg-muted: #d6d3d1;
+    --fg-subtle: #a8a29e;
+    --fg-on-accent: #ffffff;
+
+    --accent: var(--brand-mint);
+    --accent-strong: var(--brand-teal);
+    --accent-hover: var(--brand-mint);
+    --accent-quiet: rgba(45, 212, 191, 0.14);
+
+    --hope: var(--brand-ivory);
+    --hope-quiet: rgba(232, 224, 202, 0.12);
+
+    --border: rgba(255, 255, 255, 0.08);
+    --border-strong: rgba(255, 255, 255, 0.18);
+    --ring: rgba(45, 212, 191, 0.5);
+
+    --status-safe: #34d399;
+    --status-safe-quiet: rgba(52, 211, 153, 0.16);
+    --status-target: var(--brand-mint);
+    --status-target-quiet: rgba(45, 212, 191, 0.16);
+    --status-reach: #e0b455;
+    --status-reach-quiet: rgba(224, 180, 85, 0.16);
+    --status-danger: #f87171;
+    --status-danger-quiet: rgba(248, 113, 113, 0.16);
+
+    --specialty-surgical: #e28a66;
+    --specialty-womens: #db82b6;
+    --specialty-medical: #7aa6e0;
+    --specialty-diagnostic: #a98ed0;
+    --specialty-acute: #e0b455;
+    --specialty-dental: #9dbb6a;
+    --specialty-community: #92aebd;
+
+    --sim-cascade: var(--brand-mint);
+    --sim-cascade-quiet: rgba(45, 212, 191, 0.14);
+    --sim-estimate: #a8a29e;
+    --sim-estimate-quiet: rgba(168, 162, 158, 0.14);
+
+    /* The sequential chart scale reverses direction on a dark ground. Every
+       other chart token is derived from the semantic tokens above, so nothing
+       else chart-related needs restating per theme. */
+    --chart-scale-01: #10403c;
+    --chart-scale-02: #17605a;
+    --chart-scale-03: #219188;
+    --chart-scale-04: #45c3b7;
+    --chart-scale-05: #8ee5dc;
+  }
+}
+
+/* --- Dark theme: explicit user choice ------------------------------------ */
+:root[data-theme="dark"] {
+  --background: var(--brand-midnight);
+  --surface: var(--brand-midnight-raised);
+  --surface-raised: #17403b;
+  --surface-sunken: var(--brand-midnight-deep);
+
+  --foreground: #ffffff;
+  --fg-muted: #d6d3d1;
+  --fg-subtle: #a8a29e;
+  --fg-on-accent: #ffffff;
+
+  --accent: var(--brand-mint);
+  --accent-strong: var(--brand-teal);
+  --accent-hover: var(--brand-mint);
+  --accent-quiet: rgba(45, 212, 191, 0.14);
+
+  --hope: var(--brand-ivory);
+  --hope-quiet: rgba(232, 224, 202, 0.12);
+
+  --border: rgba(255, 255, 255, 0.08);
+  --border-strong: rgba(255, 255, 255, 0.18);
+  --ring: rgba(45, 212, 191, 0.5);
+
+  --status-safe: #34d399;
+  --status-safe-quiet: rgba(52, 211, 153, 0.16);
+  --status-target: var(--brand-mint);
+  --status-target-quiet: rgba(45, 212, 191, 0.16);
+  --status-reach: #e0b455;
+  --status-reach-quiet: rgba(224, 180, 85, 0.16);
+  --status-danger: #f87171;
+  --status-danger-quiet: rgba(248, 113, 113, 0.16);
+
+  --specialty-surgical: #e28a66;
+  --specialty-womens: #db82b6;
+  --specialty-medical: #7aa6e0;
+  --specialty-diagnostic: #a98ed0;
+  --specialty-acute: #e0b455;
+  --specialty-dental: #9dbb6a;
+  --specialty-community: #92aebd;
+
+  --sim-cascade: var(--brand-mint);
+  --sim-cascade-quiet: rgba(45, 212, 191, 0.14);
+  --sim-estimate: #a8a29e;
+  --sim-estimate-quiet: rgba(168, 162, 158, 0.14);
+
+  --chart-scale-01: #10403c;
+  --chart-scale-02: #17605a;
+  --chart-scale-03: #219188;
+  --chart-scale-04: #45c3b7;
+  --chart-scale-05: #8ee5dc;
+}
+
+/* ============================================================================
+   Tailwind bindings
+   `inline` keeps the utilities pointing at the CSS variables above, so a
+   theme switch re-resolves them without regenerating any classes.
+   ========================================================================== */
+
 @theme inline {
+  /* Surfaces & text */
   --color-background: var(--background);
+  --color-surface: var(--surface);
+  --color-surface-raised: var(--surface-raised);
+  --color-surface-sunken: var(--surface-sunken);
   --color-foreground: var(--foreground);
+  --color-fg-muted: var(--fg-muted);
+  --color-fg-subtle: var(--fg-subtle);
+  --color-fg-on-accent: var(--fg-on-accent);
+
+  /* Accents */
+  --color-accent: var(--accent);
+  --color-accent-strong: var(--accent-strong);
+  --color-accent-hover: var(--accent-hover);
+  --color-accent-quiet: var(--accent-quiet);
+  --color-hope: var(--hope);
+  --color-hope-quiet: var(--hope-quiet);
+
+  /* Lines */
+  --color-border: var(--border);
+  --color-border-strong: var(--border-strong);
+  --color-ring: var(--ring);
+
+  /* Brand ramp — for surfaces that are intentionally fixed across themes,
+     e.g. the always-dark ecosystem section on a light page. */
+  --color-brand-cream: var(--brand-cream);
+  --color-brand-cream-deep: var(--brand-cream-deep);
+  --color-brand-midnight: var(--brand-midnight);
+  --color-brand-midnight-deep: var(--brand-midnight-deep);
+  --color-brand-midnight-raised: var(--brand-midnight-raised);
+  --color-brand-midnight-abyss: var(--brand-midnight-abyss);
+  --color-brand-mist: var(--brand-mist);
+  --color-brand-ink: var(--brand-ink);
+  --color-brand-ink-muted: var(--brand-ink-muted);
+  --color-brand-teal: var(--brand-teal);
+  --color-brand-teal-deep: var(--brand-teal-deep);
+  --color-brand-teal-deeper: var(--brand-teal-deeper);
+  --color-brand-mint: var(--brand-mint);
+  --color-brand-ivory: var(--brand-ivory);
+
+  /* Status */
+  --color-status-safe: var(--status-safe);
+  --color-status-safe-quiet: var(--status-safe-quiet);
+  --color-status-target: var(--status-target);
+  --color-status-target-quiet: var(--status-target-quiet);
+  --color-status-reach: var(--status-reach);
+  --color-status-reach-quiet: var(--status-reach-quiet);
+  --color-status-danger: var(--status-danger);
+  --color-status-danger-quiet: var(--status-danger-quiet);
+  --color-status-live: var(--status-live);
+  --color-status-verified: var(--status-verified);
+
+  /* Specialty discipline families */
+  --color-specialty-surgical: var(--specialty-surgical);
+  --color-specialty-womens: var(--specialty-womens);
+  --color-specialty-medical: var(--specialty-medical);
+  --color-specialty-diagnostic: var(--specialty-diagnostic);
+  --color-specialty-acute: var(--specialty-acute);
+  --color-specialty-dental: var(--specialty-dental);
+  --color-specialty-community: var(--specialty-community);
+
+  /* Simulation confidence registers */
+  --color-sim-cascade: var(--sim-cascade);
+  --color-sim-cascade-quiet: var(--sim-cascade-quiet);
+  --color-sim-estimate: var(--sim-estimate);
+  --color-sim-estimate-quiet: var(--sim-estimate-quiet);
+
+  /* Type */
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
   --font-serif: var(--font-serif);
+
+  /* Motion */
+  --ease-smooth-out: cubic-bezier(0.22, 1, 0.36, 1);
+  /* Charts (@bklit). The shadcn CLI wrote these with a doubled prefix —
+     `var(----chart-1)` — which resolves to nothing, so every chart utility
+     would have fallen back to transparent. Corrected, and given the
+     `--color-` prefix the CLI omitted on four of them. */
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+  --color-chart-background: var(--chart-background);
+  --color-chart-foreground: var(--chart-foreground);
+  --color-chart-foreground-muted: var(--chart-foreground-muted);
+  --color-chart-line-primary: var(--chart-line-primary);
+  --color-chart-line-secondary: var(--chart-line-secondary);
+  --color-chart-crosshair: var(--chart-crosshair);
+  --color-chart-grid: var(--chart-grid);
+  --color-chart-brush-border: var(--chart-brush-border);
+  --color-chart-tooltip-background: var(--chart-tooltip-background);
+  --color-chart-tooltip-foreground: var(--chart-tooltip-foreground);
+  --color-chart-tooltip-muted: var(--chart-tooltip-muted);
+  --color-chart-marker-background: var(--chart-marker-background);
+  --color-chart-marker-border: var(--chart-marker-border);
+  --color-chart-marker-foreground: var(--chart-marker-foreground);
+  --color-chart-marker-badge-background: var(--chart-marker-badge-background);
+  --color-chart-marker-badge-foreground: var(--chart-marker-badge-foreground);
+  --color-chart-segment-background: var(--chart-segment-background);
+  --color-chart-segment-line: var(--chart-segment-line);
+  --color-chart-label: var(--chart-label);
+  --color-chart-scale-01: var(--chart-scale-01);
+  --color-chart-scale-02: var(--chart-scale-02);
+  --color-chart-scale-03: var(--chart-scale-03);
+  --color-chart-scale-04: var(--chart-scale-04);
+  --color-chart-scale-05: var(--chart-scale-05);
+  --color-chart-scale-pattern-color: var(--chart-scale-pattern-color);
+  --color-muted-foreground: var(--muted-foreground);
 }
 
 body {
@@ -44,13 +421,23 @@ body {
 
 /* 3D Floating Animation */
 @keyframes floatGlyphSlow {
-  0%, 100% { transform: translateY(0px) rotate(0deg); }
-  50% { transform: translateY(-12px) rotate(3deg); }
+  0%,
+  100% {
+    transform: translateY(0px) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-12px) rotate(3deg);
+  }
 }
 
 @keyframes floatGlyphReverse {
-  0%, 100% { transform: translateY(0px) rotate(0deg); }
-  50% { transform: translateY(10px) rotate(-3deg); }
+  0%,
+  100% {
+    transform: translateY(0px) rotate(0deg);
+  }
+  50% {
+    transform: translateY(10px) rotate(-3deg);
+  }
 }
 
 .animate-float-slow {
@@ -61,14 +448,17 @@ body {
   animation: floatGlyphReverse 7s ease-in-out infinite;
 }
 
-/* Hand-drawn Underline SVG */
+/* Hand-drawn Underline SVG
+   The stroke color is baked into the data URI (SVG in `background-image`
+   cannot read a CSS variable), so it stays pinned to the brand teal rather
+   than following the accent token. */
 .sketch-underline {
   position: relative;
   display: inline-block;
 }
 
 .sketch-underline::after {
-  content: '';
+  content: "";
   position: absolute;
   left: -4px;
   right: -4px;
@@ -78,3 +468,4 @@ body {
   background-repeat: no-repeat;
   background-size: 100% 100%;
 }
+

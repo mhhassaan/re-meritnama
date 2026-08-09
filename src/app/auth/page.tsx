@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import { AuthView } from "@/components/auth/auth-view";
 import type { Metadata } from "next";
 
@@ -7,5 +8,9 @@ export const metadata: Metadata = {
 };
 
 export default function AuthPage() {
-  return <AuthView initialMode="signin" />;
+  return (
+    <Suspense fallback={null}>
+      <AuthView initialMode="signin" />
+    </Suspense>
+  );
 }

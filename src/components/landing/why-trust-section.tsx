@@ -71,16 +71,16 @@ export function WhyTrustSection() {
   };
 
   return (
-    <section id="trust" className="py-24 sm:py-32 px-6 bg-[#F3F0E6] text-[#1A2118]">
+    <section id="trust" className="py-24 sm:py-32 px-6 bg-brand-cream-deep text-brand-ink">
       <div className="mx-auto grid max-w-7xl items-start gap-12 lg:gap-16 lg:grid-cols-2">
         
         {/* Left Column: Headline, Copy & Koboyo Icon Bullets */}
         <div className="space-y-8">
           <div className="space-y-4">
-            <span className="font-mono text-[11px] font-bold tracking-[0.38em] text-[#0D9488] uppercase">
+            <span className="font-mono text-[11px] font-bold tracking-[0.38em] text-brand-teal uppercase">
               WHY TRUST MERITNAMA
             </span>
-            <h2 className="font-sans text-3xl sm:text-5xl font-black text-[#1A2118] tracking-tight leading-[1.1]">
+            <h2 className="font-sans text-3xl sm:text-5xl font-black text-brand-ink tracking-tight leading-[1.1]">
               Built for candidate transparency and data accuracy.
             </h2>
             <p className="font-sans text-stone-600 text-base font-medium leading-relaxed max-w-lg">
@@ -90,23 +90,23 @@ export function WhyTrustSection() {
 
           {/* Left Bullet Points with Hand-Drawn Koboyo Icons */}
           <div className="space-y-4">
-            <div className="flex items-center gap-3.5 text-sm font-bold text-[#1A2118]">
-              <div className="w-9 h-9 rounded-xl bg-[#0D9488]/10 flex items-center justify-center shrink-0">
-                <KoboyoShield className="h-5 w-auto text-[#0D9488]" />
+            <div className="flex items-center gap-3.5 text-sm font-bold text-brand-ink">
+              <div className="w-9 h-9 rounded-xl bg-brand-teal/10 flex items-center justify-center shrink-0">
+                <KoboyoShield className="h-5 w-auto text-brand-teal" />
               </div>
               <span>Zero institutional bias or commercial agenda</span>
             </div>
 
-            <div className="flex items-center gap-3.5 text-sm font-bold text-[#1A2118]">
-              <div className="w-9 h-9 rounded-xl bg-[#0D9488]/10 flex items-center justify-center shrink-0">
-                <KoboyoApprovedDocument className="h-5 w-auto text-[#0D9488]" />
+            <div className="flex items-center gap-3.5 text-sm font-bold text-brand-ink">
+              <div className="w-9 h-9 rounded-xl bg-brand-teal/10 flex items-center justify-center shrink-0">
+                <KoboyoApprovedDocument className="h-5 w-auto text-brand-teal" />
               </div>
               <span>100% verified against Punjab Health Foundation Gazette</span>
             </div>
 
-            <div className="flex items-center gap-3.5 text-sm font-bold text-[#1A2118]">
-              <div className="w-9 h-9 rounded-xl bg-[#0D9488]/10 flex items-center justify-center shrink-0">
-                <KoboyoStethoscope className="h-5 w-auto text-[#0D9488]" />
+            <div className="flex items-center gap-3.5 text-sm font-bold text-brand-ink">
+              <div className="w-9 h-9 rounded-xl bg-brand-teal/10 flex items-center justify-center shrink-0">
+                <KoboyoStethoscope className="h-5 w-auto text-brand-teal" />
               </div>
               <span>Reviewed and audited by active FCPS/MD resident doctors</span>
             </div>
@@ -115,8 +115,7 @@ export function WhyTrustSection() {
           <div className="pt-2">
             <Link
               href="/app.html#trust"
-              style={{ backgroundColor: '#115E59', color: '#FFFFFF' }}
-              className="group inline-flex items-center gap-2.5 rounded-sm bg-[#115E59] px-7 py-3.5 text-sm font-bold text-white shadow-md hover:bg-[#134E4A] transition-all active:scale-[0.96]"
+              className="group inline-flex items-center gap-2.5 rounded-sm bg-brand-teal-deep px-7 py-3.5 text-sm font-bold text-white shadow-md hover:bg-brand-teal-deeper transition-all active:scale-[0.96]"
             >
               <span>Verify Official Gazette Data</span>
               <ArrowRight className="h-4 w-4 text-white transition-transform duration-200 group-hover:translate-x-1" />
@@ -125,7 +124,7 @@ export function WhyTrustSection() {
         </div>
 
         {/* Right Column: Watermelon UI Feature-5 Persistent Layering Stacked Deck */}
-        <div className="bg-[#FAF9F5] border border-stone-200/90 rounded-3xl p-6 sm:p-10 relative flex justify-center items-center shadow-xs overflow-hidden min-h-[640px] sm:min-h-[680px] lg:mt-1">
+        <div className="bg-brand-cream border border-stone-200/90 rounded-3xl p-6 sm:p-10 relative flex justify-center items-center shadow-xs overflow-hidden min-h-[640px] sm:min-h-[680px] lg:mt-1">
           <div className="relative h-[580px] sm:h-[620px] w-full max-w-lg">
             {CARDS_DATA.map((card) => {
               const isCurrentlyHovered = hoveredCard === card.id;
@@ -165,7 +164,7 @@ export function WhyTrustSection() {
                       className="h-full w-auto object-contain drop-shadow-xs"
                     />
                   </div>
-                  <h4 className="font-sans font-extrabold text-[#0D9488] text-lg mb-1.5">
+                  <h4 className="font-sans font-extrabold text-brand-teal text-lg mb-1.5">
                     {card.title}
                   </h4>
                   <p className="font-sans text-xs text-stone-600 leading-relaxed font-medium">

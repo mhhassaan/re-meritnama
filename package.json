@@ -6,18 +6,39 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "fixtures": "node supabase/fixtures/generate.mjs",
+    "db:push": "supabase db push",
+    "db:diff": "supabase db diff",
+    "seed": "node supabase/fixtures/seed.mjs",
+    "test:rls": "node supabase/tests/rls.test.mjs",
+    "test:merit": "node src/lib/merit/query.test.mjs"
   },
   "dependencies": {
     "@gsap/react": "^2.1.2",
+    "@number-flow/react": "^0.6.2",
+    "@supabase/ssr": "^0.12.4",
+    "@supabase/supabase-js": "^2.112.2",
+    "@visx/curve": "^4.0.1-alpha.0",
+    "@visx/event": "^4.0.1-alpha.0",
+    "@visx/grid": "^4.0.1-alpha.0",
+    "@visx/responsive": "^4.0.1-alpha.0",
+    "@visx/scale": "^4.0.1-alpha.0",
+    "@visx/shape": "^4.0.1-alpha.0",
+    "clsx": "^2.1.1",
+    "d3-array": "^3.2.4",
+    "d3-shape": "^3.2.0",
     "framer-motion": "^12.43.0",
     "gsap": "^3.15.0",
     "lucide-react": "^1.28.0",
+    "motion": "^13.0.0",
     "next": "16.2.12",
     "ogl": "^1.0.11",
     "react": "19.2.4",
     "react-dom": "19.2.4",
-    "react-icons": "^5.7.0"
+    "react-icons": "^5.7.0",
+    "server-only": "^0.0.1",
+    "tailwind-merge": "^3.6.0"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",
@@ -26,6 +47,7 @@
     "@types/react-dom": "^19",
     "eslint": "^9",
     "eslint-config-next": "16.2.12",
+    "supabase": "^2.113.0",
     "tailwindcss": "^4",
     "typescript": "^5"
   }

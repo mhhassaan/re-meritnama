@@ -1,0 +1,95 @@
+<!--
+  Supabase "Confirm signup" email template.
+
+  Paste into Authentication -> Emails -> Templates -> Confirm signup.
+
+  NOTE: unused while access is invite-only. Candidates do not sign themselves
+  up — they submit an access request, staff approve it, and the invite email
+  creates the account. This template exists so that enabling public signup
+  later does not silently fall back to Supabase's default, which uses the
+  implicit flow and would break the server-side callback.
+
+  Available variables: .SiteURL .TokenHash .Email .RedirectTo .Data
+-->
+<table width="100%" cellpadding="0" cellspacing="0" border="0"
+       style="background-color:#f3f0e6;padding:32px 0;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;">
+  <tr>
+    <td align="center">
+      <table width="600" cellpadding="0" cellspacing="0" border="0"
+             style="background:#ffffff;border-radius:4px;overflow:hidden;border:1px solid #e5e2d8;">
+
+        <tr>
+          <td style="background:#0f2825;padding:28px 32px;">
+            <p style="margin:0;color:#e8e0ca;font-size:12px;font-weight:700;letter-spacing:3px;text-transform:uppercase;">
+              MeritNama
+            </p>
+            <p style="margin:6px 0 0;color:#ffffff;font-size:20px;font-weight:700;">
+              Confirm your email address
+            </p>
+          </td>
+        </tr>
+
+        <tr>
+          <td style="padding:32px;color:#171717;font-size:15px;line-height:24px;">
+
+            <p style="margin:0 0 18px;color:#44403c;">
+              An account was created on MeritNama using
+              <span style="font-family:ui-monospace,SFMono-Regular,Menlo,monospace;">{{ .Email }}</span>.
+              MeritNama is an independent platform for Punjab residency induction
+              candidates — merit calculation under official PHF rules, historical
+              gazette cutoffs, and seat-allocation simulation.
+            </p>
+
+            <!-- Confirmation is not a formality here: both candidate data tiers
+                 are unreadable until email_confirmed_at is set, because control
+                 of the address is what proves the account belongs to the
+                 candidate it claims. -->
+            <p style="margin:0 0 18px;color:#44403c;">
+              Confirming your address is what activates the account. Until then,
+              no induction data is visible.
+            </p>
+
+            <table cellpadding="0" cellspacing="0" border="0" style="margin:0 0 22px;">
+              <tr>
+                <td style="background:#115e59;border-radius:2px;">
+                  <a href="{{ .SiteURL }}/auth/callback?token_hash={{ .TokenHash }}&type=signup"
+                     style="display:inline-block;padding:13px 28px;color:#ffffff;font-size:15px;font-weight:700;text-decoration:none;">
+                    Confirm email address
+                  </a>
+                </td>
+              </tr>
+            </table>
+
+            <p style="margin:0 0 22px;font-size:13px;line-height:20px;color:#737373;">
+              If the button does not work, copy this address into your browser:<br>
+              <span style="font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12px;word-break:break-all;color:#115e59;">{{ .SiteURL }}/auth/callback?token_hash={{ .TokenHash }}&type=signup</span>
+            </p>
+
+            <p style="margin:0 0 8px;font-size:13px;line-height:20px;color:#737373;">
+              This link works once and expires shortly.
+            </p>
+
+            <p style="margin:0;font-size:13px;line-height:20px;color:#737373;">
+              MeritNama will never ask for your password, CNIC or payment details
+              by email.
+            </p>
+
+          </td>
+        </tr>
+
+        <tr>
+          <td style="background:#f3f0e6;padding:20px 32px;border-top:1px solid #e5e2d8;">
+            <p style="margin:0;font-size:12px;line-height:19px;color:#737373;">
+              If you did not create this account, ignore this email — it cannot be
+              used until the address is confirmed from this link.
+            </p>
+            <p style="margin:10px 0 0;font-size:12px;color:#a3a29c;">
+              MeritNama · Independent Punjab residency induction analytics
+            </p>
+          </td>
+        </tr>
+
+      </table>
+    </td>
+  </tr>
+</table>

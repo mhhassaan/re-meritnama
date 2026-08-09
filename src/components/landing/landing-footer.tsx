@@ -121,7 +121,7 @@ export function LandingFooter() {
       initial="hidden"
       whileInView="visible"
       viewport={{ once: true, amount: 0.15, margin: "0px 0px -40px 0px" }}
-      className="w-full overflow-hidden rounded-t-4xl bg-[#0F2825] font-sans antialiased sm:rounded-t-[2.5rem] md:rounded-t-[3rem] border-t border-teal-900/40 relative"
+      className="w-full overflow-hidden rounded-t-4xl bg-brand-midnight font-sans antialiased sm:rounded-t-[2.5rem] md:rounded-t-[3rem] border-t border-teal-900/40 relative"
     >
       <motion.div
         variants={staggerContainer}
@@ -144,7 +144,7 @@ export function LandingFooter() {
               />
             </div>
 
-            <p className="text-sm leading-[1.65] font-light text-pretty text-[#a8b8b5]">
+            <p className="text-sm leading-[1.65] font-light text-pretty text-brand-mist">
               Independent residency induction analytics, gazette cutoffs, and seat allocation simulation for MBBS/BDS graduates in Punjab.
             </p>
 
@@ -154,8 +154,7 @@ export function LandingFooter() {
                 href="/app.html"
                 variants={ctaVariant}
                 whileTap={{ scale: 0.96 }}
-                style={{ backgroundColor: '#115E59', color: '#FFFFFF' }}
-                className="group flex min-h-[44px] items-center justify-between gap-2.5 rounded-sm px-5 py-3 text-[14px] font-bold text-white shadow-sm transition-all duration-150 ease-out hover:bg-[#134E4A] active:scale-[0.96]"
+                className="group flex min-h-[44px] items-center justify-between gap-2.5 rounded-sm bg-brand-teal-deep px-5 py-3 text-[14px] font-bold text-white shadow-sm transition-all duration-150 ease-out hover:bg-brand-teal-deeper active:scale-[0.96]"
               >
                 <span>Request Access</span>
                 <ArrowRight className="h-4 w-4 text-white transition-transform duration-200 ease-out group-hover:translate-x-1" />
@@ -165,10 +164,10 @@ export function LandingFooter() {
                 href="mailto:itskaero@gmail.com"
                 variants={ctaVariant}
                 whileTap={{ scale: 0.96 }}
-                className="group flex min-h-[44px] items-center justify-between gap-2.5 rounded-sm border border-stone-700/80 bg-stone-800/80 px-5 py-3 text-[14px] font-bold text-[#e8e0cc] shadow-sm transition-all duration-150 ease-out hover:bg-stone-700 active:scale-[0.96]"
+                className="group flex min-h-[44px] items-center justify-between gap-2.5 rounded-sm border border-stone-700/80 bg-stone-800/80 px-5 py-3 text-[14px] font-bold text-brand-ivory shadow-sm transition-all duration-150 ease-out hover:bg-stone-700 active:scale-[0.96]"
               >
                 <span>Support Project</span>
-                <ArrowRight className="h-4 w-4 text-[#e8e0cc] transition-transform duration-200 ease-out group-hover:translate-x-1" />
+                <ArrowRight className="h-4 w-4 text-brand-ivory transition-transform duration-200 ease-out group-hover:translate-x-1" />
               </motion.a>
             </div>
           </motion.div>
@@ -176,7 +175,7 @@ export function LandingFooter() {
           {/* Navigation Links Columns + Back to Top Action */}
           <div className="flex flex-col justify-between gap-8 w-full max-w-[680px]">
             <div className="flex items-center justify-between pb-2 border-b border-teal-900/40">
-              <span className="font-mono text-[11px] font-bold tracking-[0.3em] text-[#0D9488] uppercase">
+              <span className="font-mono text-[11px] font-bold tracking-[0.3em] text-brand-teal uppercase">
                 PUNJAB RESIDENCY SUITE
               </span>
 
@@ -186,10 +185,10 @@ export function LandingFooter() {
                 whileHover={{ scale: 1.04, y: -2 }}
                 whileTap={{ scale: 0.95 }}
                 aria-label="Scroll back to top of page"
-                className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-sm bg-teal-950/90 border border-teal-800/70 text-xs font-bold text-[#e8e0cc] hover:text-white hover:border-teal-400 transition-all cursor-pointer shadow-xs"
+                className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-sm bg-teal-950/90 border border-teal-800/70 text-xs font-bold text-brand-ivory hover:text-white hover:border-teal-400 transition-all cursor-pointer shadow-xs"
               >
                 <span>Back to Top</span>
-                <ArrowUp className="w-3.5 h-3.5 text-[#0D9488]" />
+                <ArrowUp className="w-3.5 h-3.5 text-brand-teal" />
               </motion.button>
             </div>
 
@@ -200,7 +199,7 @@ export function LandingFooter() {
             >
               {defaultColumns.map((col) => (
                 <motion.div key={col.title} variants={riseItem}>
-                  <h3 className="text-sm font-bold tracking-wider uppercase text-[#e8e0cc]">
+                  <h3 className="text-sm font-bold tracking-wider uppercase text-brand-ivory">
                     {col.title}
                   </h3>
                   <motion.ul
@@ -211,7 +210,7 @@ export function LandingFooter() {
                       <motion.li key={link.label} variants={linkItem}>
                         <Link
                           href={link.href}
-                          className="inline-block text-xs leading-none font-medium text-[#a8b8b5] transition-colors duration-200 hover:text-white"
+                          className="inline-block text-xs leading-none font-medium text-brand-mist transition-colors duration-200 hover:text-white"
                         >
                           {link.label}
                         </Link>

@@ -12,6 +12,7 @@ yarn-debug.log*
 yarn-error.log*
 .pnpm-debug.log*
 .env*
+!.env.example
 .vercel
 *.tsbuildinfo
 next-env.d.ts
@@ -64,6 +65,38 @@ next-env.d.ts
 /storage.rules
 /functions/
 
+# Candidate PII — NEVER COMMIT
+# ==========================================
+# `public/` is served verbatim by the web server, so anything placed here is
+# world-readable with no authentication. Per-candidate records (name, CNIC,
+# PMDC number, email, phone) belong in Firestore behind auth + rules.
+#
+# These files stay on disk for local pipeline work; they are simply never
+# tracked. The aggregate files in public/data (cutoffs, trends, seats, policy,
+# flat_lookup) hold no personal fields and REMAIN tracked — the app needs them
+# and they are genuinely public.
+/public/data/induction21_candidates.json
+/public/data/candidate_auth_index.json
+/public/data/grievance_verification.json
+/public/data/candidates_changes.json
+/public/data/current_merit.json
+/public/data/induction21_joining_status.json
+/public/data/induction21_merit_round*.json
+/public/data/round1_to_round2_merit_report.json
+/public/data/sim_merit_cascade*.json
+
+# Service credentials that bypass every access control. The Supabase
+# service_role key lives in .env.local (already ignored above); these patterns
+# catch key files that get dropped into the repo by mistake.
+**/serviceAccountKey*.json
+**/*-adminsdk-*.json
+**/*service-role*.json
+
+# Local export/backup artefacts that may contain real records.
+/exports/
+/backups/
+
+# ==========================================
 # Internal Agent & Scratch Files
 /.impeccable/
 /devlog.md
@@ -75,3 +108,8 @@ next-env.d.ts
 
 .agents/
 .github/
+.mcp.json
+DASHBOARD_REDESIGN.md
+SESSION_TRANSCRIPT_AND_ROADMAP.md
+AGENTS.md
+.claude

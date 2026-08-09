@@ -1,9 +1,10 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { motion, type Variants } from "framer-motion";
-import { ArrowRight, ArrowDown } from "lucide-react";
+import { AnimatePresence, motion, type Variants } from "framer-motion";
+import { ArrowRight, ArrowDown, Menu, X } from "lucide-react";
 import {
   KoboyoStethoscope,
   KoboyoChartNetwork,
@@ -14,7 +15,46 @@ interface HeroSectionProps {
   handleNavClick: (e: React.MouseEvent<HTMLAnchorElement>, targetId: string) => void;
 }
 
+/** Single source for both the desktop bar and the mobile drawer, so the two
+ *  cannot drift out of sync as sections are added. */
+const NAV_LINKS = [
+  { href: "#how", label: "How It Works" },
+  { href: "#video-showcase", label: "Simulation Preview" },
+  { href: "#explore-section", label: "What's Inside" },
+  { href: "#trust", label: "Why Trust" },
+  { href: "#ecosystem", label: "Induction Ecosystem" },
+] as const;
+
 export function HeroSection({ heroImageRef, handleNavClick }: HeroSectionProps) {
+  const [menuOpen, setMenuOpen] = useState(false);
+
+  // Lock body scroll behind the drawer, and close it if the viewport grows to
+  // the desktop breakpoint while it is open (otherwise the drawer would stay
+  // mounted over a nav bar that is already visible).
+  useEffect(() => {
+    if (!menuOpen) return;
+
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+
+    const desktop = window.matchMedia("(min-width: 768px)");
+    const closeOnDesktop = (e: MediaQueryListEvent) => {
+      if (e.matches) setMenuOpen(false);
+    };
+    const closeOnEscape = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setMenuOpen(false);
+    };
+
+    desktop.addEventListener("change", closeOnDesktop);
+    window.addEventListener("keydown", closeOnEscape);
+
+    return () => {
+      document.body.style.overflow = previousOverflow;
+      desktop.removeEventListener("change", closeOnDesktop);
+      window.removeEventListener("keydown", closeOnEscape);
+    };
+  }, [menuOpen]);
+
   const navVariants: Variants = {
     hidden: { opacity: 0, y: -14, filter: "blur(5px)" },
     show: {
@@ -80,7 +120,7 @@ export function HeroSection({ heroImageRef, handleNavClick }: HeroSectionProps) 
   };
 
   return (
-    <div className="relative min-h-screen w-full overflow-hidden font-sans antialiased bg-[#FAF9F5]">
+    <div className="relative min-h-screen w-full overflow-hidden font-sans antialiased bg-brand-cream">
       {/* Custom Medical Residency Vector Landscape Artwork with GSAP Parallax */}
       <div className="pointer-events-none absolute inset-0 z-0 overflow-hidden">
         <img
@@ -90,7 +130,7 @@ export function HeroSection({ heroImageRef, handleNavClick }: HeroSectionProps) 
           className="h-[115%] w-full object-cover object-right-bottom opacity-95 will-change-transform"
         />
         {/* Gentle Gradient Fade Overlay for Maximum Text Contrast */}
-        <div className="absolute inset-0 bg-gradient-to-r from-[#FAF9F5] via-[#FAF9F5]/90 to-transparent w-full md:w-3/5" />
+        <div className="absolute inset-0 bg-gradient-to-r from-brand-cream via-brand-cream/90 to-transparent w-full md:w-3/5" />
       </div>
 
       <div className="relative z-10 flex min-h-screen flex-col justify-between">
@@ -112,62 +152,121 @@ export function HeroSection({ heroImageRef, handleNavClick }: HeroSectionProps) 
             />
           </div>
 
-          <div className="hidden items-center gap-10 text-sm font-semibold text-[#1A2118] md:flex">
-            <a
-              href="#how"
-              onClick={(e) => handleNavClick(e, "#how")}
-              className="flex min-h-[40px] items-center transition-colors hover:text-[#0D9488]"
-            >
-              How It Works
-            </a>
-            <a
-              href="#video-showcase"
-              onClick={(e) => handleNavClick(e, "#video-showcase")}
-              className="flex min-h-[40px] items-center transition-colors hover:text-[#0D9488]"
-            >
-              Simulation Preview
-            </a>
-            <a
-              href="#explore-section"
-              onClick={(e) => handleNavClick(e, "#explore-section")}
-              className="flex min-h-[40px] items-center transition-colors hover:text-[#0D9488]"
-            >
-              What&apos;s Inside
-            </a>
-            <a
-              href="#trust"
-              onClick={(e) => handleNavClick(e, "#trust")}
-              className="flex min-h-[40px] items-center transition-colors hover:text-[#0D9488]"
-            >
-              Why Trust
-            </a>
-            <a
-              href="#ecosystem"
-              onClick={(e) => handleNavClick(e, "#ecosystem")}
-              className="flex min-h-[40px] items-center transition-colors hover:text-[#0D9488]"
-            >
-              Induction Ecosystem
-            </a>
+          <div className="hidden items-center gap-10 text-sm font-semibold text-brand-ink md:flex">
+            {NAV_LINKS.map((link) => (
+              <a
+                key={link.href}
+                href={link.href}
+                onClick={(e) => handleNavClick(e, link.href)}
+                className="flex min-h-[40px] items-center transition-colors hover:text-brand-teal"
+              >
+                {link.label}
+              </a>
+            ))}
           </div>
 
           {/* Header Buttons */}
           <div className="flex items-center gap-3">
             <Link
               href="/login"
-              className="flex min-h-[40px] items-center gap-1.5 rounded-sm px-4 py-2 text-[14px] font-semibold text-[#1A2118] transition-colors hover:text-[#0D9488]"
+              className="hidden min-h-[40px] items-center gap-1.5 rounded-sm px-4 py-2 text-[14px] font-semibold text-brand-ink transition-colors hover:text-brand-teal sm:flex"
             >
               <span>Sign In</span>
             </Link>
             <Link
               href="/app.html"
-              style={{ backgroundColor: "#115E59", color: "#FFFFFF" }}
-              className="group flex min-h-[40px] items-center gap-2 rounded-sm px-5 py-2.5 text-[14px] font-medium text-white shadow-[0_2px_10px_rgba(0,0,0,0.1)] transition-all duration-150 ease-out will-change-transform hover:bg-[#134E4A] active:scale-[0.96]"
+              className="group flex min-h-[40px] items-center gap-2 rounded-sm bg-brand-teal-deep px-5 py-2.5 text-[14px] font-medium text-white shadow-[0_2px_10px_rgba(0,0,0,0.1)] transition-all duration-150 ease-out will-change-transform hover:bg-brand-teal-deeper active:scale-[0.96]"
             >
               <span>Launch App</span>
               <ArrowRight className="h-4 w-4 text-white transition-transform duration-200 ease-out group-hover:translate-x-0.5" />
             </Link>
+
+            {/* Mobile menu trigger — the section links have no other route in
+                below `md`, so this is their only entry point. */}
+            <button
+              type="button"
+              onClick={() => setMenuOpen(true)}
+              aria-label="Open navigation menu"
+              aria-expanded={menuOpen}
+              aria-controls="mobile-nav-drawer"
+              className="flex h-10 w-10 items-center justify-center rounded-sm border border-stone-300/80 bg-white/80 text-brand-ink backdrop-blur-sm transition-colors hover:text-brand-teal active:scale-[0.96] md:hidden"
+            >
+              <Menu className="h-5 w-5" />
+            </button>
           </div>
         </motion.nav>
+
+        {/* Mobile Navigation Drawer */}
+        <AnimatePresence>
+          {menuOpen && (
+            <motion.div
+              key="mobile-nav"
+              id="mobile-nav-drawer"
+              className="fixed inset-0 z-50 md:hidden"
+              initial="hidden"
+              animate="show"
+              exit="hidden"
+            >
+              <motion.button
+                type="button"
+                aria-label="Close navigation menu"
+                onClick={() => setMenuOpen(false)}
+                className="absolute inset-0 h-full w-full cursor-default bg-brand-midnight/40 backdrop-blur-sm"
+                variants={{ hidden: { opacity: 0 }, show: { opacity: 1 } }}
+                transition={{ duration: 0.18, ease: "easeOut" }}
+              />
+
+              <motion.div
+                className="absolute inset-x-0 top-0 flex flex-col gap-1 bg-brand-cream px-4 pb-8 pt-6 shadow-2xl"
+                variants={{
+                  hidden: { y: "-100%" },
+                  show: { y: 0 },
+                }}
+                transition={{ type: "spring", stiffness: 420, damping: 38 }}
+              >
+                <div className="mb-4 flex items-center justify-between">
+                  <Image
+                    src="/logo.png"
+                    alt="MeritNama"
+                    width={180}
+                    height={45}
+                    className="h-9 w-auto object-contain"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setMenuOpen(false)}
+                    aria-label="Close navigation menu"
+                    className="flex h-10 w-10 items-center justify-center rounded-sm border border-stone-300/80 text-brand-ink transition-colors hover:text-brand-teal active:scale-[0.96]"
+                  >
+                    <X className="h-5 w-5" />
+                  </button>
+                </div>
+
+                {NAV_LINKS.map((link) => (
+                  <a
+                    key={link.href}
+                    href={link.href}
+                    onClick={(e) => {
+                      setMenuOpen(false);
+                      handleNavClick(e, link.href);
+                    }}
+                    className="flex min-h-[52px] items-center border-b border-stone-200/80 text-base font-semibold text-brand-ink transition-colors active:text-accent"
+                  >
+                    {link.label}
+                  </a>
+                ))}
+
+                <Link
+                  href="/login"
+                  onClick={() => setMenuOpen(false)}
+                  className="mt-5 flex min-h-[48px] items-center justify-center rounded-sm border border-brand-teal-deep px-5 text-[15px] font-semibold text-brand-teal-deep transition-colors active:scale-[0.98]"
+                >
+                  Sign In
+                </Link>
+              </motion.div>
+            </motion.div>
+          )}
+        </AnimatePresence>
 
         {/* Main Hero Content */}
         <main className="flex w-full flex-1 flex-col justify-center px-4 sm:px-8 lg:px-10 pt-10 pb-16 relative">
@@ -183,7 +282,7 @@ export function HeroSection({ heroImageRef, handleNavClick }: HeroSectionProps) 
                 <KoboyoStethoscope className="h-5 w-auto text-white" />
               </div>
               <div>
-                <p className="text-xs font-bold text-[#1A2118]">100% PHF Policy</p>
+                <p className="text-xs font-bold text-brand-ink">100% PHF Policy</p>
                 <p className="text-[10px] font-medium text-stone-500">Auto deduction rules</p>
               </div>
             </motion.div>
@@ -198,7 +297,7 @@ export function HeroSection({ heroImageRef, handleNavClick }: HeroSectionProps) 
                 <KoboyoChartNetwork className="h-5 w-auto text-white" />
               </div>
               <div>
-                <p className="text-xs font-bold text-[#1A2118]">Cascade Simulator</p>
+                <p className="text-xs font-bold text-brand-ink">Cascade Simulator</p>
                 <p className="text-[10px] font-medium text-stone-500">Multi-round allocations</p>
               </div>
             </motion.div>
@@ -222,7 +321,7 @@ export function HeroSection({ heroImageRef, handleNavClick }: HeroSectionProps) 
                 ].map((src, i) => (
                   <div
                     key={i}
-                    className="h-9 w-9 overflow-hidden rounded-full border-2 border-[#FAF9F5] shadow-sm ring-1 ring-black/10 bg-white"
+                    className="h-9 w-9 overflow-hidden rounded-full border-2 border-brand-cream shadow-sm ring-1 ring-black/10 bg-white"
                   >
                     <img
                       src={src}
@@ -232,8 +331,8 @@ export function HeroSection({ heroImageRef, handleNavClick }: HeroSectionProps) 
                   </div>
                 ))}
               </div>
-              <p style={{ color: "#1A2118" }} className="text-base font-semibold tracking-tight text-stone-900">
-                <span className="font-black text-[#0D9488]">+3,475</span> Candidate Doctors Tracked
+              <p className="text-base font-semibold tracking-tight text-brand-ink">
+                <span className="font-black text-accent">+3,475</span> Candidate Doctors Tracked
               </p>
             </motion.div>
 
@@ -242,10 +341,10 @@ export function HeroSection({ heroImageRef, handleNavClick }: HeroSectionProps) 
               variants={titleContainerVariants}
               initial="hidden"
               animate="show"
-              className="mb-8 max-w-4xl text-5xl sm:text-7xl lg:text-[5.5rem] leading-[1.02] font-black tracking-tight text-[#0B0E17]"
+              className="mb-8 max-w-4xl text-5xl sm:text-7xl lg:text-[5.5rem] leading-[1.02] font-black tracking-tight text-brand-ink"
             >
-              <motion.span variants={titleLineVariants} className="block text-[#0B0E17]">
-                Know where you <span className="sketch-underline text-[#0D9488]">stand</span>
+              <motion.span variants={titleLineVariants} className="block text-brand-ink">
+                Know where you <span className="sketch-underline text-accent">stand</span>
               </motion.span>
               <motion.span variants={titleLineVariants} className="block text-stone-800 font-extrabold">
                 in Punjab residency induction.
@@ -261,7 +360,6 @@ export function HeroSection({ heroImageRef, handleNavClick }: HeroSectionProps) 
             >
               <motion.p
                 variants={bodyItemVariants}
-                style={{ color: "#1A2118" }}
                 className="max-w-2xl text-xl sm:text-2xl leading-[1.4] font-bold text-stone-900"
               >
                 Calculate your merit score with official PHF rules, predict hospital cutoffs, and simulate seat allocations round by round.
@@ -275,8 +373,7 @@ export function HeroSection({ heroImageRef, handleNavClick }: HeroSectionProps) 
                 {/* Primary Button */}
                 <Link
                   href="/app.html"
-                  style={{ backgroundColor: "#115E59", color: "#FFFFFF" }}
-                  className="group flex min-h-[52px] items-center gap-2.5 rounded-sm px-8 py-3.5 text-[16px] font-bold text-white shadow-[0_4px_14px_rgba(0,0,0,0.15)] transition-all duration-150 ease-out will-change-transform hover:bg-[#134E4A] active:scale-[0.96]"
+                  className="group flex min-h-[52px] items-center gap-2.5 rounded-sm bg-brand-teal-deep px-8 py-3.5 text-[16px] font-bold text-white shadow-[0_4px_14px_rgba(0,0,0,0.15)] transition-all duration-150 ease-out will-change-transform hover:bg-brand-teal-deeper active:scale-[0.96]"
                 >
                   <span>Launch Candidate App</span>
                   <ArrowRight className="h-5 w-5 text-white transition-transform duration-200 ease-out group-hover:translate-x-1" />
@@ -316,12 +413,12 @@ export function HeroSection({ heroImageRef, handleNavClick }: HeroSectionProps) 
             }}
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
-            className="group flex cursor-pointer items-center gap-3 rounded-sm bg-white border border-stone-300/90 px-5 py-2.5 shadow-md hover:border-[#0D9488]/60 hover:shadow-lg transition-all duration-200"
+            className="group flex cursor-pointer items-center gap-3 rounded-sm bg-white border border-stone-300/90 px-5 py-2.5 shadow-md hover:border-brand-teal/60 hover:shadow-lg transition-all duration-200"
           >
-            <span className="font-mono text-xs font-extrabold tracking-[0.2em] uppercase text-[#1A2118] group-hover:text-[#0D9488] transition-colors">
+            <span className="font-mono text-xs font-extrabold tracking-[0.2em] uppercase text-brand-ink group-hover:text-brand-teal transition-colors">
               Scroll to Discover
             </span>
-            <div className="w-6 h-6 rounded-sm bg-[#0D9488] text-white flex items-center justify-center shrink-0 shadow-xs">
+            <div className="w-6 h-6 rounded-sm bg-brand-teal text-white flex items-center justify-center shrink-0 shadow-xs">
               <ArrowDown className="h-3.5 w-3.5 text-white" />
             </div>
           </motion.a>
