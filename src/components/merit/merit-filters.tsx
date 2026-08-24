@@ -3,7 +3,9 @@
 import { useEffect, useState } from "react";
 import { SlidersHorizontal, X } from "lucide-react";
 import type { MeritScale } from "@/lib/merit/types";
-import type { MeritQuery } from "@/lib/merit/query";
+import type { Cycle } from "@/lib/merit/data";
+import type { CycleRange, MeritQuery } from "@/lib/merit/query";
+import { SearchField, Select } from "@/components/app/field";
 
 export type Facets = {
   programs: string[];
@@ -22,12 +24,14 @@ export type Facets = {
  */
 export function MeritFilters({
   facets,
+  cycles,
   query,
   resultCount,
   totalCount,
   onChange,
 }: {
   facets: Facets;
+  cycles: Cycle[];
   query: MeritQuery;
   resultCount: number;
   totalCount: number;
@@ -52,25 +56,30 @@ export function MeritFilters({
 
   const fields = (
     <>
-      <Select
+      <CycleRangeSelect
+        cycles={cycles}
+        value={query.cycleRange ?? 5}
+        onChange={(cycleRange) => onChange({ cycleRange })}
+      />
+      <Facet
         label="Programme"
         value={query.program ?? ""}
         options={facets.programs}
         onChange={(v) => onChange({ program: v || undefined })}
       />
-      <Select
+      <Facet
         label="Quota"
         value={query.quota ?? ""}
         options={facets.quotas}
         onChange={(v) => onChange({ quota: v || undefined })}
       />
-      <Select
+      <Facet
         label="Specialty"
         value={query.specialty ?? ""}
         options={facets.specialties}
         onChange={(v) => onChange({ specialty: v || undefined })}
       />
-      <Select
+      <Facet
         label="Hospital"
         value={query.hospital ?? ""}
         options={facets.hospitals}
@@ -90,7 +99,8 @@ export function MeritFilters({
           onChange={(e) => onChange({ search: e.target.value || undefined })}
           placeholder="Search specialty or hospital…"
           aria-label="Search specialty or hospital"
-          className="min-h-[44px] w-full min-w-0 sm:flex-1 rounded-sm border border-border-strong bg-surface px-3 text-sm text-foreground placeholder:text-fg-subtle focus:border-accent focus:outline-none focus:ring-1 focus:ring-accent"
+          // Recessed rather than raised: an input is a well you type into.
+          className="min-h-[46px] w-full min-w-0 rounded-sm border border-border-strong bg-surface-sunken px-4 text-sm text-foreground shadow-[inset_0_1px_2px_rgba(0,0,0,0.04)] transition-all duration-[250ms] ease-[cubic-bezier(0.32,0.72,0,1)] placeholder:text-fg-subtle focus:border-accent focus:outline-none focus:ring-2 focus:ring-ring sm:flex-1"
         />
 
         <div className="flex items-center gap-2">
@@ -102,7 +112,7 @@ export function MeritFilters({
           <button
             type="button"
             onClick={() => setSheetOpen(true)}
-            className="flex min-h-[44px] flex-1 items-center justify-center gap-2 rounded-sm border border-border-strong px-3 text-sm font-bold text-fg-muted transition-colors hover:text-foreground sm:flex-none md:hidden"
+            className="flex min-h-[46px] flex-1 items-center justify-center gap-2 rounded-sm border border-border-strong bg-surface px-4 text-sm font-bold text-fg-muted shadow-ambient transition-all duration-[250ms] ease-[cubic-bezier(0.32,0.72,0,1)] hover:border-accent hover:text-foreground active:scale-[0.98] sm:flex-none md:hidden"
           >
             <SlidersHorizontal className="h-4 w-4" aria-hidden />
             <span>Filters</span>
@@ -116,14 +126,14 @@ export function MeritFilters({
       </div>
 
       {/* Desktop: always visible. */}
-      <div className="hidden gap-2 md:grid md:grid-cols-4">{fields}</div>
+      <div className="hidden gap-2 md:grid md:grid-cols-5">{fields}</div>
 
       <div className="flex flex-wrap items-center justify-between gap-2">
         <p className="font-mono text-[11px] text-fg-muted">
           <span className="font-bold text-foreground">
             {resultCount.toLocaleString("en-GB")}
           </span>{" "}
-          of {totalCount.toLocaleString("en-GB")} seat combinations
+          of {totalCount.toLocaleString("en-GB")} records
         </p>
 
         {activeCount > 0 && (
@@ -150,18 +160,23 @@ export function MeritFilters({
             type="button"
             aria-label="Close filters"
             onClick={() => setSheetOpen(false)}
-            className="absolute inset-0 h-full w-full cursor-default bg-brand-midnight/50"
+            // The scrim is fixed, so the blur is a one-off composite rather
+            // than a repaint on every scrolled frame.
+            className="absolute inset-0 h-full w-full cursor-default bg-brand-midnight/50 backdrop-blur-sm motion-safe:animate-[fadeIn_250ms_cubic-bezier(0.32,0.72,0,1)]"
           />
           {/* Anchored to the bottom: reachable one-handed, unlike a modal
-              centred in the middle of a tall phone screen. */}
-          <div className="absolute inset-x-0 bottom-0 max-h-[85vh] overflow-y-auto rounded-t-lg border-t border-border bg-surface p-4 pb-8">
+              centred in the middle of a tall phone screen. Rises on a weighted
+              curve so it reads as having mass. */}
+          <div className="absolute inset-x-0 bottom-0 max-h-[85vh] overflow-y-auto rounded-t-lg border-t border-border bg-surface p-5 pb-9 shadow-lifted motion-safe:animate-[sheetUp_400ms_cubic-bezier(0.32,0.72,0,1)]">
             <div className="mb-4 flex items-center justify-between">
               <h2 className="font-sans text-base font-bold text-foreground">Filters</h2>
               <button
                 type="button"
                 onClick={() => setSheetOpen(false)}
                 aria-label="Close filters"
-                className="flex h-11 w-11 items-center justify-center rounded-sm border border-border-strong text-fg-muted"
+                // Icon-only dismiss controls are circular throughout; the
+                // squared geometry rule is about labelled action buttons.
+                className="flex h-11 w-11 items-center justify-center rounded-full border border-border-strong text-fg-muted transition-transform duration-[250ms] ease-[cubic-bezier(0.32,0.72,0,1)] active:scale-[0.94]"
               >
                 <X className="h-4 w-4" aria-hidden />
               </button>
@@ -172,7 +187,7 @@ export function MeritFilters({
             <button
               type="button"
               onClick={() => setSheetOpen(false)}
-              className="mt-5 flex min-h-[48px] w-full items-center justify-center rounded-sm bg-accent-strong px-4 font-bold text-white"
+              className="mt-6 flex min-h-[52px] w-full items-center justify-center rounded-sm bg-accent-strong px-4 font-bold text-fg-on-accent shadow-ambient transition-transform duration-[250ms] ease-[cubic-bezier(0.32,0.72,0,1)] active:scale-[0.98]"
             >
               Show {resultCount.toLocaleString("en-GB")} results
             </button>
@@ -183,7 +198,65 @@ export function MeritFilters({
   );
 }
 
-function Select({
+/**
+ * Which cycles get their own column.
+ *
+ * Options are built from the data rather than hardcoded, so when Induction 22
+ * lands the ranges and their year spans move with it. Labelled by year span
+ * exactly as the live site does — "2024–2026 (Last 5)".
+ */
+function CycleRangeSelect({
+  cycles,
+  value,
+  onChange,
+}: {
+  cycles: Cycle[];
+  value: CycleRange;
+  onChange: (value: CycleRange) => void;
+}) {
+  const span = (count: number) => {
+    const window = cycles.slice(-count);
+    const from = window[0]?.label;
+    const to = window[window.length - 1]?.label;
+    return from === to ? to : `${from}–${to}`;
+  };
+
+  const options: Array<{ value: CycleRange; label: string }> = [
+    { value: "all", label: `All cycles (${span(cycles.length)})` },
+    ...([1, 3, 5, 10] as const)
+      .filter((n) => n < cycles.length)
+      .map((n) => ({
+        value: n as CycleRange,
+        label: `${span(n)} (Last ${n})`,
+      })),
+  ];
+
+  return (
+    <label className="flex flex-col gap-1">
+      <span className="font-mono text-[10px] font-bold uppercase tracking-wider text-fg-muted">
+        Cycles shown
+      </span>
+      <Select
+        value={String(value)}
+        onChange={(e) =>
+          onChange(
+            e.target.value === "all"
+              ? "all"
+              : (Number(e.target.value) as CycleRange)
+          )
+        }
+      >
+        {options.map((option) => (
+          <option key={String(option.value)} value={String(option.value)}>
+            {option.label}
+          </option>
+        ))}
+      </Select>
+    </label>
+  );
+}
+
+function Facet({
   label,
   value,
   options,
@@ -199,18 +272,14 @@ function Select({
       <span className="font-mono text-[10px] font-bold uppercase tracking-wider text-fg-muted">
         {label}
       </span>
-      <select
-        value={value}
-        onChange={(e) => onChange(e.target.value)}
-        className="min-h-[44px] rounded-sm border border-border-strong bg-surface px-2 text-sm text-foreground focus:border-accent focus:outline-none focus:ring-1 focus:ring-accent"
-      >
+      <Select value={value} onChange={(e) => onChange(e.target.value)}>
         <option value="">All</option>
         {options.map((option) => (
           <option key={option} value={option}>
             {option}
           </option>
         ))}
-      </select>
+      </Select>
     </label>
   );
 }
@@ -234,12 +303,12 @@ function ScaleToggle({
     <div
       role="radiogroup"
       aria-label="Merit scale"
-      className="flex min-h-[44px] items-center rounded-sm border border-border-strong bg-surface p-0.5"
+      className="flex min-h-[46px] items-center rounded-lg border border-border-strong bg-surface-sunken p-1"
     >
       {(
         [
-          ["normalised", "% of max", "Comparable across cycles"],
-          ["raw", "Raw", "As published that cycle — not comparable across cycles"],
+          ["normalised", "% of max", "Comparable across years"],
+          ["raw", "Raw", "As published that year — not comparable across years"],
         ] as const
       ).map(([value, label, hint]) => (
         <button
@@ -249,9 +318,9 @@ function ScaleToggle({
           aria-checked={scale === value}
           title={hint}
           onClick={() => onChange(value)}
-          className={`h-full rounded-sm px-3 font-mono text-[11px] font-bold uppercase tracking-wider transition-colors ${
+          className={`h-full rounded-md px-3.5 font-mono text-[11px] font-bold uppercase tracking-wider transition-all duration-[250ms] ease-[cubic-bezier(0.32,0.72,0,1)] ${
             scale === value
-              ? "bg-accent-quiet text-accent"
+              ? "bg-surface text-accent shadow-ambient"
               : "text-fg-subtle hover:text-fg-muted"
           }`}
         >

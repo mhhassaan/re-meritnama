@@ -113,3 +113,9 @@ DASHBOARD_REDESIGN.md
 SESSION_TRANSCRIPT_AND_ROADMAP.md
 AGENTS.md
 .claude
+
+# Ingest inputs — real candidate records.
+# These carry names, applicant ids and mobile numbers for ~1,450 real doctors.
+# They are pipeline INPUT, never served: anything under public/ is returned
+# verbatim with no authentication, which is how the original leaked.
+/ingest/

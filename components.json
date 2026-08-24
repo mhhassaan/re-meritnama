@@ -19,6 +19,8 @@
     "hooks": "@/hooks"
   },
   "registries": {
-    "@bklit": "https://ui.bklit.com/r/{name}.json"
+    "@bklit": "https://ui.bklit.com/r/{name}.json",
+    "@hugeicons-animated": "https://hugeicons-animated.com/r/{name}.json",
+    "@pdfcn": "https://www.pdfcn.dev/r/{name}.json"
   }
 }

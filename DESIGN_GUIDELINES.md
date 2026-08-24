@@ -20,6 +20,21 @@ MeritNama balances **precision data engineering** (merit calculation, 13 gazette
    - Interactive elements must respond to human touch with snappy, natural spring physics (`whileHover={{ y: -4, scale: 1.02 }}`, `whileTap={{ scale: 0.96 }}`).
 4. **Squared Button Geometry**:
    - Action buttons use squared corners (`rounded-sm`) for a structured, professional control-room aesthetic. Avoid bubbly pill buttons for primary actions.
+   - The exception is **icon-only** controls (dismiss, expand, trailing chevrons), which are circular. The rule is about labelled actions, not every round thing.
+5. **Radius scale — the whole app uses three steps, and only three**:
+   - `rounded-sm` — inputs, selects, action buttons. The default.
+   - `rounded-md` — small inner containers, tags, telemetry pills.
+   - `rounded-lg` — panel shells, grouped-control containers (the segmented
+     toggle, the bezel outer tray), drawers and sheets.
+   - `rounded-full` only for icon-only controls, dots and status pills.
+   - **Nothing larger.** Marketing sections use `rounded-2xl`/`rounded-3xl` and
+     stay there; app and admin surfaces do not. Large squircles read as a
+     different product sitting next to the auth screens.
+6. **Nested Enclosures ("double bezel")**:
+   - Panels do not sit flat on the page. A recessed outer tray (`rounded-lg bg-surface-sunken/70 p-1 ring-1 ring-border`) holds an inner plate (`rounded-[0.25rem] bg-surface`) with a lit top edge (`shadow-[inset_0_1px_0_var(--edge-highlight)]`).
+   - **The inner radius is the outer radius minus the shell padding.** Concentric curves only look right when they actually are; equal radii pinch the inner corner.
+   - Use the `Bezel` component (`src/components/app/bezel.tsx`) rather than repeating the classes.
+7. **Depth is tokenised**: `--edge-highlight`, `--shadow-ambient`, `--shadow-lifted`. Never a hard `rgba(0,0,0,0.3)` drop shadow — ambient shadows are two layers, a tight contact shadow plus a wide diffused one. `lifted` is reserved for something that came forward in response to an action.
 
 ---
 
@@ -77,6 +92,25 @@ MeritNama balances **precision data engineering** (merit calculation, 13 gazette
 ---
 
 ## 4. Layout & Grid Standards
+
+### Motion
+
+- **Curves**: `--ease-smooth-out` for small state changes; `--ease-weighted`
+  (`cubic-bezier(0.32, 0.72, 0, 1)`) for anything that should feel like it has
+  mass — panels opening, sheets rising, elements entering the viewport. Never
+  `linear` or bare `ease-in-out`.
+- **Entry**: `<Reveal>` (`src/components/app/reveal.tsx`) fades and lifts content
+  in on `IntersectionObserver`, never a scroll listener. It honours
+  `prefers-reduced-motion` and shows anything already on or above the screen
+  immediately — an observer never fires for an element above the viewport, and
+  content must not depend on an animation to become visible.
+- **Never wrap a `position: fixed` overlay in `<Reveal>`.** It carries a
+  `transform`, which makes it the containing block for fixed descendants; a
+  bottom sheet inside will anchor to the wrapper, not the viewport.
+- **Composited properties only**: animate `transform` and `opacity`. Never
+  `height`, `top`, `width` or `filter`.
+- **`backdrop-blur` only on fixed elements** (scrims, sticky chrome). On a
+  scrolling container it repaints every frame and destroys mobile framerate.
 
 ### Page Container Widths
 - **Max Width**: `max-w-7xl` (1280px) centered with `mx-auto`.
@@ -205,3 +239,33 @@ Before shipping any new page in `src/app/`:
 - [ ] Are bottom telemetry pills using `rounded-md` geometry with `text-[#2DD4BF]` right-aligned status text?
 - [ ] Does the layout adapt gracefully from mobile (`px-4`) to widescreen desktop (`max-w-7xl px-10`)?
 - [ ] Does the code compile cleanly with `npm run build` with zero TypeScript errors?
+
+## Icons on controls
+
+**Every clickable or actionable control gets an animated icon.** Primary and
+secondary buttons, submits, "load more", toolbar actions, navigation rows —
+all `@hugeicons-animated`, wired through `useActionIcon()` in
+`src/components/app/action-icon.ts` so the control owns the hover rather than
+the 16 pixels of artwork inside it.
+
+Static Koboyo icons remain correct for anything that is **not** pressable:
+
+- an illustration in an empty state,
+- a marker beside a heading or a specialty label,
+- an inline status or warning glyph beside prose.
+
+Sizes are `ICON_SIZE` (18) in the navigation rails and `ICON_SIZE_SM` (16)
+beside a button label. Both come from the same module; do not restate them.
+
+Three constraints follow from how the components are built, and all three have
+already caused a bug here:
+
+1. They render a **`<div>`**. Never place one inside a `<span>` or a `<p>` —
+   invalid HTML, and it fails hydration.
+2. They need a `ref` to be driven by their parent. Without it the animation
+   fires only when the pointer crosses the icon itself.
+3. Wire `onFocus`/`onBlur` alongside hover, or keyboard users get no cue at all.
+   `useActionIcon` does all three; use it rather than hand-rolling the handlers.
+
+`prefers-reduced-motion` is handled inside `src/lib/use-icon-animation.ts`, so
+no call site guards it.

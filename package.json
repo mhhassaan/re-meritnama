@@ -12,15 +12,23 @@
     "db:diff": "supabase db diff",
     "seed": "node supabase/fixtures/seed.mjs",
     "test:rls": "node supabase/tests/rls.test.mjs",
-    "test:merit": "node src/lib/merit/query.test.mjs"
+    "test:merit": "node src/lib/merit/query.test.mjs",
+    "test:calc": "node src/lib/calculator/score.test.mjs",
+    "test:predict": "node src/lib/predict/predict.test.mjs",
+    "test:compare": "node src/lib/compare/compare.test.mjs",
+    "test:pool": "node --max-old-space-size=6144 src/lib/portal/pool-stats.test.mjs",
+    "test:cascade": "node --max-old-space-size=6144 src/lib/portal/cascade.test.mjs",
+    "test:placement": "node --max-old-space-size=6144 src/lib/portal/placement.test.mjs"
   },
   "dependencies": {
     "@gsap/react": "^2.1.2",
     "@number-flow/react": "^0.6.2",
     "@supabase/ssr": "^0.12.4",
     "@supabase/supabase-js": "^2.112.2",
+    "@takumi-rs/helpers": "^2.9.2",
     "@visx/curve": "^4.0.1-alpha.0",
     "@visx/event": "^4.0.1-alpha.0",
+    "@visx/gradient": "^4.0.1-alpha.0",
     "@visx/grid": "^4.0.1-alpha.0",
     "@visx/responsive": "^4.0.1-alpha.0",
     "@visx/scale": "^4.0.1-alpha.0",
@@ -38,7 +46,8 @@
     "react-dom": "19.2.4",
     "react-icons": "^5.7.0",
     "server-only": "^0.0.1",
-    "tailwind-merge": "^3.6.0"
+    "tailwind-merge": "^3.6.0",
+    "takumi-pdf": "^0.10.1"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",

@@ -29,6 +29,39 @@ const here = dirname(fileURLToPath(import.meta.url));
 const repoRoot = join(here, "..", "..");
 const COUNT = Number(process.argv[2] ?? 250);
 
+/**
+ * The current cycle's marks total, read from the policy file rather than
+ * assumed.
+ *
+ * This was hardcoded to the 95-mark era and silently became wrong when the
+ * formula was rewritten: the 2026 intake maxes at 30, so every generated
+ * candidate scored 35-88 — above the maximum achievable. Merit lists order by
+ * marks, so the fixtures buried the real data underneath 1,896 impossible rows.
+ *
+ * Marks are generated as a PERCENTAGE of whatever the total is, so the next
+ * formula change cannot reintroduce the same bug.
+ */
+const CURRENT_INDUCTION = 21;
+
+const policies = JSON.parse(
+  readFileSync(join(repoRoot, "public", "data", "policy_by_induction.json"), "utf8")
+);
+const TOTAL_MARKS = policies[String(CURRENT_INDUCTION)]?.total_marks;
+
+if (!TOTAL_MARKS) {
+  throw new Error(
+    `No total_marks for induction ${CURRENT_INDUCTION} in policy_by_induction.json`
+  );
+}
+
+/**
+ * Real Induction 21 closes ran 13.96-27.17 out of 30, i.e. roughly 47-91% of
+ * max. Generating in that band keeps fixtures plausible next to real records
+ * instead of sitting implausibly at either end.
+ */
+const marksWithin = (loPct, hiPct) =>
+  round2((intBetween(loPct * 100, hiPct * 100) / 10000) * TOTAL_MARKS);
+
 // mulberry32 — small, fast, and seeded, so runs are reproducible.
 function makeRng(seed) {
   let a = seed >>> 0;
@@ -119,9 +152,9 @@ function buildPreferences(count) {
     instituteName: c.hospital,
     preferenceNo: i + 1,
     quotaName: c.quota,
-    programMarks: round2(intBetween(4000, 8500) / 100),
+    programMarks: marksWithin(47, 91),
     disciplineIds: [specialtyId.get(c.specialty) ?? 0],
-    marks: round2(intBetween(4000, 8500) / 100),
+    marks: marksWithin(47, 91),
     parentInstitute: rng() < 0.25,
   }));
 }
@@ -131,7 +164,7 @@ for (let i = 1; i <= COUNT; i++) {
   // Offset well clear of the real 5-digit applicant IDs, so a fixture record is
   // recognisable at a glance and can never collide with a production one.
   const applicantId = 900000 + i;
-  const marksTotal = round2(intBetween(3500, 8800) / 100);
+  const marksTotal = marksWithin(46, 92);
 
   candidates[applicantId] = {
     applicantId,
@@ -159,3 +192,4 @@ writeFileSync(outPath, JSON.stringify(candidates, null, 1));
 console.log(`wrote ${COUNT} synthetic candidates -> ${outPath}`);
 console.log(`  applicantId range 900001..${900000 + COUNT}`);
 console.log(`  ${specialties.length} real specialties, ${combos.length} real seat combos`);
+console.log(`  marks generated against a ${TOTAL_MARKS}-mark total (induction ${CURRENT_INDUCTION})`);

@@ -103,6 +103,39 @@ export type Database = {
         };
         Relationships: [];
       };
+      applicants: {
+        Row: {
+          applicant_id: number;
+          certificates: Json;
+          id: number;
+          induction: number;
+          marks_total: number | null;
+          preferences: Json;
+          profile_status: number | null;
+          updated_at: string;
+        };
+        Insert: {
+          applicant_id: number;
+          certificates?: Json;
+          id?: never;
+          induction: number;
+          marks_total?: number | null;
+          preferences?: Json;
+          profile_status?: number | null;
+          updated_at?: string;
+        };
+        Update: {
+          applicant_id?: number;
+          certificates?: Json;
+          id?: never;
+          induction?: number;
+          marks_total?: number | null;
+          preferences?: Json;
+          profile_status?: number | null;
+          updated_at?: string;
+        };
+        Relationships: [];
+      };
       candidate_links: {
         Row: {
           candidate_id: number;
@@ -136,7 +169,9 @@ export type Database = {
         Row: {
           applicant_id: number;
           applied_in: Json;
+          certificates: Json;
           cnic: string | null;
+          consent_rounds: Json;
           contact_number: string | null;
           email_id: string | null;
           father_name: string | null;
@@ -146,12 +181,15 @@ export type Database = {
           name_full: string;
           pmdc_no: string | null;
           preferences: Json;
+          profile_status: number | null;
           updated_at: string;
         };
         Insert: {
           applicant_id: number;
           applied_in?: Json;
+          certificates?: Json;
           cnic?: string | null;
+          consent_rounds?: Json;
           contact_number?: string | null;
           email_id?: string | null;
           father_name?: string | null;
@@ -161,12 +199,15 @@ export type Database = {
           name_full: string;
           pmdc_no?: string | null;
           preferences?: Json;
+          profile_status?: number | null;
           updated_at?: string;
         };
         Update: {
           applicant_id?: number;
           applied_in?: Json;
+          certificates?: Json;
           cnic?: string | null;
+          consent_rounds?: Json;
           contact_number?: string | null;
           email_id?: string | null;
           father_name?: string | null;
@@ -176,6 +217,64 @@ export type Database = {
           name_full?: string;
           pmdc_no?: string | null;
           preferences?: Json;
+          profile_status?: number | null;
+          updated_at?: string;
+        };
+        Relationships: [];
+      };
+      joining_status: {
+        Row: {
+          applicant_id: number;
+          hospital: string;
+          id: number;
+          induction: number;
+          institute: string | null;
+          joined_on: string | null;
+          marks: number | null;
+          name_full: string | null;
+          pmdc_no: string | null;
+          preference_no: number | null;
+          program: string;
+          quota: string;
+          seats: number | null;
+          specialty: string;
+          status: string;
+          updated_at: string;
+        };
+        Insert: {
+          applicant_id: number;
+          hospital: string;
+          id?: never;
+          induction: number;
+          institute?: string | null;
+          joined_on?: string | null;
+          marks?: number | null;
+          name_full?: string | null;
+          pmdc_no?: string | null;
+          preference_no?: number | null;
+          program: string;
+          quota: string;
+          seats?: number | null;
+          specialty: string;
+          status: string;
+          updated_at?: string;
+        };
+        Update: {
+          applicant_id?: number;
+          hospital?: string;
+          id?: never;
+          induction?: number;
+          institute?: string | null;
+          joined_on?: string | null;
+          marks?: number | null;
+          name_full?: string | null;
+          pmdc_no?: string | null;
+          preference_no?: number | null;
+          program?: string;
+          quota?: string;
+          seats?: number | null;
+          specialty?: string;
+          status?: string;
           updated_at?: string;
         };
         Relationships: [];
@@ -243,6 +342,54 @@ export type Database = {
         };
         Relationships: [];
       };
+      pool_directory: {
+        Row: {
+          applicant_id: number;
+          applied_in: Json;
+          certificates: Json;
+          components: Json;
+          id: number;
+          induction: number;
+          marks_total: number | null;
+          name_full: string | null;
+          pmdc_no: string | null;
+          preferences: Json;
+          profile_status: number | null;
+          revisions: Json;
+          updated_at: string;
+        };
+        Insert: {
+          applicant_id: number;
+          applied_in?: Json;
+          certificates?: Json;
+          components?: Json;
+          id?: never;
+          induction: number;
+          marks_total?: number | null;
+          name_full?: string | null;
+          pmdc_no?: string | null;
+          preferences?: Json;
+          profile_status?: number | null;
+          revisions?: Json;
+          updated_at?: string;
+        };
+        Update: {
+          applicant_id?: number;
+          applied_in?: Json;
+          certificates?: Json;
+          components?: Json;
+          id?: never;
+          induction?: number;
+          marks_total?: number | null;
+          name_full?: string | null;
+          pmdc_no?: string | null;
+          preferences?: Json;
+          profile_status?: number | null;
+          revisions?: Json;
+          updated_at?: string;
+        };
+        Relationships: [];
+      };
       profiles: {
         Row: {
           avatar_path: string | null;
@@ -300,6 +447,42 @@ export type Database = {
         };
         Relationships: [];
       };
+      seats: {
+        Row: {
+          hospital: string;
+          id: number;
+          induction: number;
+          institute: string | null;
+          program: string;
+          quota: string;
+          seats: number;
+          specialty: string;
+          updated_at: string;
+        };
+        Insert: {
+          hospital: string;
+          id?: never;
+          induction: number;
+          institute?: string | null;
+          program: string;
+          quota: string;
+          seats: number;
+          specialty: string;
+          updated_at?: string;
+        };
+        Update: {
+          hospital?: string;
+          id?: never;
+          induction?: number;
+          institute?: string | null;
+          program?: string;
+          quota?: string;
+          seats?: number;
+          specialty?: string;
+          updated_at?: string;
+        };
+        Relationships: [];
+      };
       user_roles: {
         Row: {
           granted_at: string;
@@ -323,10 +506,44 @@ export type Database = {
       };
     };
     Views: {
-      [_ in never]: never;
+      cascade_inputs: {
+        Row: {
+          applicant_id: number | null;
+          certificates: Json | null;
+          induction: number | null;
+          marks_total: number | null;
+          preferences: Json | null;
+          profile_status: number | null;
+        };
+        Relationships: [];
+      };
+      merit_list_rounds: {
+        Row: {
+          induction: number | null;
+          program: string | null;
+          quota: string | null;
+          round: number | null;
+        };
+        Relationships: [];
+      };
     };
     Functions: {
-      [_ in never]: never;
+      apply_applicant_pool: {
+        Args: { p_induction: number; p_rows: Json };
+        Returns: number;
+      };
+      apply_joining_status: {
+        Args: { p_induction: number; p_rows: Json };
+        Returns: number;
+      };
+      apply_pool_directory: {
+        Args: { p_induction: number; p_rows: Json };
+        Returns: number;
+      };
+      apply_portal_inputs: {
+        Args: { p_induction: number; p_rows: Json };
+        Returns: number;
+      };
     };
     Enums: {
       app_role: "super_admin" | "moderator" | "editorial" | "analyst";

@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { ChevronDown } from "lucide-react";
 import type { MeritRow, MeritScale } from "@/lib/merit/types";
+import type { Cycle } from "@/lib/merit/data";
 import {
   averageValue,
   formatValue,
@@ -26,14 +27,18 @@ import { MeritTrendChart } from "./merit-trend-chart";
  */
 export function MeritCard({
   row,
-  inductions,
+  cycles,
   scale,
 }: {
   row: MeritRow;
-  inductions: number[];
+  cycles: Cycle[];
   scale: MeritScale;
 }) {
   const [open, setOpen] = useState(false);
+
+  const inductions = cycles.map((cycle) => cycle.induction);
+  const labelOf = (induction: number) =>
+    cycles.find((cycle) => cycle.induction === induction)?.label ?? "—";
 
   const latest = latestValue(row, scale);
   const average = averageValue(row);
@@ -46,7 +51,12 @@ export function MeritCard({
   );
 
   return (
-    <li className="rounded-md border border-border bg-surface">
+    <li
+      className={`rounded-lg bg-surface-sunken/70 p-1 ring-1 ring-border transition-shadow duration-[350ms] ease-[cubic-bezier(0.32,0.72,0,1)] ${
+        open ? "shadow-lifted" : "shadow-ambient"
+      }`}
+    >
+      <div className="overflow-hidden rounded-[0.25rem] bg-surface shadow-[inset_0_1px_0_var(--edge-highlight)]">
       <div className="p-4">
         <SpecialtyLabel specialty={row.specialty} className="text-sm" />
 
@@ -58,8 +68,8 @@ export function MeritCard({
 
         <div className="mt-4 flex items-end justify-between gap-4">
           <div>
-            <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-fg-subtle">
-              Latest close · Ind {row.latest_induction}
+            <p className="whitespace-nowrap font-mono text-[10px] uppercase tracking-[0.2em] text-fg-subtle">
+              Latest close · {labelOf(row.latest_induction)}
             </p>
             <p className="mt-0.5 font-mono text-2xl font-bold text-foreground">
               {formatValue(latest, scale)}
@@ -91,15 +101,23 @@ export function MeritCard({
         type="button"
         onClick={() => setOpen((v) => !v)}
         aria-expanded={open}
-        className="flex min-h-[48px] w-full items-center justify-between border-t border-border px-4 text-left font-mono text-[11px] font-bold uppercase tracking-wider text-fg-muted transition-colors active:text-foreground"
+        className="group flex min-h-[52px] w-full items-center justify-between border-t border-border py-1.5 pl-4 pr-1.5 text-left font-mono text-[11px] font-bold uppercase tracking-wider text-fg-muted transition-colors active:text-foreground"
       >
         <span>
-          {open ? "Hide" : "Show"} {ran.length} cycle{ran.length === 1 ? "" : "s"}
+          {open ? "Hide" : "Show"} {ran.length} year{ran.length === 1 ? "" : "s"}
         </span>
-        <ChevronDown
-          className={`h-4 w-4 transition-transform ${open ? "rotate-180" : ""}`}
+        {/* Nested well rather than a naked chevron, and it rotates on a
+            weighted curve so the expansion feels driven rather than switched. */}
+        <span
           aria-hidden
-        />
+          className="flex h-9 w-9 items-center justify-center rounded-full bg-accent-quiet text-accent transition-transform duration-[350ms] ease-[cubic-bezier(0.32,0.72,0,1)] group-active:scale-95"
+        >
+          <ChevronDown
+            className={`h-4 w-4 transition-transform duration-[350ms] ease-[cubic-bezier(0.32,0.72,0,1)] ${
+              open ? "rotate-180" : ""
+            }`}
+          />
+        </span>
       </button>
 
       {open && (
@@ -109,7 +127,7 @@ export function MeritCard({
               chart cannot be read to two decimal places. */}
           <MeritTrendChart
             row={row}
-            inductions={inductions}
+            cycles={cycles}
             className="mb-4"
             aspectRatio="2 / 1"
           />
@@ -123,7 +141,7 @@ export function MeritCard({
                   key={induction}
                   className="flex items-baseline justify-between gap-3 font-mono text-xs"
                 >
-                  <span className="text-fg-subtle">Induction {induction}</span>
+                  <span className="text-fg-subtle">{labelOf(induction)}</span>
                   <span className="flex-1 border-b border-dotted border-border" />
                   <span className="font-bold text-foreground">
                     {formatValue(value, scale)}
@@ -137,6 +155,7 @@ export function MeritCard({
           </ul>
         </div>
       )}
+      </div>
     </li>
   );
 }

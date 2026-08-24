@@ -75,10 +75,13 @@ export function ConfidenceBadge({
 
   return (
     <span
-      className={`inline-flex items-center rounded-sm border px-1.5 py-0.5 font-mono text-[10px] font-bold uppercase tracking-wider ${className}`}
+      // Fixed width and centred: LOW, MEDIUM and HIGH are different lengths, so
+      // shrink-to-fit badges gave every row a differently-sized box and the
+      // column read as ragged. One box size, three labels inside it.
+      className={`inline-flex w-[4.75rem] items-center justify-center rounded-sm border px-1.5 py-0.5 font-mono text-[10px] font-bold uppercase tracking-wider ${className}`}
       title={
         dataPoints != null
-          ? `${confidence} confidence — based on ${dataPoints} cycle${dataPoints === 1 ? "" : "s"} of data`
+          ? `${confidence} confidence — based on ${dataPoints} year${dataPoints === 1 ? "" : "s"} of data`
           : `${confidence} confidence`
       }
     >

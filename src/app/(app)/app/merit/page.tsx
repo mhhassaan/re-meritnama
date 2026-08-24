@@ -1,12 +1,14 @@
 import type { Metadata } from "next";
-import { loadFacets, loadInductions, loadMeritRows } from "@/lib/merit/data";
+import { loadCycles, loadFacets, loadMeritRows } from "@/lib/merit/data";
 import { MeritBrowser } from "@/components/merit/merit-browser";
 import { VerseStrip } from "@/components/app/verse-strip";
+import { Reveal } from "@/components/app/reveal";
+import { Bezel, Eyebrow } from "@/components/app/bezel";
 
 export const metadata: Metadata = {
   title: "Merit Table | MeritNama",
   description:
-    "Historical closing merits by specialty, hospital, programme and quota across Punjab residency induction cycles.",
+    "Historical closing merits by specialty, hospital, programme and quota, year by year, for Punjab residency inductions.",
 };
 
 /**
@@ -18,35 +20,67 @@ export const metadata: Metadata = {
  * bulk scraping is attributable and the invite-only model holds.
  */
 export default async function MeritTablePage() {
-  const [rows, inductions, facets] = await Promise.all([
+  const [rows, cycles, facets] = await Promise.all([
     loadMeritRows(),
-    loadInductions(),
+    loadCycles(),
     loadFacets(),
   ]);
+
+  const first = cycles[0];
+  const last = cycles[cycles.length - 1];
 
   return (
     <div>
       <VerseStrip />
 
-      <div className="mx-auto max-w-[1600px] px-4 py-8 sm:px-6 lg:px-8">
-        <p className="font-mono text-[11px] font-bold uppercase tracking-[0.38em] text-accent">
-          Merit Table
-        </p>
-        <h1 className="mt-3 font-sans text-3xl font-black tracking-tight sm:text-4xl">
-          Closing merits, {inductions.length} cycles
-        </h1>
-        <p className="mt-3 max-w-3xl text-sm leading-relaxed text-fg-muted">
-          What each seat actually closed at, by specialty, hospital, programme
-          and quota. Trend and confidence are derived from how many cycles of
-          data exist for that combination — a projection from eleven years is a
-          different claim from one built on two.
-        </p>
+      <div className="mx-auto max-w-[1600px] px-4 py-14 sm:px-6 md:py-20 lg:px-8">
+        {/* Editorial split: the claim on the left, the shape of the evidence on
+            the right. Collapses to a single column below `lg`, where the
+            figures sit under the sentence they qualify. */}
+        <header className="grid gap-10 lg:grid-cols-[minmax(0,1fr)_auto] lg:items-end lg:gap-16">
+          <Reveal>
+            <Eyebrow>Merit Table</Eyebrow>
 
-        <div className="mt-8">
-          <MeritBrowser rows={rows} inductions={inductions} facets={facets} />
+            <h1 className="mt-6 max-w-[16ch] font-sans text-[2.5rem] font-black leading-[0.95] tracking-[-0.03em] sm:text-6xl lg:text-7xl">
+              Closing merits,
+              <span className="block text-accent">
+                {first.label}–{last.label}
+              </span>
+            </h1>
+
+            <p className="mt-7 max-w-2xl text-[15px] leading-relaxed text-fg-muted">
+              What each seat actually closed at, by specialty, hospital,
+              programme and quota. Trend and confidence are derived from how
+              many years of data exist for that combination — a projection from
+              eleven years is a different claim from one built on two. Click any
+              row for the full year-by-year breakdown.
+            </p>
+          </Reveal>
+
+          <Reveal delay={120}>
+            <Bezel className="lg:min-w-[19rem]">
+              <dl className="divide-y divide-border">
+                <Figure
+                  label="Records"
+                  value={rows.length.toLocaleString("en-GB")}
+                />
+                <Figure label="Years covered" value={String(cycles.length)} />
+                <Figure label="Latest year" value={last.label} />
+              </dl>
+            </Bezel>
+          </Reveal>
+        </header>
+
+        {/* Deliberately NOT wrapped in <Reveal>. A transformed ancestor becomes
+            the containing block for `position: fixed`, so the mobile filter
+            sheet anchored to the bottom of the whole results list — thousands
+            of pixels below the viewport — instead of the screen. Entry
+            animation is not worth breaking a modal for. */}
+        <div className="mt-16 md:mt-20">
+          <MeritBrowser rows={rows} cycles={cycles} facets={facets} />
         </div>
 
-        <p className="mt-10 border-t border-border pt-5 text-xs leading-relaxed text-fg-subtle">
+        <p className="mt-20 border-t border-border pt-6 text-xs leading-relaxed text-fg-subtle">
           Historical data only, sourced from official PHF merit lists. Closing
           merits shift with applicant numbers, seat counts and policy changes, so
           past figures indicate but never guarantee. Verify eligibility, seat
@@ -54,6 +88,33 @@ export default async function MeritTablePage() {
           application decisions.
         </p>
       </div>
+    </div>
+  );
+}
+
+/** One figure in the header panel. Numerics are monospaced, per the guidelines. */
+function Figure({
+  label,
+  value,
+  hint,
+}: {
+  label: string;
+  value: string;
+  hint?: string;
+}) {
+  return (
+    <div className="flex items-baseline justify-between gap-8 px-5 py-4">
+      <dt className="font-mono text-[10px] font-bold uppercase tracking-[0.18em] text-fg-muted">
+        {label}
+      </dt>
+      <dd className="font-mono text-lg font-bold tabular-nums text-foreground">
+        {value}
+        {hint && (
+          <span className="ml-1.5 text-xs font-normal text-fg-subtle">
+            {hint}
+          </span>
+        )}
+      </dd>
     </div>
   );
 }

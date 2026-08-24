@@ -50,6 +50,12 @@
      moments, celebration, and softening a discouraging result. Using it as
      general decoration destroys its signal. */
 
+  /* Native controls — the `<select>` popup list, scrollbars, the date picker —
+     are drawn by the OS, not by us. Without `color-scheme` they render in the
+     browser's default light chrome whatever the page is doing, so a dark theme
+     opens a white dropdown. Declared per theme so the platform follows. */
+  color-scheme: light;
+
   /* --- 2. Semantic tokens — light theme ----------------------------------- */
   --background: var(--brand-cream);
   --surface: var(--brand-white);
@@ -125,6 +131,24 @@
   --ease-smooth-out: cubic-bezier(0.22, 1, 0.36, 1);
   --ease-in-out: ease-in-out;
   --ease-out: ease-out;
+  /* Weighted spring-like curve for anything that should feel like it has mass:
+     panels opening, elements entering the viewport. Slower out than in. */
+  --ease-weighted: cubic-bezier(0.32, 0.72, 0, 1);
+
+  /* --- 6b. Depth ---------------------------------------------------------- */
+  /* Nested "double-bezel" enclosures need a top edge highlight to read as a
+     physical lip rather than a flat colour change. Theme-resolved, because a
+     white highlight on cream is a different value from one on midnight. */
+  --edge-highlight: rgba(255, 255, 255, 0.9);
+  /* Diffused ambient shadows, never a hard drop. Two layers: a tight contact
+     shadow and a wide soft one, which is what stops a card looking pasted on. */
+  --shadow-ambient: 0 1px 2px rgba(23, 23, 23, 0.04),
+    0 12px 32px -12px rgba(23, 23, 23, 0.1);
+  --shadow-lifted: 0 2px 4px rgba(23, 23, 23, 0.05),
+    0 24px 56px -20px rgba(23, 23, 23, 0.16);
+  /* The shadow cast INTO a recessed control — inputs and selects. Opposite in
+     direction to the raised shadows above, and a different value per theme. */
+  --field-inset: rgba(23, 23, 23, 0.06);
   /* --- 7. Chart tokens (@bklit registry) ---------------------------------- */
   /* The shadcn CLI injects a neutral greyscale ramp and a `.dark` class block.
      Both were replaced: this project has no `.dark` class (theme resolution is
@@ -186,6 +210,7 @@
 /* --- Dark theme: system preference, unless explicitly set to light -------- */
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
+    color-scheme: dark;
     --background: var(--brand-midnight);
     --surface: var(--brand-midnight-raised);
     --surface-raised: #17403b;
@@ -230,6 +255,15 @@
     --sim-estimate: #a8a29e;
     --sim-estimate-quiet: rgba(168, 162, 158, 0.14);
 
+    /* A near-white lip would glare on midnight; depth on a dark ground comes
+       from a faint highlight and a much deeper, softer shadow. */
+    --edge-highlight: rgba(255, 255, 255, 0.07);
+    --shadow-ambient: 0 1px 2px rgba(0, 0, 0, 0.3),
+      0 12px 32px -12px rgba(0, 0, 0, 0.55);
+    --shadow-lifted: 0 2px 4px rgba(0, 0, 0, 0.35),
+      0 24px 56px -20px rgba(0, 0, 0, 0.7);
+    --field-inset: rgba(0, 0, 0, 0.28);
+
     /* The sequential chart scale reverses direction on a dark ground. Every
        other chart token is derived from the semantic tokens above, so nothing
        else chart-related needs restating per theme. */
@@ -243,6 +277,7 @@
 
 /* --- Dark theme: explicit user choice ------------------------------------ */
 :root[data-theme="dark"] {
+  color-scheme: dark;
   --background: var(--brand-midnight);
   --surface: var(--brand-midnight-raised);
   --surface-raised: #17403b;
@@ -286,6 +321,13 @@
   --sim-cascade-quiet: rgba(45, 212, 191, 0.14);
   --sim-estimate: #a8a29e;
   --sim-estimate-quiet: rgba(168, 162, 158, 0.14);
+
+  --edge-highlight: rgba(255, 255, 255, 0.07);
+  --shadow-ambient: 0 1px 2px rgba(0, 0, 0, 0.3),
+    0 12px 32px -12px rgba(0, 0, 0, 0.55);
+  --shadow-lifted: 0 2px 4px rgba(0, 0, 0, 0.35),
+    0 24px 56px -20px rgba(0, 0, 0, 0.7);
+  --field-inset: rgba(0, 0, 0, 0.28);
 
   --chart-scale-01: #10403c;
   --chart-scale-02: #17605a;
@@ -375,6 +417,12 @@
 
   /* Motion */
   --ease-smooth-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-weighted: cubic-bezier(0.32, 0.72, 0, 1);
+
+  /* Depth */
+  --color-edge-highlight: var(--edge-highlight);
+  --shadow-ambient: var(--shadow-ambient);
+  --shadow-lifted: var(--shadow-lifted);
   /* Charts (@bklit). The shadcn CLI wrote these with a doubled prefix —
      `var(----chart-1)` — which resolves to nothing, so every chart utility
      would have fallen back to transparent. Corrected, and given the
@@ -412,11 +460,99 @@
   --color-muted-foreground: var(--muted-foreground);
 }
 
+/* Sheet and scrim entrances. Transform and opacity only — a sheet animated on
+   `bottom` would relayout the document on every frame of the rise. */
+@keyframes sheetUp {
+  from {
+    transform: translateY(100%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+
+@keyframes drawerIn {
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
 body {
   background: var(--background);
   color: var(--foreground);
   font-family: var(--font-sans), system-ui, -apple-system, sans-serif;
   overflow-x: hidden;
+}
+
+/* --- Scrollbars ----------------------------------------------------------
+   `color-scheme` already stops a dark page opening a white scrollbar, but it
+   only picks the OS's generic light or dark chrome — a blue-grey Windows bar on
+   a teal-and-cream page. These rules put the scrollbar on the same tokens as
+   everything else, so it flips with the theme along with the rest.
+
+   Both syntaxes are needed and they are not interchangeable. `scrollbar-color`
+   is the standard property (Firefox, and Chrome 121+); `::-webkit-scrollbar` is
+   what older WebKit and Chromium understand, and it is ignored entirely once
+   the standard property is applied — so specifying both is belt and braces
+   rather than a conflict.
+
+   Colours are derived from the semantic tokens rather than restated, the same
+   rule the chart tokens follow: no scrollbar colour is written out in a dark
+   block. */
+:root {
+  --scrollbar-thumb: var(--border-strong);
+  --scrollbar-thumb-hover: var(--fg-subtle);
+  --scrollbar-track: transparent;
+}
+
+* {
+  scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-track);
+  /* Thin, not hidden. A scrollbar is the only indication of how much is left,
+     and on a 742-card list that matters. */
+  scrollbar-width: thin;
+}
+
+*::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+*::-webkit-scrollbar-track {
+  background: var(--scrollbar-track);
+}
+
+*::-webkit-scrollbar-thumb {
+  background: var(--scrollbar-thumb);
+  border-radius: 999px;
+  /* A transparent border with `background-clip` insets the thumb without
+     shrinking the hit area — the bar stays a comfortable target while reading
+     as a slim line. */
+  border: 2px solid transparent;
+  background-clip: padding-box;
+}
+
+*::-webkit-scrollbar-thumb:hover {
+  background: var(--scrollbar-thumb-hover);
+  background-clip: padding-box;
+  border: 2px solid transparent;
+}
+
+/* Where the two bars meet. Left unstyled it renders as a pale OS square in the
+   corner of every scrollable table. */
+*::-webkit-scrollbar-corner {
+  background: var(--scrollbar-track);
 }
 
 /* 3D Floating Animation */

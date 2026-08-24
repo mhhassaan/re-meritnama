@@ -5,6 +5,7 @@ import { cn } from "@/lib/utils";
 // Registry path bug: the @bklit component ships this as
 // `../components/shimmering-text`, which resolves to src/components/components/.
 // The CLI actually writes the file to src/components/shimmering-text.tsx.
+// Re-applied after every `shadcn add --overwrite`.
 import { ShimmeringText } from "../shimmering-text";
 import {
   LINE_LOADING_PULSE_EASE,

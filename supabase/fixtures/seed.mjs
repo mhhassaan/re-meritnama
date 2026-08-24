@@ -82,16 +82,46 @@ const candidateRows = ids.map((id) => {
   };
 });
 
+// Real applicant ids are below 900001; fixtures start at 900001. Their presence
+// means this database has been through the ingest pipeline, and the app should
+// show those records rather than a synthetic cohort sitting alongside them.
+const { count: realCandidates } = await db
+  .from("candidates")
+  .select("id", { count: "exact", head: true })
+  .eq("induction", INDUCTION)
+  .lt("applicant_id", 900001);
+
+const HAS_REAL_DATA = Boolean(realCandidates);
+
 // Chunked: a single insert of thousands of rows with jsonb preference lists can
 // exceed the request size limit.
 const CHUNK = 200;
-for (let i = 0; i < candidateRows.length; i += CHUNK) {
+
+if (HAS_REAL_DATA && !process.argv.includes("--force-fixtures")) {
+  // The two link targets are still written. The development sign-ins have to
+  // point at SOMETHING, and it must be a record this project owns — never an
+  // ingested one belonging to a real person. Everything else in the fixture
+  // cohort is skipped, so the app shows real data.
+  const linkTargets = candidateRows.slice(0, 2);
   const { error } = await db
     .from("candidates")
-    .upsert(candidateRows.slice(i, i + CHUNK), { onConflict: "induction,applicant_id" });
+    .upsert(linkTargets, { onConflict: "induction,applicant_id" });
   if (error) throw new Error(`candidates upsert failed: ${error.message}`);
+
+  console.log(
+    `skipped fixture candidates: ${realCandidates} ingested records already ` +
+      `exist for induction ${INDUCTION}. Wrote ${linkTargets.length} link ` +
+      `targets for the dev sign-ins. Pass --force-fixtures for the full cohort.`
+  );
+} else {
+  for (let i = 0; i < candidateRows.length; i += CHUNK) {
+    const { error } = await db
+      .from("candidates")
+      .upsert(candidateRows.slice(i, i + CHUNK), { onConflict: "induction,applicant_id" });
+    if (error) throw new Error(`candidates upsert failed: ${error.message}`);
+  }
+  console.log(`seeded ${candidateRows.length} candidates (tier 2, private)`);
 }
-console.log(`seeded ${candidateRows.length} candidates (tier 2, private)`);
 
 // --- tier 1: gazette-equivalent projection -----------------------------------
 // Built by PROJECTING the private records: only the gazette-published columns
@@ -131,15 +161,37 @@ const uniqueMerit = meritRows.filter((r) => {
   return true;
 });
 
-for (let i = 0; i < uniqueMerit.length; i += CHUNK) {
-  const { error } = await db
-    .from("merit_entries")
-    .upsert(uniqueMerit.slice(i, i + CHUNK), {
-      onConflict: "induction,round,applicant_id,program,specialty,hospital",
-    });
-  if (error) throw new Error(`merit_entries upsert failed: ${error.message}`);
+// Never write fixture merit entries on top of ingested ones.
+//
+// The seed writes at round 1, which is also where the ingested consent rounds
+// land, so re-seeding a database that already holds real records mixes the two
+// in a single list. That is not cosmetic: merit lists order by marks, and a
+// fixture cohort will interleave with — or outrank — real candidates depending
+// on how the two were generated. Real applicant ids are below 900001, so their
+// presence is the signal.
+const { count: realEntries } = await db
+  .from("merit_entries")
+  .select("id", { count: "exact", head: true })
+  .eq("induction", INDUCTION)
+  .lt("applicant_id", 900001);
+
+if (realEntries && !process.argv.includes("--force-merit-entries")) {
+  console.log(
+    `skipped merit_entries: ${realEntries} ingested rows already exist for ` +
+      `induction ${INDUCTION}. Fixture entries would mix with real candidates ` +
+      `in the same round. Pass --force-merit-entries to override.`
+  );
+} else {
+  for (let i = 0; i < uniqueMerit.length; i += CHUNK) {
+    const { error } = await db
+      .from("merit_entries")
+      .upsert(uniqueMerit.slice(i, i + CHUNK), {
+        onConflict: "induction,round,applicant_id,program,specialty,hospital",
+      });
+    if (error) throw new Error(`merit_entries upsert failed: ${error.message}`);
+  }
+  console.log(`seeded ${uniqueMerit.length} merit entries (tier 1, gazette-equivalent)`);
 }
-console.log(`seeded ${uniqueMerit.length} merit entries (tier 1, gazette-equivalent)`);
 
 // --- accounts ----------------------------------------------------------------
 
@@ -147,22 +199,48 @@ console.log(`seeded ${uniqueMerit.length} merit entries (tier 1, gazette-equival
 const DEV_PASSWORD = "devpassword123!";
 
 async function ensureUser({ email, displayName, role, applicantId }) {
-  // Remove any previous run's account so the script is re-runnable.
-  const { data: list } = await db.auth.admin.listUsers({ perPage: 1000 });
-  const existing = list?.users?.find((u) => u.email === email);
-  if (existing) await db.auth.admin.deleteUser(existing.id);
-
-  const { data, error } = await db.auth.admin.createUser({
-    email,
-    password: DEV_PASSWORD,
-    // Pre-confirmed: private.is_verified() reads email_confirmed_at, and both
-    // tiers are unreadable without it.
-    email_confirm: true,
-    user_metadata: { display_name: displayName },
+  // Update in place rather than delete-and-recreate.
+  //
+  // The old version deleted the account first and ignored whether that
+  // succeeded. Two things went wrong. Deleting an account is BLOCKED whenever
+  // something still references it: `access_requests.reviewed_by` and
+  // `user_roles.granted_by` are `ON DELETE NO ACTION` on purpose, so the record
+  // of who approved what survives the reviewer's account. Once the admin had
+  // approved a single request it could no longer be deleted, and because the
+  // error was unchecked the script carried on and failed three lines later with
+  // a misleading "already registered".
+  //
+  // The deeper problem is that recreating an account issues a NEW user id, which
+  // orphans every row that pointed at the old one. Updating keeps the id stable,
+  // which is what makes this script genuinely re-runnable.
+  const { data: list, error: listError } = await db.auth.admin.listUsers({
+    perPage: 1000,
   });
-  if (error) throw new Error(`createUser(${email}) failed: ${error.message}`);
+  if (listError) throw new Error(`listUsers failed: ${listError.message}`);
 
-  const userId = data.user.id;
+  const existing = list?.users?.find((u) => u.email === email);
+
+  let userId;
+  if (existing) {
+    const { error } = await db.auth.admin.updateUserById(existing.id, {
+      password: DEV_PASSWORD,
+      email_confirm: true,
+      user_metadata: { display_name: displayName },
+    });
+    if (error) throw new Error(`updateUser(${email}) failed: ${error.message}`);
+    userId = existing.id;
+  } else {
+    const { data, error } = await db.auth.admin.createUser({
+      email,
+      password: DEV_PASSWORD,
+      // Pre-confirmed: private.is_verified() reads email_confirmed_at, and both
+      // tiers are unreadable without it.
+      email_confirm: true,
+      user_metadata: { display_name: displayName },
+    });
+    if (error) throw new Error(`createUser(${email}) failed: ${error.message}`);
+    userId = data.user.id;
+  }
 
   if (role) {
     const { error: roleError } = await db
@@ -199,19 +277,38 @@ async function ensureUser({ email, displayName, role, applicantId }) {
   return userId;
 }
 
-const first = candidates[ids[0]];
-const second = candidates[ids[1]];
+/**
+ * The two candidate sign-ins.
+ *
+ * They link to FIXTURE candidate records, always — never to an ingested one.
+ *
+ * An earlier version pointed them at real records so that every screen would
+ * show real data. That was wrong: those records belong to actual people, and
+ * attaching a shared development login to one makes a real person's private
+ * Tier 2 data reachable through a test account, and mutates rows that were
+ * never ours. Development tooling only writes to what this project created.
+ *
+ * Real data still reaches the UI — the app reads `merit_entries` and
+ * `candidates` through its normal access controls. What is fenced off is the
+ * seed repurposing someone's record as a test subject.
+ */
+function candidateTargets() {
+  return [ids[0], ids[1]].map((id) => ({
+    email: candidates[id].emailId,
+    name: candidates[id].nameFull,
+    applicantId: candidates[id].applicantId,
+  }));
+}
 
-await ensureUser({
-  email: first.emailId,
-  displayName: first.nameFull,
-  applicantId: first.applicantId,
-});
-await ensureUser({
-  email: second.emailId,
-  displayName: second.nameFull,
-  applicantId: second.applicantId,
-});
+const linkedTargets = candidateTargets();
+
+for (const target of linkedTargets) {
+  await ensureUser({
+    email: target.email,
+    displayName: target.name,
+    applicantId: target.applicantId,
+  });
+}
 await ensureUser({
   email: "admin@example.invalid",
   displayName: "Dev Admin",
@@ -224,7 +321,11 @@ await ensureUser({
 });
 
 console.log(`\nseeded accounts (password for all: ${DEV_PASSWORD})`);
-console.log(`  ${first.emailId}   candidate, linked to ${first.applicantId}`);
-console.log(`  ${second.emailId}   candidate, linked to ${second.applicantId}`);
+for (const target of linkedTargets) {
+  console.log(
+    `  ${target.email}   candidate, linked to applicant ${target.applicantId}` +
+      " (fixture record)"
+  );
+}
 console.log(`  admin@example.invalid        super_admin`);
 console.log(`  moderator@example.invalid    moderator`);

@@ -17,6 +17,21 @@ export type SortKey =
 
 export type SortDirection = "asc" | "desc";
 
+/**
+ * How many of the most recent cycles get their own column.
+ *
+ * Thirteen columns of percentages is more than anyone reads at once, and on a
+ * 1440px screen it pushes the trend and confidence columns off the right edge.
+ * The live site defaults to the last five, and that is the right default: the
+ * older cycles ran under scoring policies two or three revisions out of date.
+ * `"all"` is there for anyone who genuinely wants the full history.
+ */
+export type CycleRange = 1 | 3 | 5 | 10 | "all";
+
+export function visibleCycleCount(range: CycleRange, total: number): number {
+  return range === "all" ? total : Math.min(range, total);
+}
+
 export type MeritQuery = {
   program?: string;
   quota?: string;
@@ -29,6 +44,8 @@ export type MeritQuery = {
   sort?: SortKey;
   direction?: SortDirection;
   scale?: MeritScale;
+  /** Columns only — it never removes rows from the result set. */
+  cycleRange?: CycleRange;
 };
 
 /**

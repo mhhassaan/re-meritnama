@@ -6,6 +6,7 @@ import { Grid } from "@/components/charts/grid";
 import { ChartTooltip } from "@/components/charts/tooltip/chart-tooltip";
 import { chartCssVars } from "@/components/charts/chart-context";
 import type { MeritRow } from "@/lib/merit/types";
+import type { Cycle } from "@/lib/merit/data";
 import { valueFor } from "@/lib/merit/query";
 import { specialtyColorVar } from "@/lib/design/specialty";
 
@@ -41,24 +42,25 @@ const CYCLE_SPACING_MS = 86_400_000;
 type Point = {
   x: Date;
   induction: number;
+  label: string;
   value: number;
 };
 
 export function MeritTrendChart({
   row,
-  inductions,
+  cycles,
   className = "",
   aspectRatio = "3 / 1",
 }: {
   row: MeritRow;
-  inductions: number[];
+  cycles: Cycle[];
   className?: string;
   aspectRatio?: string;
 }) {
   const points = useMemo<Point[]>(
     () =>
-      inductions
-        .map((induction) => {
+      cycles
+        .map(({ induction, label }) => {
           // Always normalised: raw marks come from cycles whose totals ranged
           // from 95 down to 30, so a raw line would plot a policy change as if
           // it were a change in competitiveness.
@@ -68,11 +70,12 @@ export function MeritTrendChart({
             : {
                 x: new Date(induction * CYCLE_SPACING_MS),
                 induction,
+                label,
                 value,
               };
         })
         .filter((point): point is Point => point !== null),
-    [row, inductions]
+    [row, cycles]
   );
 
   // One observation cannot be a trend. Drawing a single dot on a full chart
@@ -122,7 +125,7 @@ export function MeritTrendChart({
             return (
               <div className="px-2.5 py-1.5">
                 <p className="font-mono text-[10px] uppercase tracking-wider text-chart-tooltip-muted">
-                  Induction {p.induction}
+                  {p.label}
                 </p>
                 <p className="mt-0.5 font-mono text-sm font-bold text-chart-tooltip-foreground">
                   {p.value.toFixed(1)}% of max
@@ -149,7 +152,7 @@ export function MeritTrendChart({
                 left: `calc(10px + ${fraction} * (100% - 20px))`,
               }}
             >
-              {point.induction}
+              {point.label}
             </span>
           );
         })}
@@ -159,7 +162,7 @@ export function MeritTrendChart({
         {/* The vertical scale is stated rather than drawn: the registry's
             line-chart ships no YAxis, and gridlines with no labels are
             decoration. The domain is fixed 0–100 so two charts compare. */}
-        Induction · % of max, 0–100 scale
+        Year · % of max, 0–100 scale
       </p>
     </div>
   );

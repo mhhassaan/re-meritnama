@@ -4,6 +4,7 @@ import { useMemo } from "react";
 import { LineChart, Line } from "@/components/charts/line-chart";
 import { Grid } from "@/components/charts/grid";
 import type { MeritRow } from "@/lib/merit/types";
+import type { Cycle } from "@/lib/merit/data";
 import { valueFor } from "@/lib/merit/query";
 import { specialtyColorVar } from "@/lib/design/specialty";
 
@@ -28,28 +29,33 @@ const HEIGHT = 104;
 const MARGIN = { top: 20, right: 10, bottom: 16, left: 10 };
 const INNER_HEIGHT = HEIGHT - MARGIN.top - MARGIN.bottom;
 
-type Point = { x: Date; induction: number; value: number };
+type Point = { x: Date; induction: number; label: string; value: number };
 
 export function MeritRowTrend({
   row,
-  inductions,
+  cycles,
 }: {
   row: MeritRow;
-  inductions: number[];
+  cycles: Cycle[];
 }) {
   const points = useMemo<Point[]>(
     () =>
-      inductions
-        .map((induction) => {
+      cycles
+        .map((cycle) => {
           // Always normalised. A raw line would render the marks total moving
           // from 95 to 30 as if it were a change in competitiveness.
-          const value = valueFor(row, induction, "normalised");
+          const value = valueFor(row, cycle.induction, "normalised");
           return value == null
             ? null
-            : { x: new Date(induction * CYCLE_SPACING_MS), induction, value };
+            : {
+                x: new Date(cycle.induction * CYCLE_SPACING_MS),
+                induction: cycle.induction,
+                label: cycle.label,
+                value,
+              };
         })
         .filter((point): point is Point => point !== null),
-    [row, inductions]
+    [row, cycles]
   );
 
   if (points.length < 2) {
@@ -59,7 +65,7 @@ export function MeritRowTrend({
         style={{ height: HEIGHT }}
       >
         {points.length === 1
-          ? `Induction ${points[0].induction} only — ${points[0].value.toFixed(1)}%, not a trend`
+          ? `${points[0].label} only — ${points[0].value.toFixed(1)}%, not a trend`
           : "No cycle data"}
       </div>
     );
@@ -127,7 +133,7 @@ export function MeritRowTrend({
             className="absolute -translate-x-1/2 font-mono text-[9px] tabular-nums text-fg-subtle"
             style={{ left: leftFor(point), bottom: 0 }}
           >
-            {point.induction}
+            {point.label}
           </span>
         ))}
       </div>
@@ -137,7 +143,7 @@ export function MeritRowTrend({
       <span className="sr-only">
         Closing merit as a percentage of each cycle&apos;s total:{" "}
         {points
-          .map((p) => `Induction ${p.induction}, ${p.value.toFixed(1)} percent`)
+          .map((p) => `${p.label}, ${p.value.toFixed(1)} percent`)
           .join("; ")}
       </span>
     </div>
