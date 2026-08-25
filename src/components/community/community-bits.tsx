@@ -36,7 +36,7 @@ export function AuthorLine({
       >
         {author.name.charAt(0)}
       </span>
-      <span className="font-bold text-fg-muted">{author.name}</span>
+      <span className="min-w-0 break-words font-bold text-fg-muted">{author.name}</span>
       {author.isMe && (
         <span className="uppercase tracking-wider text-hope">you</span>
       )}

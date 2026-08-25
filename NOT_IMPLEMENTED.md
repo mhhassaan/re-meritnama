@@ -11,7 +11,7 @@ Three reasons appear over and over, so they are abbreviated in the tables:
 | **decision** | Building it would change the security posture or publish something nobody has published. Needs the owner, not a developer. |
 | **declined** | Deliberately not ported. The reason is given. |
 
-Last checked against the deployed site on **2026-08-24**, signed in.
+Last checked against the deployed site on **2026-08-25**, signed in — including a sweep of every `*.html` it serves.
 
 ---
 
@@ -21,7 +21,7 @@ Last checked against the deployed site on **2026-08-24**, signed in.
 
 | Feature | Status | Notes |
 | :-- | :-- | :-- |
-| Start Here, Merit Table, My Prediction, Calculator, Compare, Previous Merit Lists, Policy, Guide, Jobs | **built** | — |
+| Start Here, Merit Table, My Prediction, Calculator, Compare, Previous Merit Lists, Policy, Guide, Jobs, Editorial, Support | **built** | — |
 
 ### Induction Portal (`simulation.html`)
 
@@ -35,8 +35,6 @@ Last checked against the deployed site on **2026-08-24**, signed in.
 | :-- | :-- | :-- |
 | `hospital.html` | **built** | Ported as `/app/portal/hospitals/[slug]`. |
 | `candidate.html` (My Profile) | **partly built** | See §3. |
-| **`editorial.html` — Editorial** | scope | "In-depth analysis, policy commentary, and data-driven insights." Content, plus somewhere to author it. |
-| **`donate.html` — Support** | scope | "Keep MeritNama Running." Payments are the owner's, not ours — see §5. |
 | **`admin.html`** | n/a | We have our own `/admin`. The original's is not a porting target. |
 
 ---
@@ -51,9 +49,7 @@ Last checked against the deployed site on **2026-08-24**, signed in.
 | Joining Status | **"Likely wasted" bucket** | data | The live site offers it as a stat and a filter. Nothing in the export distinguishes it from "not joined yet", and its own counter reports 0 while all five deadlines have passed. Each deadline is printed on the row instead. |
 | Config | **Merit formula: "MS/MD Marks Adjusted"** | data | A formula there is a definition — base field, fields to sum, adjustments — stored in the owner's Firestore. We hold the name, not the definition. |
 | Config | **Candidate revision (Amendment 1/2/3)** | scope | Re-derives every mark by subtracting a per-field delta over house job, position, MDCAT and degree. Amendments are ingested and shown on a record; the engines read a precomputed total, so applying one means recomputing the pool. |
-| Hospital profile | **Training Reviews** | decision | Resident-written reviews, rated overall and per aspect. Needs a table, a write path and moderation. |
 | Portal header | **Inbox badge, share button, language globe, background picker** | scope | Small chrome. The background picker offers page-wide visual themes. |
-| Portal header | **Notification and editorial banners** | scope | Admin-authored announcements pinned above the page. |
 
 ---
 
@@ -90,7 +86,11 @@ Not missing — different on purpose, and each is stated on the page it affects.
 
 Not developer work. Listed so they are not mistaken for scope.
 
-- **Support / donations.** Payments, the account they land in, and any receipting.
+- **Support / donations.** The page is built and carries the original's copy,
+  bank details, totals and supporters list. What is still the owner's: keeping
+  those figures current — they are a hardcoded snapshot from 2026-08-25 with no
+  feed behind them — and deciding whether supporters should be able to opt out
+  of appearing.
 - **Moderating the community surfaces.** The queue at `/app/admin/reports` is built and you hold `super_admin`, but somebody has to read it. Nothing hides itself on a report count, deliberately, so an unread queue means an unmoderated forum.
 - **A current jobs feed.** `public/data/jobs.json` was scraped on 11 July 2026 and every deadline in it has passed. The live board's 153 postings live in the owner's Firestore, which is out of scope; a refreshed snapshot or an export of that collection would make the Jobs page current with no code change.
 - **Father's names.** Needed for nothing currently built, and deliberately absent.
@@ -98,10 +98,51 @@ Not developer work. Listed so they are not mistaken for scope.
 
 ---
 
-## 6. Suggested order
+## 6. What is actually left
 
-Nothing on the original's feature list is outstanding. What remains is
-operational rather than scope — see §5.
+**Every page the original has is now built.** What remains is a short tail of
+in-page features, three things needing the owner's decision, and the
+operational items in §5.
+
+**In-page, ordered by what they cost now**
+
+1. **Candidate revision (Amendment 1/2/3)** in Config — re-derives every mark
+   from per-field deltas. The amendments are ingested and shown on a record, but
+   the engines read a precomputed total, so applying one means recomputing the
+   pool rather than flipping a switch. The largest of these.
+2. **Trust signals row** on the profile — "Verified · Public profile · Photo
+   added · Contribution linked". The fourth needs a per-account link between a
+   supporter and their contribution, which the Support page does not create —
+   its list is a hardcoded snapshot, not rows tied to accounts.
+3. **Portal header chrome** — inbox badge, share button, language globe,
+   background picker. Smallest and least valuable.
+
+**Waiting on a decision from the owner, not on code**: Message the admin
+(§3 — it is a lookup surface over grievance records), Mentorship (§3), and the
+`MS/MD Marks Adjusted` formula (§2 — we hold its name, not its definition).
+
+**Declined, with reasons on the record**: pool PDF export, father's-name
+tidbits, the "Happy Residency" mail tool, invite PINs, and the twelve
+full-page background animations.
+
+~~Shortlist~~ — built. A star on every hospital card and profile, a drawer
+listing what was saved, capped at 40. `localStorage` only, matching the
+original and for a reason worth keeping: a shortlist is a viewing preference
+rather than evidence, and which hospitals a named candidate is circling during a
+live cycle is not something this product should hold on a server. The store is
+generic — an item is `{id, type, label, href, meta}` — so a page opts in by
+rendering a star, and seats or specialties could take one later without touching
+the store.
+
+~~Training Reviews~~ — built, on the hospital profile and summarised on the
+directory card. They are `community_posts` with `kind = 'hospital_review'`, so
+they arrived with the authorship trigger, rate limits, reporting and moderation
+already attached — the migration added four columns (three aspect ratings and a
+training year) and nothing else. Averages count only *visible* reviews: a hidden
+one is still returned to its author by the policy, and letting it move the
+number would show that author a different average from everyone else. An unrated
+aspect prints "not rated" rather than 0, because a zero reads as the worst score
+rather than an absent one.
 
 ~~Chat, Discussion, Community Feed~~ — built as one project, with the
 moderation substrate first. Authorship comes from a database trigger reading

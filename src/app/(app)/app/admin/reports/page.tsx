@@ -151,16 +151,16 @@ function Item({ item, resolved }: { item: ReportedItem; resolved?: boolean }) {
       {item.content ? (
         <>
           {item.content.title && (
-            <p className="mt-3 font-sans text-sm font-bold text-foreground">
+            <p className="mt-3 break-words font-sans text-sm font-bold text-foreground">
               {item.content.title}
             </p>
           )}
           {/* Clamped: a reviewer needs enough to judge, and the link opens the
               thing in place. An 8,000-character body would bury the controls. */}
-          <p className="mt-2 line-clamp-6 whitespace-pre-wrap text-sm leading-relaxed text-fg-muted">
+          <p className="mt-2 line-clamp-6 whitespace-pre-wrap text-sm leading-relaxed text-fg-muted break-words">
             {item.content.body}
           </p>
-          <p className="mt-2 font-mono text-[10px] text-fg-subtle">
+          <p className="mt-2 break-words font-mono text-[10px] text-fg-subtle">
             by {item.content.authorName} · {formatDateTime(item.content.createdAt)}
             {item.content.href && (
               <>
@@ -190,7 +190,7 @@ function Item({ item, resolved }: { item: ReportedItem; resolved?: boolean }) {
               {report.resolvedAt && ` · closed as ${report.action}`}
             </span>
             {report.note && (
-              <p className="mt-0.5 whitespace-pre-wrap text-fg-muted">
+              <p className="mt-0.5 whitespace-pre-wrap text-fg-muted break-words">
                 &ldquo;{report.note}&rdquo;
               </p>
             )}

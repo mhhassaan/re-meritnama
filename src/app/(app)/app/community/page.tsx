@@ -216,11 +216,11 @@ export default async function CommunityFeedPage({
                   )}
                 </div>
 
-                <p className="mt-3 font-sans text-base font-bold leading-snug text-foreground">
+                <p className="mt-3 break-words font-sans text-base font-bold leading-snug text-foreground">
                   {post.title}
                 </p>
 
-                <p className="mt-2 whitespace-pre-wrap text-sm leading-relaxed text-fg-muted">
+                <p className="mt-2 whitespace-pre-wrap text-sm leading-relaxed text-fg-muted break-words">
                   {post.body}
                 </p>
 

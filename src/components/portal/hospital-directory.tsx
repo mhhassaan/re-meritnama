@@ -4,6 +4,7 @@ import { useMemo, useState } from "react";
 import Link from "next/link";
 import type { HospitalSummary } from "@/lib/portal/hospitals";
 import { Bezel } from "@/components/app/bezel";
+import { ShortlistDrawer, ShortlistStar } from "@/components/portal/shortlist";
 import { FieldLabel, SearchField } from "@/components/app/field";
 import { LoadMore } from "@/components/portal/load-more";
 import { HouseIcon } from "@/components/icons/koboyo";
@@ -42,8 +43,11 @@ const CHIP_AREA = "h-[3.75rem]";
 
 export function HospitalDirectory({
   hospitals,
+  ratings,
 }: {
   hospitals: HospitalSummary[];
+  /** Average rating and count per hospital name, for the ones that have any. */
+  ratings: Record<string, { average: number; count: number }>;
 }) {
   const [search, setSearch] = useState("");
   const [shown, setShown] = useState(BATCH);
@@ -72,14 +76,17 @@ export function HospitalDirectory({
   return (
     <>
       <Bezel className="mt-8" innerClassName="p-5">
-        <div className="flex flex-col gap-1">
-          <FieldLabel htmlFor="hosp-search">Search</FieldLabel>
-          <SearchField
-            id="hosp-search"
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            placeholder="Hospital, institute, specialty or programme…"
-          />
+        <div className="flex flex-wrap items-end gap-4">
+          <div className="flex min-w-0 flex-1 flex-col gap-1">
+            <FieldLabel htmlFor="hosp-search">Search</FieldLabel>
+            <SearchField
+              id="hosp-search"
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              placeholder="Hospital, institute, specialty or programme…"
+            />
+          </div>
+          <ShortlistDrawer />
         </div>
       </Bezel>
 
@@ -106,7 +113,11 @@ export function HospitalDirectory({
               short card never leaves a gap beneath it. */}
           <div className="mt-3 grid auto-rows-fr gap-4 lg:grid-cols-2">
             {visible.slice(0, shown).map((hospital) => (
-              <HospitalCard key={hospital.slug} hospital={hospital} />
+              <HospitalCard
+                key={hospital.slug}
+                hospital={hospital}
+                rating={ratings[hospital.name]}
+              />
             ))}
           </div>
 
@@ -122,7 +133,13 @@ export function HospitalDirectory({
   );
 }
 
-function HospitalCard({ hospital }: { hospital: HospitalSummary }) {
+function HospitalCard({
+  hospital,
+  rating,
+}: {
+  hospital: HospitalSummary;
+  rating?: { average: number; count: number };
+}) {
   const largest = Math.max(...hospital.seatsByProgram.map((p) => p.seats), 1);
 
   return (
@@ -132,24 +149,59 @@ function HospitalCard({ hospital }: { hospital: HospitalSummary }) {
     >
       <Bezel innerClassName="flex h-full flex-col p-5 transition-colors duration-[200ms] group-hover:bg-surface-sunken">
         {/* ── Identity, on a fixed two lines ───────────────────────────── */}
-        <div className="min-h-[2.75rem]">
-          <p className="line-clamp-1 font-sans text-[15px] font-bold leading-snug text-accent">
-            {hospital.name}
-          </p>
-          <p className="line-clamp-1 text-xs leading-snug text-fg-subtle">
-            {hospital.institute && hospital.institute !== hospital.name
-              ? hospital.institute
-              : " "}
-          </p>
+        <div className="flex min-h-[2.75rem] items-start gap-2">
+          <div className="min-w-0 flex-1">
+            <p className="line-clamp-1 font-sans text-[15px] font-bold leading-snug text-accent">
+              {hospital.name}
+            </p>
+            <p className="line-clamp-1 text-xs leading-snug text-fg-subtle">
+              {hospital.institute && hospital.institute !== hospital.name
+                ? hospital.institute
+                : " "}
+            </p>
+          </div>
+
+          {/* Inside a card that is itself a link, so the star stops the click
+              before it bubbles — otherwise saving a hospital opens it. */}
+          <ShortlistStar
+            item={{
+              id: `hospital:${hospital.slug}`,
+              type: "hospital",
+              label: hospital.name,
+              href: `/app/portal/hospitals/${hospital.slug}`,
+              meta: `${hospital.seats} seats · ${hospital.programs.join(", ")}`,
+            }}
+            className="-mr-1 -mt-1"
+          />
         </div>
 
         {/* ── The two numbers, read rather than counted ────────────────── */}
-        <div className="mt-3 flex items-baseline gap-6 border-y border-border py-3">
+        <div className="mt-3 flex flex-wrap items-baseline gap-x-6 gap-y-2 border-y border-border py-3">
           <Stat value={hospital.seats} label={hospital.seats === 1 ? "seat" : "seats"} />
           <Stat
             value={hospital.specialties.length}
             label={hospital.specialties.length === 1 ? "specialty" : "specialties"}
           />
+
+          {/* Only when somebody has actually reviewed it. A card that always
+              showed a rating slot would print an empty score for 68 of 69
+              hospitals, which reads as a bad rating rather than as no data. */}
+          {rating && (
+            <span className="flex items-baseline gap-1.5">
+              <span
+                aria-hidden
+                className="text-sm leading-none tracking-[0.06em] text-status-reach"
+              >
+                {"★".repeat(Math.round(rating.average))}
+              </span>
+              <span className="font-mono text-[13px] font-bold tabular-nums text-foreground">
+                {rating.average.toFixed(1)}
+              </span>
+              <span className="font-mono text-[10px] text-fg-subtle">
+                {rating.count} {rating.count === 1 ? "review" : "reviews"}
+              </span>
+            </span>
+          )}
         </div>
 
         {/* ── Seats by programme, as a bar ─────────────────────────────── */}

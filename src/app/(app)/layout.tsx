@@ -6,6 +6,8 @@ import { UserMenu } from "@/components/app/user-menu";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { SignOutButton } from "@/components/auth/sign-out-button";
 import { signAvatar } from "@/lib/profile/avatar";
+import { loadLiveNotices } from "@/lib/announce/data";
+import { NoticeBanner } from "@/components/app/notice-banner";
 import { AppNavDrawer, AppSidebar } from "@/components/app/app-nav";
 
 /**
@@ -42,6 +44,7 @@ export default async function AppLayout({
   // self-readable and `user_roles` has no client write policy at all, so a role
   // shown here cannot be one the holder granted themselves.
   const supabase = await createClient();
+  const notices = await loadLiveNotices();
   const [{ data: profile }, { data: roles }] = await Promise.all([
     // Filtered to this user on purpose: `profiles` is readable for every
     // public profile, so an unfiltered `.maybeSingle()` matches several rows
@@ -103,6 +106,10 @@ export default async function AppLayout({
           <SignOutButton />
         </div>
       </header>
+
+      {/* Announcements sit under the header and above the rail, so they are the
+          first thing on every page without displacing the nav. */}
+      <NoticeBanner notices={notices} />
 
       {/* The rail scrolls with its own sticky container rather than the page,
           so the nav stays reachable down a 1,470-row table. */}

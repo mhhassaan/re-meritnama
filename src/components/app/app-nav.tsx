@@ -20,6 +20,7 @@ import { DatabaseIcon } from "@/components/ui/database";
 import { File01Icon } from "@/components/ui/file-01";
 import { GridViewIcon } from "@/components/ui/grid-view";
 import { HelpCircleIcon } from "@/components/ui/help-circle";
+import { SparklesIcon } from "@/components/ui/sparkles";
 import { HistoryIcon } from "@/components/ui/history";
 import { ListViewIcon } from "@/components/ui/list-view";
 import { Location01Icon } from "@/components/ui/location-01";
@@ -109,8 +110,10 @@ export const NAV_GROUPS: NavGroup[] = [
   {
     label: "Resources",
     items: [
+      { label: "Editorial", href: "/app/editorial", Icon: File01Icon },
       { label: "Policy", href: "/app/policy", Icon: File01Icon },
       { label: "Guide", href: "/app/guide", Icon: HelpCircleIcon },
+      { label: "Support", href: "/app/support", Icon: SparklesIcon },
       { label: "Discussion", href: "/app/discussion", Icon: Message01Icon },
       { label: "Community Feed", href: "/app/community", Icon: UserGroupIcon },
     ],

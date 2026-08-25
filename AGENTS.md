@@ -300,6 +300,9 @@ has, in a position that reads as an addition.
 | 23 | Data Changes | `/app/portal/changes` | built |
 | 24 | Accredited Programs | `/app/accreditation` | built |
 | 25 | Job Openings | `/app/jobs` | built |
+| 25a | Editorial | `/app/editorial` | built |
+| 25b | Support | `/app/support` | built |
+| 25c | Announcements (staff) | `/app/admin/notifications` | built |
 | 26 | Discussion | `/app/discussion` | built |
 | 27 | Community Feed | `/app/community` | built |
 | 28 | Chat | `/app/portal/chat` | built |
@@ -646,10 +649,28 @@ the original's `hospital.html?id=3`. That numeric portal id is not a column we
 hold, and a slug survives being pasted into a message. Verified unique: 69 names,
 69 slugs.
 
-**Training Reviews are not built.** The original's profile ends with
-resident-written reviews, rated overall and per aspect. That is a community
-feature with its own writes and its own moderation problem, not a view over seat
-data, and the page says so rather than ending abruptly.
+**Training Reviews are built, and cost almost nothing** because the community
+work had already built everything they needed. A review is a `community_posts`
+row with `kind = 'hospital_review'` — same authorship trigger, same rate limit,
+same report button, same moderation queue. The migration added four columns
+(teaching, work-life balance, seniors' support, training year) and one index.
+No new table, and deliberately so: a separate one would be a second copy of
+every moderation rule and the first place they would drift apart.
+
+Two rules on the numbers:
+
+- **Averages count only visible reviews.** The select policy still returns a
+  reader their own hidden review, so averaging everything returned would show
+  that author a different score from everybody else — and let a removed review
+  keep influencing the score it was removed for.
+- **An unrated aspect prints "not rated", never 0.** The three aspects are
+  optional; a zero reads as the worst possible score rather than an absent one.
+  The same distinction the Data Changes work turned on.
+
+The directory card shows the average and count, from one grouped query for all
+69 rather than one per card, and shows nothing at all for a hospital nobody has
+reviewed — an always-present rating slot would print an empty score for 68 of
+69 and read as a bad rating.
 
 **Every card in the directory is the same height, and that took two things.**
 The first version printed the specialty list as running text — Mayo has 28, a
@@ -1422,6 +1443,115 @@ component instance across a same-route navigation, its `shown` state survives
 and the entrance animation does not replay. Worth recording so it is not
 re-investigated.
 
+### Shortlist
+
+`src/lib/shortlist.ts` and `src/components/portal/shortlist.tsx`. A star on
+every hospital card and profile, a "My shortlist (N)" drawer, capped at 40.
+
+**`localStorage` only, and that is the decision rather than the shortcut.** A
+shortlist is a viewing preference, not evidence: nothing decides anything from
+it and nobody else reads it. What it *would* be on a server is a record of which
+hospitals a named candidate is circling during a live cycle — the same reasoning
+that keeps `find-me` and the manual candidate in the browser.
+
+**The store is generic.** An item is `{id, type, label, href, meta}`, so a page
+opts in by rendering a star and the module never learns about hospitals. The
+original's is built the same way and only its hospital pages use it; ours match
+that rather than inventing new places to save from.
+
+Three things that each bit or nearly did:
+
+- **The star lives inside a card that is itself a `<Link>`**, so it calls
+  `preventDefault` and `stopPropagation`. Without both, saving a hospital opens
+  it — the most annoying bug this control can have.
+- **State is read after mount, never during render.** `localStorage` does not
+  exist on the server, so seeding from it directly fails hydration. The button
+  is `disabled` until the store has been read rather than showing a confident
+  "not saved" it is about to contradict, and the drawer's count renders only
+  once `ready`.
+- **A tab does not receive its own `storage` event.** Cross-tab sync needs
+  `storage`; keeping the stars on *this* page in step with the drawer needs a
+  custom event as well. Same pair as `find-me`.
+
+### Staff-authored content: banners and Editorial
+
+`notifications` and `editorial_posts`, both written by `is_staff()` —
+super_admin or moderator. Deliberately **not** `can_post()`: this is not
+community content, it speaks in the site's own voice, and a banner carries an
+authority a forum post does not.
+
+The point of both is that they take their content from a **table rather than a
+file in the repo**. During a live round, the difference between "post an
+announcement" and "ask the contractor for a redeploy" is the difference between
+telling candidates something on the day and not telling them.
+
+**A notification's link is constrained to an internal path by a check
+constraint**, not only by the form — verified by trying it with the service
+role, which is refused. A banner above every page is the most trusted surface in
+the product, and the people reading it are being asked for verification details
+elsewhere in the same week; an external link there is a phishing vector the
+moment a staff account is compromised.
+
+**Dismissals live in `localStorage`, keyed by notice id.** A row per user per
+notice would be a new table, a new policy and a write on page load, to remember
+that somebody clicked ✕. A new announcement reaches everybody because its id has
+never been dismissed. Read after mount, and the banner renders `null` until then
+— so nothing below it moves when it turns out to have been dismissed.
+
+**Editorial bodies are parsed, never injected** (`src/lib/announce/render.ts`).
+Two block types: a line starting `## ` is a heading, everything else is a
+paragraph. Not Markdown and not HTML — a full Markdown renderer brings raw-HTML
+passthrough and arbitrary link targets, which are ways to reach off this site
+from a surface that speaks in its voice. Anything unrecognised renders as the
+literal text the author typed, which is the safe failure; verified by putting a
+`<script>` tag in a body and finding zero script elements in the article.
+
+**Drafts are staff-only by policy**, so an author reads a piece on the real page
+in its real typography before anybody else can. The original cannot do this at
+all: its pieces are markup inside `editorial.html`, so writing one and
+publishing one are the same act. Ours also get their own URL rather than the
+original's hash-routing, so a piece somebody sends you opens on the piece.
+
+**Support is a content page, not a payment integration.** The original has no
+processor either — it explains the cost, gives bank and Raast details, and asks
+people to claim through the access-request form, which already carries
+`payment_reference` / `payment_declared` / `payment_verified`.
+
+**The totals and all 185 supporters are carried across, hardcoded**, at the
+owner's instruction. There is no feed behind them; they were read off the live
+page on 2026-08-25 and the page says as much rather than implying a number that
+updates itself.
+
+**The payment details are two tabs, Bank transfer and Raast/QR, as the original
+has them.** They are two ways of doing the same thing rather than two halves of
+one instruction — somebody paying from a banking app scans and never reads the
+number, somebody typing a transfer never looks at the code — so showing both at
+once makes each reader skip half the panel.
+
+The QR is generated **server-side** with `qrcode` into an SVG string. The value
+never changes, so shipping an encoder to every browser would be paying for work
+that can be done once; it also keeps the page free of a CDN script. Its holder
+is `bg-white` **in both themes** and always will be: a QR is read by contrast,
+and dark modules on a dark card scan for nobody.
+
+Tab icons are `@hugeicons-animated`, not Koboyo — a tab is a control, and the
+standing rule is that anything clickable animates. `role="tablist"` with
+arrow-key movement, so it is a tab set rather than two buttons that look like
+one.
+
+`src/lib/support/supporters.ts` is a **server-only module, deliberately not a
+file in `public/`** — 185 names served verbatim at a guessable URL is the exact
+shape of the original's failure. Two values were cleaned **on the way in**, the
+same rule `pool-directory.mjs` and `joining-status.mjs` follow, so that what was
+never written cannot later leak:
+
+- **Parentage stripped** from 143 of the 185. Every other surface here strips
+  it, and a page that prints the amount beside the name is not the place to stop.
+- **One entry withheld**: a supporter typed their **email address** into the
+  name box and the original publishes it. Same class as the three candidates who
+  typed a CNIC into the pool's name field. It renders as "Anonymous supporter",
+  amount and date intact.
+
 ### The account menu
 
 `src/components/app/user-menu.tsx`, in the `(app)` header, beside the theme
@@ -1615,6 +1745,19 @@ observations — the scale changed, not the sample.
 ## Traps already hit — do not rediscover
 
 **UI / hydration**
+- **Every render of user-written text needs `break-words`.** `whitespace-pre-wrap`
+  preserves an unbroken run rather than wrapping it, so one long token widens
+  its container past the page — measured at **17,665px** inside a 1,190px column
+  from a single review body, taking the whole document with it. It applies to
+  bodies, titles, summaries, reporter notes and **display names**, on Discussion,
+  the Feed, the moderation queue and hospital reviews. Chat already had it; the
+  rest did not.
+- **A control that appears on interaction needs its slot reserved.** The review
+  form's "clear" button was appended once a star was picked, which widened its
+  row and shoved the stars leftward at the moment of the click — and left the
+  unrated rows lining their stars up differently from the rated ones. It has a
+  fixed-width slot on every row now, empty when there is nothing to clear. Same
+  class of bug as the quote strip's unreserved height.
 - `color-scheme` must be declared per theme in `globals.css`. Native controls —
   the `<select>` popup list, scrollbars, date pickers — are drawn by the OS, not
   by our CSS, so without it a dark page opens a white dropdown. It only selects

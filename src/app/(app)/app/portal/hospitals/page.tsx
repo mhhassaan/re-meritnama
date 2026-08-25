@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Suspense } from "react";
 import { loadHospitals } from "@/lib/portal/hospitals";
+import { loadHospitalRatings } from "@/lib/community/reviews";
 import { CURRENT_INDUCTION } from "@/lib/induction";
 import { loadCycleSummaries } from "@/lib/merit/data";
 import { HospitalDirectory } from "@/components/portal/hospital-directory";
@@ -27,10 +28,15 @@ export const metadata: Metadata = {
  * so the directory needs no table of its own.
  */
 export default async function HospitalsPage() {
-  const [hospitals, cycles] = await Promise.all([
+  const [hospitals, ratings, cycles] = await Promise.all([
     loadHospitals(),
+    loadHospitalRatings(),
     loadCycleSummaries(),
   ]);
+
+  // A Map does not survive the server/client boundary, so it is flattened to a
+  // plain object for the directory component.
+  const ratingRows = Object.fromEntries(ratings);
 
   const cycle = cycles.find((c) => c.induction === CURRENT_INDUCTION);
   const seats = hospitals.reduce((sum, h) => sum + h.seats, 0);
@@ -69,7 +75,7 @@ export default async function HospitalsPage() {
         </Bezel>
 
         <Suspense fallback={null}>
-          <HospitalDirectory hospitals={hospitals} />
+          <HospitalDirectory hospitals={hospitals} ratings={ratingRows} />
         </Suspense>
 
         <p className="mt-16 flex items-start gap-2.5 border-t border-border pt-6 text-xs leading-relaxed text-fg-subtle">

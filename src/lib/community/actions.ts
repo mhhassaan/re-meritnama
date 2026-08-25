@@ -145,6 +145,11 @@ export async function createPost(input: {
   specialty?: string;
   hospital?: string;
   rating?: number | null;
+  /** Hospital reviews only — the three aspects and the year. */
+  teaching?: number | null;
+  balance?: number | null;
+  seniors?: number | null;
+  trainingYear?: number | null;
 }): Promise<WriteResult> {
   const supabase = await createClient();
 
@@ -162,6 +167,12 @@ export async function createPost(input: {
     return { ok: false, error: "A hospital review needs a hospital." };
   }
 
+  // The aspects follow the overall rating: they are meaningless outside a
+  // review and the column has a check constraint saying so, so they are dropped
+  // here rather than left to produce an error a reader cannot interpret.
+  const aspect = (value: number | null | undefined) =>
+    input.kind === "hospital_review" && value ? value : null;
+
   const { data, error } = await supabase
     .from("community_posts")
     .insert({
@@ -171,6 +182,10 @@ export async function createPost(input: {
       specialty: clean(input.specialty, 80),
       hospital: clean(input.hospital, 160),
       rating,
+      rating_teaching: aspect(input.teaching),
+      rating_balance: aspect(input.balance),
+      rating_seniors: aspect(input.seniors),
+      training_year: aspect(input.trainingYear),
     } as never)
     .select("id")
     .maybeSingle();
@@ -179,6 +194,8 @@ export async function createPost(input: {
   if (!data) return { ok: false, error: explain("row-level security", "posts") };
 
   revalidatePath("/app/community");
+  // A review also changes the hospital profile it was written about.
+  if (input.kind === "hospital_review") revalidatePath("/app/portal/hospitals", "layout");
   return { ok: true, id: data.id };
 }
 

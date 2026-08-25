@@ -2,6 +2,19 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { loadHospital } from "@/lib/portal/hospitals";
+import { loadHospitalReviews } from "@/lib/community/reviews";
+import { loadPostingRights } from "@/lib/community/data";
+import { ReviewComposer } from "@/components/community/review-composer";
+import { StarsRead } from "@/components/community/stars";
+import {
+  AuthorLine,
+  Chip,
+  HiddenNotice,
+  PostingGate,
+} from "@/components/community/community-bits";
+import { ReportButton } from "@/components/community/report-button";
+import { ShortlistDrawer, ShortlistStar } from "@/components/portal/shortlist";
+import { WithdrawButton } from "@/components/community/reply-composer";
 import { PortalQuoteStrip } from "@/components/portal/quote-strip";
 import { Reveal } from "@/components/app/reveal";
 import { Bezel, Eyebrow } from "@/components/app/bezel";
@@ -51,6 +64,14 @@ export default async function HospitalProfilePage({
   // training hospital this cycle".
   if (!hospital) notFound();
 
+  // Fetched after the 404 check, and keyed on the hospital's real name rather
+  // than the slug: the slug is our addressing scheme, the name is what a review
+  // is written against.
+  const [reviews, rights] = await Promise.all([
+    loadHospitalReviews(hospital.name),
+    loadPostingRights(),
+  ]);
+
   return (
     <div>
       <PortalQuoteStrip />
@@ -59,22 +80,36 @@ export default async function HospitalProfilePage({
         <Reveal>
           {/* `Eyebrow` is an inline-flex span, so the back link needs its own
               block or the two share a line and read as one control. */}
-          <div>
+          <div className="flex flex-wrap items-center justify-between gap-4">
             <Link
               href="/app/portal/hospitals"
               className="inline-flex items-center gap-2 font-mono text-[11px] uppercase tracking-wider text-fg-muted transition-colors hover:text-foreground"
             >
               <span aria-hidden>&larr;</span> All hospitals
             </Link>
+            <ShortlistDrawer />
           </div>
 
           <div className="mt-6">
             <Eyebrow>Induction Portal</Eyebrow>
           </div>
 
-          <h1 className="mt-4 max-w-[22ch] font-sans text-[2rem] font-black leading-[1.05] tracking-[-0.03em] sm:text-5xl">
-            {hospital.name}
-          </h1>
+          <div className="mt-4 flex items-start gap-3">
+            <h1 className="max-w-[22ch] font-sans text-[2rem] font-black leading-[1.05] tracking-[-0.03em] sm:text-5xl">
+              {hospital.name}
+            </h1>
+            {/* Beside the name, where the original puts it. */}
+            <ShortlistStar
+              item={{
+                id: `hospital:${hospital.slug}`,
+                type: "hospital",
+                label: hospital.name,
+                href: `/app/portal/hospitals/${hospital.slug}`,
+                meta: `${hospital.seats} seats · ${hospital.programs.join(", ")}`,
+              }}
+              className="mt-1 text-2xl"
+            />
+          </div>
 
           {hospital.institute && hospital.institute !== hospital.name && (
             <p className="mt-2 text-sm text-fg-muted">{hospital.institute}</p>
@@ -181,19 +216,102 @@ export default async function HospitalProfilePage({
           </div>
         </section>
 
-        {/* ── Reviews, which are not built ─────────────────────────────── */}
+        {/* ── Training reviews ─────────────────────────────────────────
+            The original's page ends here too. These are `community_posts` with
+            `kind = 'hospital_review'`, so they arrive with the same authorship
+            trigger, rate limit, reporting and moderation as everything else
+            people write on this site — the section is a view, not a feature. */}
         <section className="mt-12">
-          <Bezel innerClassName="flex flex-wrap items-center gap-3 p-5">
-            <MessagesIcon className="h-4 w-auto shrink-0 text-fg-subtle" />
-            <p className="min-w-0 flex-1 text-sm leading-relaxed text-fg-muted">
-              <span className="font-bold text-foreground">Training reviews</span>{" "}
-              — the official portal ends this page with reviews written by
-              residents, rated overall and per aspect. That is a community
-              feature with its own writes and its own moderation, not a view over
-              seat data, so it is not built here yet.
+          <h2 className="font-mono text-[11px] font-bold uppercase tracking-[0.2em] text-fg-muted">
+            Training reviews
+          </h2>
+
+          {reviews.summary.count === 0 ? (
+            <p className="mt-3 max-w-2xl text-sm leading-relaxed text-fg-muted">
+              Nobody has reviewed {hospital.name} yet. A seat table says what is
+              on offer; only somebody who trained here can say what it was like.
             </p>
-            <Pill tone="plain">Soon</Pill>
-          </Bezel>
+          ) : (
+            <Bezel className="mt-3" innerClassName="p-5">
+              <div className="flex flex-wrap items-center gap-x-8 gap-y-4">
+                <div>
+                  <p className="font-mono text-[9px] uppercase tracking-[0.18em] text-fg-muted">
+                    Overall
+                  </p>
+                  <StarsRead
+                    value={reviews.summary.overall}
+                    size="text-lg"
+                    className="mt-1"
+                  />
+                  <p className="mt-1 font-mono text-[10px] text-fg-subtle">
+                    {reviews.summary.count}{" "}
+                    {reviews.summary.count === 1 ? "review" : "reviews"}
+                  </p>
+                </div>
+
+                {/* Each aspect is optional, so an unrated one prints "not
+                    rated" rather than a zero — a zero here would read as the
+                    worst possible score instead of an absent one. */}
+                <div className="flex flex-col gap-1.5">
+                  <Aspect label="Teaching" value={reviews.summary.teaching} />
+                  <Aspect label="Work-life balance" value={reviews.summary.balance} />
+                  <Aspect label="Seniors' support" value={reviews.summary.seniors} />
+                </div>
+              </div>
+            </Bezel>
+          )}
+
+          <PostingGate rights={rights} />
+          {rights.canPost && (
+            <ReviewComposer
+              hospital={hospital.name}
+              specialties={hospital.rows.map((r) => r.specialty)}
+              alreadyReviewed={reviews.mine}
+            />
+          )}
+
+          {reviews.reviews.length > 0 && (
+            <div className="mt-6 flex flex-col gap-3">
+              {reviews.reviews.map((review) => (
+                <Bezel key={review.id} innerClassName="p-5">
+                  <div className="flex flex-wrap items-center gap-2">
+                    <StarsRead value={review.rating} />
+                    {review.specialty && <Chip>{review.specialty}</Chip>}
+                    {review.trainingYear && <Chip>Trained {review.trainingYear}</Chip>}
+                  </div>
+
+                  <p className="mt-3 break-words font-sans text-sm font-bold leading-snug text-foreground">
+                    {review.title}
+                  </p>
+                  <p className="mt-2 whitespace-pre-wrap text-sm leading-relaxed text-fg-muted break-words">
+                    {review.body}
+                  </p>
+
+                  {(review.teaching || review.balance || review.seniors) && (
+                    <div className="mt-3 flex flex-wrap gap-x-6 gap-y-1.5 border-t border-border pt-3">
+                      {review.teaching && <Aspect label="Teaching" value={review.teaching} />}
+                      {review.balance && <Aspect label="Balance" value={review.balance} />}
+                      {review.seniors && <Aspect label="Seniors" value={review.seniors} />}
+                    </div>
+                  )}
+
+                  <HiddenNotice moderation={review.moderation} />
+
+                  <div className="mt-4 flex flex-wrap items-center justify-between gap-3 border-t border-border pt-3">
+                    <AuthorLine author={review.author} at={review.createdAt} />
+                    <div className="flex items-center gap-4">
+                      {review.author.isMe && !review.moderation.hidden && (
+                        <WithdrawButton target="post" targetId={review.id} />
+                      )}
+                      {!review.author.isMe && (
+                        <ReportButton target="post" targetId={review.id} />
+                      )}
+                    </div>
+                  </div>
+                </Bezel>
+              ))}
+            </div>
+          )}
         </section>
 
         <p className="mt-16 flex items-start gap-2.5 border-t border-border pt-6 text-xs leading-relaxed text-fg-subtle">
@@ -206,6 +324,18 @@ export default async function HospitalProfilePage({
         </p>
       </div>
     </div>
+  );
+}
+
+/** One aspect average, or an honest "not rated". */
+function Aspect({ label, value }: { label: string; value: number | null }) {
+  return (
+    <span className="flex flex-wrap items-center gap-2">
+      <span className="font-mono text-[9px] uppercase tracking-[0.18em] text-fg-muted">
+        {label}
+      </span>
+      <StarsRead value={value} size="text-xs" />
+    </span>
   );
 }
 

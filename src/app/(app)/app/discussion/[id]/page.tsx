@@ -78,7 +78,7 @@ export default async function ThreadPage({
           )}
         </div>
 
-        <h1 className="mt-4 font-sans text-2xl font-black leading-tight tracking-[-0.02em] text-foreground sm:text-3xl">
+        <h1 className="mt-4 break-words font-sans text-2xl font-black leading-tight tracking-[-0.02em] text-foreground sm:text-3xl">
           {thread.title}
         </h1>
 
@@ -86,7 +86,7 @@ export default async function ThreadPage({
           {/* `whitespace-pre-wrap`, not a markdown renderer. Rendering
               user-written markup is a way to smuggle links and formatting into
               a page other people trust; paragraph breaks are all this needs. */}
-          <p className="whitespace-pre-wrap text-[15px] leading-relaxed text-foreground">
+          <p className="whitespace-pre-wrap text-[15px] leading-relaxed text-foreground break-words">
             {thread.body}
           </p>
 
@@ -123,7 +123,7 @@ export default async function ThreadPage({
           <div className="mt-3 flex flex-col gap-3">
             {visibleReplies.map((reply) => (
               <Bezel key={reply.id} innerClassName="p-5">
-                <p className="whitespace-pre-wrap text-sm leading-relaxed text-foreground">
+                <p className="whitespace-pre-wrap text-sm leading-relaxed text-foreground break-words">
                   {reply.body}
                 </p>
 

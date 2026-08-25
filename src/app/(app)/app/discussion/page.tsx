@@ -207,7 +207,7 @@ export default async function DiscussionPage({
 
                 <Link
                   href={`/app/discussion/${thread.id}`}
-                  className="mt-3 block font-sans text-base font-bold leading-snug text-foreground transition-colors hover:text-accent"
+                  className="mt-3 block break-words font-sans text-base font-bold leading-snug text-foreground transition-colors hover:text-accent"
                 >
                   {thread.title}
                 </Link>
@@ -215,7 +215,7 @@ export default async function DiscussionPage({
                 {/* Clamped rather than truncated with an ellipsis in the data:
                     the full body is one click away and the list is for
                     scanning. */}
-                <p className="mt-2 line-clamp-2 text-sm leading-relaxed text-fg-muted">
+                <p className="mt-2 line-clamp-2 text-sm leading-relaxed text-fg-muted break-words">
                   {thread.body}
                 </p>
 

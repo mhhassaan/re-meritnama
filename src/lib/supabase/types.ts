@@ -296,8 +296,12 @@ export type Database = {
           id: number;
           kind: string;
           rating: number | null;
+          rating_balance: number | null;
+          rating_seniors: number | null;
+          rating_teaching: number | null;
           specialty: string | null;
           title: string;
+          training_year: number | null;
           updated_at: string;
         };
         Insert: {
@@ -313,8 +317,12 @@ export type Database = {
           id?: never;
           kind: string;
           rating?: number | null;
+          rating_balance?: number | null;
+          rating_seniors?: number | null;
+          rating_teaching?: number | null;
           specialty?: string | null;
           title: string;
+          training_year?: number | null;
           updated_at?: string;
         };
         Update: {
@@ -330,8 +338,12 @@ export type Database = {
           id?: never;
           kind?: string;
           rating?: number | null;
+          rating_balance?: number | null;
+          rating_seniors?: number | null;
+          rating_teaching?: number | null;
           specialty?: string | null;
           title?: string;
+          training_year?: number | null;
           updated_at?: string;
         };
         Relationships: [];
@@ -551,6 +563,105 @@ export type Database = {
           new_value?: number | null;
           old_value?: number | null;
           program?: string;
+          updated_at?: string;
+        };
+        Relationships: [];
+      };
+      editorial_posts: {
+        Row: {
+          author_name: string;
+          body: string;
+          category: string;
+          created_at: string;
+          created_by: string | null;
+          id: number;
+          is_published: boolean;
+          published_at: string | null;
+          read_minutes: number | null;
+          slug: string;
+          summary: string;
+          title: string;
+          updated_at: string;
+        };
+        Insert: {
+          author_name?: string;
+          body: string;
+          category: string;
+          created_at?: string;
+          created_by?: string | null;
+          id?: never;
+          is_published?: boolean;
+          published_at?: string | null;
+          read_minutes?: number | null;
+          slug: string;
+          summary: string;
+          title: string;
+          updated_at?: string;
+        };
+        Update: {
+          author_name?: string;
+          body?: string;
+          category?: string;
+          created_at?: string;
+          created_by?: string | null;
+          id?: never;
+          is_published?: boolean;
+          published_at?: string | null;
+          read_minutes?: number | null;
+          slug?: string;
+          summary?: string;
+          title?: string;
+          updated_at?: string;
+        };
+        Relationships: [];
+      };
+      notifications: {
+        Row: {
+          active: boolean;
+          body: string;
+          created_at: string;
+          created_by: string | null;
+          dismissable: boolean;
+          ends_at: string | null;
+          icon: string | null;
+          id: number;
+          kind: string;
+          link: string | null;
+          link_text: string | null;
+          starts_at: string | null;
+          title: string;
+          updated_at: string;
+        };
+        Insert: {
+          active?: boolean;
+          body: string;
+          created_at?: string;
+          created_by?: string | null;
+          dismissable?: boolean;
+          ends_at?: string | null;
+          icon?: string | null;
+          id?: never;
+          kind?: string;
+          link?: string | null;
+          link_text?: string | null;
+          starts_at?: string | null;
+          title: string;
+          updated_at?: string;
+        };
+        Update: {
+          active?: boolean;
+          body?: string;
+          created_at?: string;
+          created_by?: string | null;
+          dismissable?: boolean;
+          ends_at?: string | null;
+          icon?: string | null;
+          id?: never;
+          kind?: string;
+          link?: string | null;
+          link_text?: string | null;
+          starts_at?: string | null;
+          title?: string;
           updated_at?: string;
         };
         Relationships: [];

@@ -6,6 +6,8 @@ import { usePathname } from "next/navigation";
 import { UserIcon } from "@/components/ui/user";
 import { Settings01Icon } from "@/components/ui/settings-01";
 import { Shield02Icon } from "@/components/ui/shield-02";
+import { Message01Icon } from "@/components/ui/message-01";
+import { File01Icon } from "@/components/ui/file-01";
 import { ChevronDownIcon } from "@/components/ui/chevron-down";
 import { ICON_SIZE_SM, useActionIcon } from "@/components/app/action-icon";
 
@@ -146,6 +148,22 @@ export function UserMenu({ identity }: { identity: Identity }) {
                   >
                     <Shield02Icon size={ICON_SIZE_SM} />
                     Reports
+                  </Link>
+                  <Link
+                    href="/app/admin/notifications"
+                    role="menuitem"
+                    className="flex items-center gap-2.5 rounded-sm px-2 py-2 text-sm text-fg-muted transition-colors hover:bg-surface-sunken hover:text-foreground"
+                  >
+                    <Message01Icon size={ICON_SIZE_SM} />
+                    Announcements
+                  </Link>
+                  <Link
+                    href="/app/admin/editorial"
+                    role="menuitem"
+                    className="flex items-center gap-2.5 rounded-sm px-2 py-2 text-sm text-fg-muted transition-colors hover:bg-surface-sunken hover:text-foreground"
+                  >
+                    <File01Icon size={ICON_SIZE_SM} />
+                    Write editorial
                   </Link>
                   <Link
                     href="/admin"
