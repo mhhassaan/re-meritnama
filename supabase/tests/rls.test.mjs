@@ -32,6 +32,11 @@ if (!BASE || !KEY) {
 }
 
 const DEV_PASSWORD = "devpassword123!";
+
+// Used only to tidy up rows this suite created. Never to assert anything: the
+// service role bypasses RLS, so a check made with it proves nothing about what
+// the public endpoint allows.
+const SERVICE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY;
 let passed = 0;
 let failed = 0;
 
@@ -91,6 +96,8 @@ for (const table of [
   "applicants",
   "pool_directory",
   "joining_status",
+  "data_changes",
+  "data_change_runs",
 ]) {
   const { status } = await get(`${table}?select=*&limit=1`);
   check(`anon cannot read ${table}`, status, 401);
@@ -269,6 +276,93 @@ console.log("\npayment proof storage");
     }
   );
   check("candidate cannot upload directly", candidateUpload.status >= 400, true);
+}
+
+// Avatars are photographs of people's faces, keyed to a display name and a
+// cycle. The bucket is private, and the select policy is scoped to the
+// uploader's own folder — so the interesting assertions are that no public URL
+// works and that a signed-in candidate cannot reach anybody else's folder.
+console.log("\navatar storage");
+{
+  const OTHER = "00000000-0000-0000-0000-000000000000/avatar";
+
+  const publicUrl = await fetch(`${BASE}/storage/v1/object/public/avatars/${OTHER}`);
+  check("avatars bucket is not public", publicUrl.status >= 400, true);
+
+  const anonRead = await fetch(`${BASE}/storage/v1/object/avatars/${OTHER}`, {
+    headers: { apikey: KEY, Authorization: `Bearer ${KEY}` },
+  });
+  check("anon cannot read an avatar", anonRead.status >= 400, true);
+
+  const otherRead = await fetch(`${BASE}/storage/v1/object/avatars/${OTHER}`, {
+    headers: { apikey: KEY, Authorization: `Bearer ${candidateToken}` },
+  });
+  check("a candidate cannot read another user's avatar", otherRead.status >= 400, true);
+
+  // Minting is checked separately from reading. The whole design is that other
+  // people's photos reach a browser only through a server-minted signed URL, so
+  // a client able to mint its own would make the private bucket decorative.
+  const sign = await fetch(`${BASE}/storage/v1/object/sign/avatars/${OTHER}`, {
+    method: "POST",
+    headers: {
+      apikey: KEY,
+      Authorization: `Bearer ${candidateToken}`,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ expiresIn: 60 }),
+  });
+  check("a candidate cannot sign another user's avatar", sign.status >= 400, true);
+
+  // Listing separately again: a bucket that denies reads but permits listing
+  // still discloses which accounts have uploaded a photo.
+  //
+  // Unlike payment-proofs, the expected answer is NOT zero. The select policy
+  // is scoped to the caller's own folder — `upsert` needs a readable row, see
+  // the migration — so listing returns exactly one entry, theirs. What must
+  // hold is that nobody else's folder is in it.
+  const ownUid = JSON.parse(
+    Buffer.from(candidateToken.split(".")[1], "base64url").toString()
+  ).sub;
+
+  const listRes = await fetch(`${BASE}/storage/v1/object/list/avatars`, {
+    method: "POST",
+    headers: {
+      apikey: KEY,
+      Authorization: `Bearer ${candidateToken}`,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ prefix: "", limit: 100 }),
+  });
+  const listed = await listRes.json().catch(() => null);
+  const foreign = Array.isArray(listed)
+    ? listed.map((e) => e.name).filter((n) => n !== ownUid)
+    : ["not-an-array"];
+  check("listing the avatars bucket shows nobody else's folder", foreign, []);
+
+  const otherUpload = await fetch(`${BASE}/storage/v1/object/avatars/${OTHER}`, {
+    method: "POST",
+    headers: {
+      apikey: KEY,
+      Authorization: `Bearer ${candidateToken}`,
+      "Content-Type": "image/png",
+    },
+    body: new Uint8Array([0x89, 0x50, 0x4e, 0x47]),
+  });
+  check(
+    "a candidate cannot upload into another user's folder",
+    otherUpload.status >= 400,
+    true
+  );
+
+  const otherDelete = await fetch(`${BASE}/storage/v1/object/avatars/${OTHER}`, {
+    method: "DELETE",
+    headers: { apikey: KEY, Authorization: `Bearer ${candidateToken}` },
+  });
+  check(
+    "a candidate cannot delete another user's avatar",
+    otherDelete.status >= 400,
+    true
+  );
 }
 
 console.log("\nportal allocation inputs");
@@ -530,6 +624,240 @@ console.log("\njoining status");
     body: JSON.stringify({ p_induction: 21, p_rows: [] }),
   });
   check("a candidate cannot call apply_joining_status", joinRpc.status >= 400, true);
+}
+
+console.log("\ndata changes");
+
+// ── data_changes ────────────────────────────────────────────────────────
+//
+// The source diff carries a CNIC correction for 397 of its 622 records and the
+// old and new name strings for 400. Neither is ingested, and neither can be:
+// there is no column able to hold a string at all. Asserted directly rather
+// than trusted to the ingest script continuing to read one field at a time.
+{
+  const changes = await get(
+    "data_changes?select=*&induction=eq.21&limit=1",
+    candidateToken
+  );
+  check("a verified candidate can read data changes", changes.rows?.length, 1);
+
+  const cols = Object.keys(changes.rows?.[0] ?? {});
+  const stringy = cols.filter((c) =>
+    ["cnic", "name_full", "old_text", "new_text", "preferences"].includes(c)
+  );
+  check("data changes carries no identity or preference column", stringy, []);
+
+  // `field` names the thing that moved, and the two withheld ones must never
+  // appear among them — a future ingest that stopped stripping would surface
+  // here rather than on the page.
+  const fields = await get(
+    "data_changes?select=field&induction=eq.21&limit=1000",
+    candidateToken
+  );
+  const names = new Set((fields.rows ?? []).map((r) => r.field));
+  check("no cnic field is recorded", names.has("cnic"), false);
+  check("no nameFull field is recorded", names.has("nameFull"), false);
+
+  const run = await get("data_change_runs?select=*&induction=eq.21", candidateToken);
+  check("a verified candidate can read the run summary", run.rows?.length, 1);
+
+  // Checked by effect, not status: PostgREST answers 204 with zero rows
+  // affected when RLS hides the target, which is a success status for a write
+  // that did nothing.
+  const write = await fetch(`${BASE}/rest/v1/data_changes?limit=1`, {
+    method: "PATCH",
+    headers: {
+      apikey: KEY,
+      Authorization: `Bearer ${candidateToken}`,
+      "Content-Type": "application/json",
+      Prefer: "return=representation",
+    },
+    body: JSON.stringify({ kind: "OVERWRITTEN BY TEST" }),
+  });
+  const changed = await write.json().catch(() => []);
+  check(
+    "a candidate cannot write data changes",
+    Array.isArray(changed) ? changed.length : 0,
+    0
+  );
+
+  const stillClean = await get(
+    "data_changes?select=kind&kind=eq.OVERWRITTEN%20BY%20TEST",
+    candidateToken
+  );
+  check("...and no row took the value", stillClean.rows?.length ?? 0, 0);
+
+  const rpc = await fetch(`${BASE}/rest/v1/rpc/apply_data_changes`, {
+    method: "POST",
+    headers: {
+      apikey: KEY,
+      Authorization: `Bearer ${candidateToken}`,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ p_induction: 21, p_rows: [] }),
+  });
+  check("a candidate cannot call apply_data_changes", rpc.status >= 400, true);
+
+  const runRpc = await fetch(`${BASE}/rest/v1/rpc/apply_data_change_run`, {
+    method: "POST",
+    headers: {
+      apikey: KEY,
+      Authorization: `Bearer ${candidateToken}`,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ p_induction: 21, p_run: {} }),
+  });
+  check("a candidate cannot call apply_data_change_run", runRpc.status >= 400, true);
+}
+
+// The community tables are the only place where one user writes what another
+// reads, so the assertions here are about people rather than about datasets:
+// can somebody post as somebody else, flood a room, read a report filed about
+// them, or moderate without being staff.
+console.log("\ncommunity");
+{
+  const moderatorToken = await signIn("moderator@example.invalid");
+  const meId = JSON.parse(
+    Buffer.from(candidateToken.split(".")[1], "base64url").toString()
+  ).sub;
+  const modId = JSON.parse(
+    Buffer.from(moderatorToken.split(".")[1], "base64url").toString()
+  ).sub;
+
+  const post = (path, token, body) =>
+    fetch(`${BASE}/rest/v1/${path}`, {
+      method: "POST",
+      headers: {
+        apikey: KEY,
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+        Prefer: "return=representation",
+      },
+      body: JSON.stringify(body),
+    });
+
+  for (const table of [
+    "community_threads",
+    "community_replies",
+    "community_posts",
+    "chat_rooms",
+    "chat_messages",
+    "content_reports",
+  ]) {
+    const { status } = await get(`${table}?select=*&limit=1`);
+    check(`anon cannot read ${table}`, status, 401);
+  }
+
+  // The whole identity model in one assertion. The original's new-thread form
+  // has a free-text name field, which is why one of its live threads is signed
+  // "Admin"; here both columns are overwritten by a trigger from the session.
+  const spoof = await post("community_threads", candidateToken, {
+    author_id: modId,
+    author_name: "Admin",
+    category: "general",
+    title: "RLS probe — impersonation",
+    body: "attempting to post as somebody else",
+  });
+  const spoofed = await spoof.json().catch(() => []);
+  const spoofRow = Array.isArray(spoofed) ? spoofed[0] : null;
+  check("a post cannot claim another author's id", spoofRow?.author_id, meId);
+  check(
+    "a post cannot claim another author's name",
+    spoofRow?.author_name !== "Admin",
+    true
+  );
+
+  const threadId = spoofRow?.id;
+
+  // Reports name their reporter, and the policy compares it to auth.uid().
+  const forged = await post("content_reports", candidateToken, {
+    target_type: "thread",
+    target_id: threadId,
+    reporter_id: modId,
+    reason: "spam",
+  });
+  check("a report cannot be filed under someone else's id", forged.status >= 400, true);
+
+  const real = await post("content_reports", moderatorToken, {
+    target_type: "thread",
+    target_id: threadId,
+    reporter_id: modId,
+    reason: "spam",
+  });
+  check("a verified user can report", real.status < 400, true);
+
+  // The reported author must not be able to see who objected, or that anybody
+  // did. A report visible to its subject is an invitation to retaliate.
+  const seen = await get(
+    `content_reports?select=id&target_id=eq.${threadId}`,
+    candidateToken
+  );
+  check("the reported author sees no report about them", seen.rows?.length ?? 0, 0);
+
+  // Checked by effect, not status: PostgREST answers 204 with zero rows when a
+  // policy hides the target.
+  const modAttempt = await fetch(
+    `${BASE}/rest/v1/content_reports?target_id=eq.${threadId}`,
+    {
+      method: "PATCH",
+      headers: {
+        apikey: KEY,
+        Authorization: `Bearer ${candidateToken}`,
+        "Content-Type": "application/json",
+        Prefer: "return=representation",
+      },
+      body: JSON.stringify({ resolved_at: new Date().toISOString(), action: "kept" }),
+    }
+  );
+  const resolved = await modAttempt.json().catch(() => []);
+  check(
+    "a candidate cannot resolve a report",
+    Array.isArray(resolved) ? resolved.length : 0,
+    0
+  );
+
+  // Announcements is staff-write only. A room anyone can write to is a
+  // discussion; one labelled "Announcements" that anyone can write to is a way
+  // to publish a false announcement mid-cycle.
+  const announce = await post("chat_messages", candidateToken, {
+    room_id: "announcements",
+    body: "RLS probe — candidate announcement",
+  });
+  check("a candidate cannot post in Announcements", announce.status >= 400, true);
+
+  const general = await post("chat_messages", candidateToken, {
+    room_id: "general",
+    body: "RLS probe — general",
+  });
+  check("a candidate can post in General", general.status < 400, true);
+
+  // Rate limits live in the insert policies, so they hold for anything holding
+  // a token — not only for callers who use our server actions.
+  let accepted = 0;
+  for (let i = 0; i < 8; i += 1) {
+    const attempt = await post("community_threads", candidateToken, {
+      category: "general",
+      title: `RLS probe — rate ${i}`,
+      body: "body",
+    });
+    if (attempt.status >= 400) break;
+    accepted += 1;
+  }
+  check("thread rate limit stops the sixth in an hour", accepted <= 5, true);
+
+  // Cleanup runs with the service role: these rows were created by the suite.
+  const admin = (path) =>
+    fetch(`${BASE}/rest/v1/${path}`, {
+      method: "DELETE",
+      headers: {
+        apikey: SERVICE_KEY,
+        Authorization: `Bearer ${SERVICE_KEY}`,
+      },
+    });
+  await admin("content_reports?id=gt.0");
+  await admin("community_replies?id=gt.0");
+  await admin("community_threads?id=gt.0");
+  await admin("chat_messages?id=gt.0");
 }
 
 console.log("\nstaff");

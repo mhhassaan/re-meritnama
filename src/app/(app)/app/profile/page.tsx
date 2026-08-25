@@ -196,11 +196,6 @@ export default async function ProfilePage() {
               Not built yet
             </p>
             <ul className="mt-4 flex flex-col gap-2 text-sm leading-relaxed text-fg-muted">
-              <NotYet label="Profile photo">
-                Needs a storage bucket and its own access policy. The column
-                exists; nothing writes it, and the account menu shows an initial
-                rather than a broken image.
-              </NotYet>
               <NotYet label="Message the admin">
                 The original drafts a reply from a dataset keyed by applicant id
                 — a lookup surface over grievance records, which needs its own

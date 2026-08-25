@@ -1,6 +1,7 @@
 "use client";
 
-import { useRouter, useSearchParams } from "next/navigation";
+import { useSearchParams } from "next/navigation";
+import { useFilterNav } from "@/components/app/use-filter-nav";
 import { useState } from "react";
 import type { MeritListCycle } from "@/lib/merit-lists/data";
 import {
@@ -28,7 +29,7 @@ export function MeritListControls({
   programs: string[];
   quotas: string[];
 }) {
-  const router = useRouter();
+  const { go, pending } = useFilterNav();
   const { ref: icon, handlers } = useActionIcon();
   const params = useSearchParams();
 
@@ -51,7 +52,7 @@ export function MeritListControls({
     if (quota) next.set("quota", quota);
     if (search.trim()) next.set("q", search.trim());
 
-    router.push(`/app/merit-lists?${next.toString()}`);
+    go(`/app/merit-lists?${next.toString()}`);
   }
 
   return (
@@ -141,11 +142,11 @@ export function MeritListControls({
 
       <button
         type="submit"
-        disabled={!induction || !round}
+        disabled={pending || !induction || !round}
         {...handlers}
         className="group flex min-h-[46px] items-center gap-3 self-end rounded-sm bg-accent-strong py-2 pl-5 pr-2 text-sm font-bold text-fg-on-accent shadow-ambient transition-all duration-[250ms] ease-[cubic-bezier(0.32,0.72,0,1)] hover:bg-accent-hover active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-50"
       >
-        Load
+        {pending ? "Loading…" : "Load"}
         <span className="flex h-8 w-8 items-center justify-center rounded-full bg-white/15 transition-transform duration-[250ms] group-hover:translate-x-0.5">
           <FilterIcon ref={icon} size={ICON_SIZE_SM} />
         </span>

@@ -1,12 +1,13 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
-import { useRouter } from "next/navigation";
+import { useFilterNav } from "@/components/app/use-filter-nav";
 import { Bezel } from "@/components/app/bezel";
 import { FieldLabel, SearchField, Select } from "@/components/app/field";
 import { SpecialtyLabel } from "@/components/merit/merit-badges";
 import { SealIcon, TargetIcon } from "@/components/icons/koboyo";
 import { LoadMore } from "@/components/portal/load-more";
+import { FilterPending } from "@/components/app/filter-pending";
 import { useManualCandidate } from "@/components/portal/add-me-modal";
 import { allocationWithManual } from "@/lib/portal/allocation-action";
 import { MANUAL_ID_BASE } from "@/lib/portal/manual-candidate";
@@ -82,7 +83,7 @@ export function AllocationBrowser({
    */
   scopeLabel: string;
 }) {
-  const router = useRouter();
+  const { go, pending } = useFilterNav();
   const manual = useManualCandidate();
 
   // The page renders without the manual candidate, because the server cannot
@@ -129,8 +130,11 @@ export function AllocationBrowser({
   const [onlyUnfilled, setOnlyUnfilled] = useState(false);
 
   const quotas = useMemo(
-    () => [...new Set(activeSlots.map((s) => s.quota))].sort((a, b) => a.localeCompare(b)),
-    [activeSlots]
+    () =>
+      [...new Set(activeSlots.map((s) => s.quota))].sort((a, b) =>
+        a.localeCompare(b),
+      ),
+    [activeSlots],
   );
 
   const visible = useMemo(() => {
@@ -145,7 +149,7 @@ export function AllocationBrowser({
         slot.placed.some(
           (p) =>
             p.name?.toLowerCase().includes(term) ||
-            String(p.applicantId).includes(term)
+            String(p.applicantId).includes(term),
         )
       );
     });
@@ -163,8 +167,14 @@ export function AllocationBrowser({
   }
 
   return (
-    <>
-      <Bezel className="mt-12" innerClassName="grid grid-cols-2 gap-px bg-border sm:grid-cols-3 lg:grid-cols-6">
+    // Dimmed rather than blanked while a new programme loads: the numbers on
+    // screen are still the true answer for the programme that produced them,
+    // and swapping them for a skeleton is what makes a filter read as a reload.
+    <FilterPending pending={pending}>
+      <Bezel
+        className="mt-12"
+        innerClassName="grid grid-cols-2 gap-px bg-border sm:grid-cols-3 lg:grid-cols-6"
+      >
         <Meta label="Programme" value={program} />
         <Meta label="Seats" value={activeStats.seats.toLocaleString("en-GB")} />
         <Meta
@@ -174,7 +184,9 @@ export function AllocationBrowser({
         />
         <Meta
           label="Unfilled"
-          value={(activeStats.seats - activeStats.filled).toLocaleString("en-GB")}
+          value={(activeStats.seats - activeStats.filled).toLocaleString(
+            "en-GB",
+          )}
           tone="text-status-reach"
         />
         <Meta
@@ -221,7 +233,11 @@ export function AllocationBrowser({
             <Select
               id="alloc-program"
               value={program}
-              onChange={(e) => router.push(`/app/portal/allocation?program=${encodeURIComponent(e.target.value)}`)}
+              onChange={(e) =>
+                go(
+                  `/app/portal/allocation?program=${encodeURIComponent(e.target.value)}`,
+                )
+              }
             >
               {programs.map((p) => (
                 <option key={p} value={p}>
@@ -305,7 +321,7 @@ export function AllocationBrowser({
           />
         </>
       )}
-    </>
+    </FilterPending>
   );
 }
 
@@ -325,7 +341,9 @@ function SlotCard({ slot }: { slot: AllocationSlotView }) {
       <div className="flex items-start justify-between gap-3">
         <div className="min-w-0">
           <SpecialtyLabel specialty={slot.specialty} className="text-[13px]" />
-          <p className="mt-1 text-xs leading-snug text-fg-muted">{slot.hospital}</p>
+          <p className="mt-1 text-xs leading-snug text-fg-muted">
+            {slot.hospital}
+          </p>
           <p className="mt-1 font-mono text-[10px] uppercase tracking-wider text-fg-subtle">
             {slot.quota}
           </p>
@@ -415,7 +433,10 @@ function Name({ person }: { person: Person }) {
       {person.name ? (
         <span className="font-bold text-foreground">{person.name}</span>
       ) : (
-        <span className="font-mono text-xs text-fg-muted" title="Not named in any published merit list">
+        <span
+          className="font-mono text-xs text-fg-muted"
+          title="Not named in any published merit list"
+        >
           #{person.applicantId}
         </span>
       )}
@@ -446,7 +467,9 @@ function Meta({
       <p className={`mt-1 font-mono text-lg font-bold tabular-nums ${tone}`}>
         {value}
         {hint && (
-          <span className="ml-1.5 text-[10px] font-normal text-fg-subtle">{hint}</span>
+          <span className="ml-1.5 text-[10px] font-normal text-fg-subtle">
+            {hint}
+          </span>
         )}
       </p>
     </div>

@@ -1,6 +1,6 @@
 "use client";
 
-import { useRouter } from "next/navigation";
+import { useFilterNav } from "@/components/app/use-filter-nav";
 import { useState } from "react";
 import { Bezel } from "@/components/app/bezel";
 import { FieldLabel, SearchField, Select } from "@/components/app/field";
@@ -34,7 +34,7 @@ export function JoiningControls({
     status: string;
   };
 }) {
-  const router = useRouter();
+  const { go, pending } = useFilterNav();
   const { ref: icon, handlers } = useActionIcon();
 
   const [program, setProgram] = useState(selected.program);
@@ -54,7 +54,7 @@ export function JoiningControls({
     if (search.trim()) next.set("q", search.trim());
     if (status) next.set("status", status);
     const query = next.toString();
-    router.push(`/app/portal/joining${query ? `?${query}` : ""}`);
+    go(`/app/portal/joining${query ? `?${query}` : ""}`);
   }
 
   return (
@@ -119,10 +119,11 @@ export function JoiningControls({
 
         <button
           type="submit"
+          disabled={pending}
           {...handlers}
           className="group flex min-h-[46px] items-center gap-3 self-end rounded-sm bg-accent-strong py-2 pl-5 pr-2 text-sm font-bold text-fg-on-accent shadow-ambient transition-all duration-[250ms] ease-[cubic-bezier(0.32,0.72,0,1)] hover:bg-accent-hover active:scale-[0.98]"
         >
-          Apply filters
+          {pending ? "Updating…" : "Apply filters"}
           <span className="flex h-8 w-8 items-center justify-center rounded-full bg-white/15 transition-transform duration-[250ms] group-hover:translate-x-0.5">
             <FilterIcon ref={icon} size={ICON_SIZE_SM} />
           </span>

@@ -293,7 +293,17 @@ has, in a position that reads as an addition.
 | 16 | Config | `/app/portal/config` | built |
 | 17 | Hospitals, with per-hospital profiles | `/app/portal/hospitals` | built |
 | 18 | Competition & Demand Index | `/app/portal/competition` | built |
-| 19 | Consent What-If, Profiles, Chat, the rest | — | next |
+| 19 | Consent What-If | `/app/portal/consent` | built |
+| 20 | Scoring Policy History | `/app/policy` | built |
+| 21 | Guide | `/app/guide` | built |
+| 22 | Community Profiles | `/app/portal/profiles` | built |
+| 23 | Data Changes | `/app/portal/changes` | built |
+| 24 | Accredited Programs | `/app/accreditation` | built |
+| 25 | Job Openings | `/app/jobs` | built |
+| 26 | Discussion | `/app/discussion` | built |
+| 27 | Community Feed | `/app/community` | built |
+| 28 | Chat | `/app/portal/chat` | built |
+| 29 | Moderation queue | `/app/admin/reports` | built |
 
 Every app surface is now on the redesign. `/app` was the last placeholder: it
 hardcoded the 1,470 row count, printed `Induction 21` with no year, used
@@ -807,7 +817,8 @@ node supabase/ingest/consent-rounds.mjs --dry-run   # parse only, writes nothing
 npm run test:pool      # Candidate Pool aggregation, fixtures plus the real pool
 SUPABASE_INGEST_ALLOW_PROJECT=<ref> node supabase/ingest/pool-directory.mjs
 SUPABASE_INGEST_ALLOW_PROJECT=<ref> node supabase/ingest/joining-status.mjs
-npm run test:rls       # 35 access-control assertions over the real REST API
+SUPABASE_INGEST_ALLOW_PROJECT=<ref> node supabase/ingest/data-changes.mjs
+npm run test:rls       # 88 access-control assertions over the real REST API
 npm run test:cascade   # between-rounds cascade, graded against the published rounds
 npm run test:placement # blank-slate allocation, graded against published round 1
 SUPABASE_INGEST_ALLOW_PROJECT=<ref> node supabase/ingest/portal-inputs.mjs
@@ -884,13 +895,548 @@ resolves every specialty id already (`MISSING_SPECIALTY_IDS`), so zero rows in
 `applicants.preferences` have a blank specialty — checked directly — and that
 row cannot occur here.
 
+### Consent What-If, and the engine it is actually built on
+
+`/app/portal/consent`. The original's framing, kept: "Compare normal seat
+allocation with a rerun where one candidate does not consent. The report
+shows the released seat, who moves in, and the subsequent candidate list
+changes."
+
+**Hidden on the live site right now, and that is not a reason to skip it.**
+Its own `applyMode('merit-list')`, in `sim-merit-list.js`, sets
+`display: none` on `[data-tab="slotbrowser"]` and `[data-tab="consent"]`
+together whenever a merit list has published for the cycle — which Induction
+21's has. The pane's markup and `sim-consent.js` both still ship regardless.
+Same precedent as Where Merit Falls and Seat Allocation, hidden by the
+identical gate and built here anyway: the feature is the live experience in
+the phase of a cycle where that gate has not yet fired, and a stale nav is
+not the same thing as a retired feature.
+
+**It runs on `runPlacement`, not `runCascade` — read `sim-consent.js` itself
+to be certain rather than assuming.** An earlier pass through this list
+described it as "a narrower entry point into the cascade that powers Simulate
+Next Round." That was wrong, and worth recording precisely because it was a
+plausible-sounding guess that turned out false: the original's
+`runConsentWhatIf` calls `runPlacementFromPool`, which is the same
+deferred-acceptance blank-slate algorithm behind Seat Allocation. "No
+consent" means removing the applicant from the whole programme's pool and
+running blank-slate placement again from scratch — every seat is
+recontested, not just the one they held. That is also why the ripple can
+reach candidates who never listed the released seat at all. Verified against
+real data: removing applicant 34773 from FCPS released one Diagnostic
+Radiology seat at Nishtar Hospital and set off a six-hop chain through five
+other candidates, none of whom held preferences anywhere near each other
+except through the seats each was already occupying.
+
+`src/lib/portal/consent-whatif.ts` shares its fetch with `runAllocation` —
+`loadPool`, `loadSeatRows`, `loadPreferenceIndex`, all already cached — and
+runs `runPlacement` twice: once for the baseline, once with the target
+applicant filtered out of the candidate list. The diff needs no roster of
+"who did not change" — a candidate absent from both runs' placed-lists never
+appears in either lookup map, which produces the same silence a full
+before/after record with `.placed === false` on both sides would have,
+without building one. "Show if candidate consents" skips the second run
+entirely and reuses the baseline as its own variant, since the two are
+definitionally identical.
+
+**Cost is real and stated as such.** Two full placement runs, sequentially —
+measured warm at ~4.1 s against the real FCPS pool, almost exactly double the
+single-run Seat Allocation page's 2.0 s. An explicit "Run" click with its own
+loading state, the same UX class as Simulate Next Round, not a page load.
+
+**Changed-candidate rows stay capped, unlike Competition's table.** A
+blank-slate re-run can genuinely displace hundreds of people — a domino, not
+the cascade's localised vacate-and-refill — so the 60-row cap that removed
+itself from Competition (~160 rows, cheap) stays here, with the true count
+carried alongside it.
+
+Nothing here is written anywhere. The scenario record is `localStorage` only,
+capped at 8 like the original's, the same pattern `FindMeBar` and
+`AddMeModal` already use: an applicant id is not a secret, but a server-side
+log of who has been asking "what if" about whom is not something this page
+needs to hold.
+
+### Policy and Guide, and why the policy file needs a timeline read
+
+`/app/policy` and `/app/guide`. Both are presentation over data three other
+surfaces already load — `loadPolicies()` for the formula history, and the
+constants in `src/lib/predict/predict.ts` for the glossary's numbers. No new
+data source, no new policy, no migration.
+
+**`policy_by_induction.json` cannot tell "removed" from "not yet introduced"
+on its own, and getting it backwards inverts the meaning.** Every cycle in
+that file lists all twelve components, with `included: false` and zero marks
+for the ones not in force. So MDCAT — introduced in Induction 20 — carries
+`included: false` all the way back to Induction 8, and rendering that flag
+directly labels it "dropped" in 2020, which says the opposite of what
+happened.
+
+`loadPolicyHistory` resolves it from the timeline instead: a component's
+first marks-carrying cycle is found by scanning ascending, and anything
+before it is `pending` (rendered as a dash) rather than `dropped`. Verified
+on the real file in both directions — MDCAT reads `— — 2 2` and Matric reads
+`5 5 dropped dropped`. Hard Area Service is the case that proves the rule
+works in the middle: introduced at Induction 17, dropped at 20.
+
+One component, `attempts_in_mbbs`, never carried marks in any held cycle. It
+is excluded from the matrix — a row of dashes says nothing — but **named
+underneath it**, because the Calculator lists it under "no longer counted"
+and a reader who saw it there and not here would reasonably wonder which page
+was wrong.
+
+**The Guide's numbers are read out of the code, not copied from the
+original.** A glossary drifts silently, and it is trusted exactly where a
+reader cannot check. Two of the original's entries are corrected rather than
+ported: its quota list ("Open Merit, Women, Disabled, Minority") is not what
+our seat matrix contains — the real names are Punjab, Armed Force,
+AJK/G&B/ICT, KPK/Sindh/Balochistan, Foriegn, Disable, Dental, Placement, the
+misspellings included because a filter has to join to what the portal
+publishes — and its "hand-edit `data/current_merit.json`" FAQ describes a
+static site, not this one.
+
+FAQ entries are `<details>`, not click-to-toggle divs: open before hydration,
+findable by the browser's own in-page search, and no state to manage.
+
+### Community Profiles, and a promise that governs the page
+
+`/app/portal/profiles`. The original's framing: "Browse registered members
+who have shared their profile. Data is self-reported and shown publicly by
+the user."
+
+**No new policy was needed.** `profiles_select` has been
+`own OR is_public OR staff` since the table was created, so a directory of
+people who opted in already worked. Worth contrasting with the Candidate Pool
+roster, which needed a new table *and* an explicit owner decision — because
+nobody in that one opted into anything.
+
+**A card carries three fields, and that is fixed by copy already on screen
+rather than by taste.** `/app/profile` tells anyone ticking the
+discoverability box, in these words: *"other verified candidates can see your
+display name and your two goals — and nothing else. Your email, your marks,
+your preferences and your applicant id are never part of it."* The original's
+cards carry a merit band ("Top 50%"), inducted status and programme tags —
+every one derived from marks or the preference list, which is exactly what
+that sentence rules out. Adding any of them would retroactively falsify the
+consent text people ticked the box under.
+
+**`.eq("is_public", true)` is load-bearing, not decoration.** The policy is
+`own OR is_public`, so without that filter the caller's *own private profile*
+comes back and appears in a directory they never opted into. Verified against
+the dev data, where the signed-in account is deliberately the private one: 3
+public rows listed, own private row absent.
+
+**The private-profile count is not shown.** The original prints "66 members
+have a profile but have set it to private", which it can because its rules
+let the browser read every row. RLS hides those rows from us, so the number
+would require a service-role read to produce a cosmetic line. The page states
+the rule instead.
+
+Status filter is replaced by specialty. The original filters All / Inducted /
+Applicant; inducted status comes from the joining export, which this page is
+not permitted to read, and specialty is what people actually look each other
+up by. The facet list is queried unfiltered, so choosing a specialty does not
+then empty the dropdown that chose it.
+
+### Data Changes, and the zero that is not a score
+
+`/app/portal/changes`, from `candidatesChanges.html`. The original's framing:
+compare the previous snapshot of the applicant file with the current one and
+show what changed, by how much, and for which candidates.
+
+**The source is a precomputed diff, not the 78 MB files.** The portal publishes
+`candidates_changes.json` — 622 candidates, 4,035 records before and 4,045
+after. The original fetches it whole into the browser. `data_changes` and
+`data_change_runs` hold the part of it that is safe to keep, and
+`supabase/ingest/data-changes.mjs` reads the source field by field so the rest
+cannot arrive by accident.
+
+**Three things are withheld, and the first two match the original rather than
+diverging from it:**
+
+- `cnic` — 397 of the 622 records carry one. The string "CNIC" appears nowhere
+  on the original's rendered page either, so it never shows these values; it
+  simply ships them to every browser.
+- the old and new `nameFull` strings — 400 records. The original prints both,
+  with parentage. Only the **fact** that a name record moved is kept, as
+  `field = 'name'` with no values. Names on the page come from `pool_directory`,
+  where a father's name is stripped at ingest and the three CNIC-as-name records
+  are withheld.
+- the individual preference seats — 19,587 additions, 1,420 removals, 788 edits,
+  up to 357 on one candidate.
+
+**But the preference counts are kept, and dropping them was a bug.** The first
+version withheld preferences entirely, and 113 of the 622 changed records
+changed *nothing else* — so the page showed 509 candidates where the original
+shows 622. The per-programme counts (`prefAdded`, `prefRemoved`, `prefEdited`,
+`prefCount`) restore them without a second copy of the cycle's preference data.
+The seats themselves are already readable per candidate on the Candidate Pool.
+
+**The framing correction, which is why this is not a straight port.** The
+original prints, on every one of its 440 total-marks rows, a sentence in the
+second person: *"Your total went up by 17.1343 points."*
+
+That is true of almost none of them. **A zero in the applicant file means no
+record, not a score of nought.** 358 of the 440 move from 0 to a real mark and
+25 move the other way — records being populated and blanked as the portal
+finished data entry. Only **57** are a revision between two real values, and
+most of those are a bare MDCAT score becoming a full record (1.63 to 17.38).
+A candidate reading the original's page sees hundreds of people apparently
+gaining fifteen points and concludes the merit list is unstable.
+
+Every row carries a `kind` from ingest — `appeared` / `vanished` / `revised` /
+`added` — and the page leads with the breakdown before the table, because a
+reader who scrolls straight into the list has already been misled.
+
+**The original's three sections are one dataset filtered three ways**, and its
+own "Browse All Changes" already carries a "Marks changed" chip — so the presets
+are its idea, not a departure. Counts match it exactly: 622 all, 440 marks, 365
+programme marks, 10 new.
+
+**Filtered in the browser, not the database.** 622 candidates and 3,806 field
+changes is a few hundred kilobytes, small enough that search runs per keystroke;
+only the markup is deferred, in batches of 30, the arrangement Seat Allocation
+uses. Nothing is cached across requests — the tables have a per-user policy, and
+a cache over one of those is an access-control bypass waiting for the day the
+policy narrows.
+
+### Accreditation, and a dataset that was never missing
+
+`/app/accreditation`, from `accreditation.html`. CPSP's register of accredited
+FCPS training: 5,587 programmes, 537 institutions, 92 cities, 92 specialities.
+
+**`NOT_IMPLEMENTED.md` had it tagged `data` — a CPSP dataset we do not hold —
+and that was simply wrong.** `public/data/cpsp_accreditation.json` had been in
+the repo the whole time, 849 KB, 542 hospital records. Nothing needed
+ingesting, no table, no policy, no migration. Check the directory before
+tagging something blocked on data.
+
+It is the one dataset here with **no personal data of any kind** — a hospital,
+a city, a speciality, a unit, a code and a date — so it belongs in `public/`
+beside the other aggregates. It is still read server-side with `readFile` and
+filtered before rendering, so the 849 KB never reaches a browser; the original
+fetches the whole file and renders all 5,587 rows into the DOM at once.
+
+Filters are **URL state**, unlike the Data Changes browser. A filtered view
+here is worth sending to somebody — "Cardiology in Lahore" is the shape of the
+question people ask each other — and the original's version cannot be linked
+to at all. Batches come from a server action behind the shared `LoadMore`.
+
+**Three things in the source are left uncorrected, deliberately, and the page
+says so:**
+
+- `unit` is written as both `Unit-I` and `Unit-1`. Normalising would tidy the
+  column and silently misquote CPSP.
+- 58 of the 5,587 rows are byte-identical to another row, and some institutions
+  are listed under several spellings — King Edward appears three ways, each
+  carrying Cardiology Unit-I from the same date, so filtering to Cardiology in
+  Lahore returns three rows for one unit. Collapsing the exact duplicates would
+  be safe but would make the headline disagree with CPSP's own; collapsing the
+  spellings needs a fuzzy match and a canonical name CPSP has not chosen. The
+  page states what a row is, above the table rather than under it.
+- `F.A.` / `P.A.` / `T.A.` are printed as codes. Neither the register nor the
+  official page carries a key for them, so nothing here expands them — what
+  can honestly be said is the distribution, and F.A. covers 98.6%. They are
+  **badged in the original's colours** (F.A. green, P.A. amber) off our status
+  tokens, so they flip with the theme. The original has no rule for `T.A.` or
+  for the one written-out phrase and renders those uncoloured; so do we, since
+  assigning a severity CPSP has not published is the same invention as
+  expanding the codes into words.
+
+The Since column carries **both** formats. This site's readable one is the
+default — `DD-MM-YYYY` is exactly the ambiguity that produced three separate
+bugs in this project — and one button switches it to the register's own string
+for anyone checking a row against the official page. `AccreditationRow` keeps
+`sinceRaw` beside the ISO date, which also means an unparseable date shows what
+the source said instead of a dash. The choice is held in `localStorage` and read
+in an effect rather than during render: seeding state from `localStorage`
+directly makes the first client render disagree with the server's HTML and fails
+hydration.
+
+**`SpecialtyLabel` is not used on this table**, and the reason generalises:
+`familyOf` falls back to `"medical"` for an unknown name, and it is built for
+the seat matrix's 44 specialties. CPSP publishes 92 of its own, uppercase and
+differently spelled, of which **75 fall through to the default** — all five
+dental programmes included, screen-reader label and all. A silent wrong family
+on thousands of rows is worse than no colour. Any surface joining a foreign
+vocabulary to that map must check the hit rate first.
+
+**The dates are `DD-MM-YYYY`** — the third source in this project with that
+shape, after the joining export and the schedule. The original sidesteps it by
+printing the raw string; the components are read textually and rebuilt as ISO
+here so the column formats like every other date on the site.
+
+### Jobs, and a flag that is frozen at scrape time
+
+`/app/jobs`, from the analysis app's `#tab-jobs`. The original's framing:
+"Browse current medical job openings. Filter by role, organization, location,
+or status." The rest of its sentence — "deadlines and availability update
+live" — is the one thing not carried over, because it is not true of its own
+page.
+
+**Every posting carries an `isOpen` boolean written by the scraper when it
+ran, and nothing recomputes it.** Checked on the deployed site: 149 of 153
+postings show a green "Open" dot, and the first card in the grid is a job whose
+stated deadline was 5 July 2026. Its detail modal prints "5 days left" against
+a job that closed 26 days earlier.
+
+So `isOpen` is never read. Status and every countdown are derived from the
+deadline against the day the page renders — in **Pakistan's** wall clock, since
+these are deadlines set by Pakistani employers and printed in Pakistani
+newspapers. Only the parsed file is cached; caching a computed "Open" would
+recreate the original's bug with an expiry attached, the same reasoning that
+keeps the portal schedule's phases out of its cache.
+
+**What we hold is a snapshot, and this one really is data-limited.** Unlike
+Accreditation, the missing piece is real: `public/data/jobs.json` is 75
+postings scraped from jobz.pk on 11 July 2026, and the deployed site shows 153
+because its Jobs tab reads a **Firestore** collection that the snapshot only
+seeds — `syncJobsFromSource`, `_mergeJobsIntoFirestore`, `_subscribeJobs` in
+its own code. That project is the owner's and is out of scope.
+
+Every deadline in the snapshot has passed, so the page currently reports 0 open
+and 75 closed. It says that at the top, in those words, before anything a
+reader could act on, and the status filter deliberately does **not** default to
+"open" — opening on an empty board reads as the feature being broken rather
+than the data being old. Nothing is pinned to the July dates: drop in a fresher
+file and the same code reports whatever is actually open.
+
+**Three source fields are not carried.** `raw` is a second copy of every parsed
+field as scraped key-value pairs. `image` is null on all 75.
+`onlineApplicants` reads "Be among the first 25 applicants" — that is jobz.pk's
+own interface copy, and reprinting it would attribute their marketing to the
+employer.
+
+`arrow-up-right-01` was added from `@hugeicons-animated` for the "open the
+original posting" link. Checked afterwards, as the registry section requires:
+no `var(----chart-1)` bindings and no `.dark` block were injected this time.
+
+### Profile photos, and the select policy that had to be added back
+
+`profiles.avatar_path` had existed since the table was created with nothing
+writing it. It now has a control on `/app/profile`, and the photo appears in
+the account menu, on the profile page, and on a Community Profiles card.
+
+**The bucket is private.** A public Supabase bucket serves its objects at a
+stable URL with no authentication, forever, and that is the exact shape of the
+original's failure. What a candidate opts into is being visible to other
+verified candidates; that is not consent to a permanent unauthenticated URL
+carrying a photograph of their face beside their name and their cycle. Another
+candidate's photo reaches a browser only as a signed URL minted server-side,
+one batch request per page rather than one per card.
+
+**The select policy was removed and then had to be added back, and the reason
+is worth knowing.** The first version had insert/update/delete scoped to the
+uploader's folder and deliberately **no** select policy, so nothing client-side
+could read the bucket at all. Every upload then failed with *"new row violates
+row-level security policy"* — an error naming the insert, caused by the read:
+`upsert` makes storage-api run `insert … on conflict do update`, which has to
+read the existing row first. Scoping the select to
+`(storage.foldername(name))[1] = auth.uid()` restores the upload and keeps the
+property that mattered — nobody can enumerate the bucket or fetch someone
+else's photo by guessing a path. `test:rls` asserts that directly, and its
+listing assertion expects **one** entry rather than zero, unlike
+`payment-proofs`: the caller sees their own folder and no other.
+
+**The consent copy had to change first, not after.** `/app/profile` promised
+anyone ticking discoverability that other candidates see "your display name and
+your two goals — and nothing else". A face is not covered by that sentence, so
+the wording now names the photo. This was safe to do only because **zero
+avatars existed** — checked before building — so nobody's photograph can have
+been published under wording that did not mention it. The same check is what
+any future widening of that promise needs.
+
+**Images are downscaled and re-encoded in the browser before upload.**
+`src/lib/profile/compress-image.ts`. Three reasons, in order of weight:
+
+- **It strips EXIF.** A phone photo carries the camera model, a timestamp and
+  very often the GPS coordinates it was taken at. Uploading one verbatim puts a
+  candidate's home address in our bucket as a side effect of them choosing a
+  picture — data nobody asked for, nobody displays and nobody would think to
+  look for. A canvas re-encode carries none of it, because the encoder is handed
+  pixels rather than a file.
+- **It makes the control usable.** An avatar renders at 24, 40 or 72 CSS pixels.
+  A 4032×3024 phone photo is several megabytes to fill a 144-pixel circle, and
+  the 2 MB limit would simply refuse it. Measured: a 16.9 MB 3000×2000 source
+  became a 93 KB 512×341 WebP.
+- **The stored bytes are the browser's, not the file's**, so a mislabelled
+  content type cannot pass through unchanged. Useful, and *not* a security
+  control — this runs client-side. What contains the risk is still the private
+  bucket, never rendering as HTML, and refusing SVG.
+
+Three details that each cost a bug or nearly did:
+
+- `createImageBitmap(file, { imageOrientation: "from-image" })`. Dropping the
+  metadata drops the "rotate 90°" tag with it, so the rotation has to be applied
+  during decode or every portrait phone photo lands sideways.
+- **The re-encode is kept even when it is larger.** The first version returned
+  the original whenever it had not shrunk, which is right on bytes and wrong on
+  the point: a small image can still carry coordinates, and passing it through
+  to save two kilobytes against a two-megabyte limit trades the privacy property
+  for nothing.
+- `canvas.toBlob` does not report an unsupported type — it silently produces
+  **PNG**, which for a photograph is several times larger than the JPEG it
+  replaced. The result's own `type` is checked rather than trusted.
+
+The size check runs on the *result*, not the chosen file, or a large photo that
+compressed fine would still be refused. The type check runs on the chosen file,
+so a 12 MB TIFF is rejected for what it is rather than decoded first.
+
+**Not `next/image`, anywhere.** The source is a signed URL that expires within
+the hour, so there is nothing stable to optimise or cache, and adding a remote
+pattern for the storage host would let any object in that bucket be proxied
+through our own domain.
+
+The file input is `hidden`, not `sr-only`. An `sr-only` file input leaves a
+second, unlabelled "Choose File" in the accessibility tree beside the button
+that already opens it — confirmed in the a11y snapshot before it was changed.
+
+### Community: the first place one user writes what another reads
+
+Discussion (`/app/discussion`), the Feed (`/app/community`), Chat
+(`/app/portal/chat`) and the moderation queue (`/app/admin/reports`). One
+schema, one set of policies, four surfaces.
+
+Everything below is enforced in the **database**. The server actions shape
+input and turn a policy refusal into a sentence a person can act on; they are
+not the control. The tempting shape for a forum is to check "is this mine?" in
+an action and write with a client that can do anything, and this project has a
+standing rule against exactly that.
+
+**Authorship is taken from the session, never from the payload.** The
+original's new-thread form opens with a free-text name field defaulting to
+"Dr. Anonymous" — which is why nearly every post on its live forum reads
+"Anonymous", and why one of its seven threads is signed "Admin", a string
+anybody could type. Here a `before insert` trigger overwrites `author_id` from
+`auth.uid()` and `author_name` from the poster's own profile row. `test:rls`
+asserts both directly by trying to post as somebody else.
+
+**`author_name` is denormalised onto every row, for two reasons.**
+`profiles_select` is `own OR is_public OR staff`, so a reader must be able to
+see who wrote a thread whether or not the author opted into the directory —
+and widening that policy to make it work would leak the names of people who
+chose not to be listed. Copying the name at write time is narrower: posting
+reveals your name because you posted, not because a policy changed. It is also
+a snapshot on purpose, so renaming yourself does not rewrite what everyone saw
+you say.
+
+**Rate limits are policy predicates, not application code** — 5 threads/hour,
+30 replies/hour, 10 posts/hour, 20 messages/minute, 20 reports/hour. A limit in
+an action is advice; this one holds for anything holding a token.
+
+Which produced the one real trap here. Written as a subquery counting the same
+table the policy guards, Postgres refuses outright with **"infinite recursion
+detected in policy"** — evaluating the policy needs a select, which needs the
+policy. Each count now lives in a `security definer` function in `private`,
+which reads with RLS bypassed and never re-enters. Those functions count only
+the caller's own rows and return an integer.
+
+**Hiding, never deleting.** `hidden_at` / `hidden_by` / `hidden_reason` cover
+both an author withdrawing and staff removing. The row survives either way: a
+moderation decision that destroys its own evidence cannot be reviewed, and a
+reported post that vanished would take the report with it. Hidden content stays
+visible to its author — finding a post silently gone teaches nothing.
+
+**Reports are invisible to the person reported.** `content_reports` selects on
+`own OR staff`, so the reported author cannot see who objected or that anything
+was filed. One report per person per item, by unique key, so three taps do not
+read as three people. **Nothing auto-hides on a report count**, deliberately:
+that is how a coordinated group silences a legitimate post.
+
+**Announcements is staff-write only**, via `staff_only_write` checked inside the
+insert policy. A room everyone can write to is a discussion; one labelled
+"Announcements" that anyone can write to is a way to publish a false
+announcement during the week people are choosing preferences.
+
+**Chat is Supabase Realtime, and two things about it bit.** The socket
+authenticates separately from the REST client — without
+`realtime.setAuth(token)` before `subscribe()`, it connects as an anonymous
+reader, `chat_messages_select` matches nothing, and **no message ever arrives
+with no error anywhere**. And the sender must never depend on the socket: the
+send action returns the stored row and the component appends it, keyed by id
+against the socket's copy. The first version returned only an id, so with the
+socket down a person watched their own message disappear while it was saved.
+
+**Categories and Feed kinds carry a Koboyo mark**, in
+`src/components/community/category-icon.tsx`. That is the icon policy's split
+read correctly: these label *what a thing is*, the job the specialty marker
+does beside a heading. They sit on the filter chips as well, but a chip is a
+label for a taxonomy that happens to be clickable, not a toolbar action — the
+mark identifies the category, not the act of filtering. The composers' buttons
+and the reporting control still carry animated icons.
+
+The choices follow the original's own emoji so a reader arriving from it
+recognises the row: 💬 General, ❓ Q&A, 📚 Study, 🏠 Hospital, 📋 Merit,
+⭐ Story, ⚠ Concern; ❓ Question, 🏥 Hospital review, 📚 Resource,
+🏆 Result update. Story takes the compass rather than a second trophy, since
+the trophy is already the Feed's result update.
+
+Sized `h-3 w-auto` — one dimension, because Koboyo is hand-drawn with per-icon
+viewBoxes. The differing widths are harmless in a wrapping row of chips, which
+is the opposite of the navigation, where they made every label start at a
+different x and drove the rails to the animated set instead. The same mark also
+appears beside the composer's category hint, because a native `<option>` cannot
+carry one and that is where the mapping becomes learnable.
+
+`private.can_post()` is verified **and** carrying a display name. The second
+half is not decoration: authorship is the entire safety model, and a post
+attributed to an empty string is an anonymous post with extra steps.
+
+### Filter changes must not read as a page load
+
+Every filtered surface keeps its state in the URL, which makes applying a
+filter a same-route navigation. Measured before touching anything, that was
+**already a client transition** — the document survives, one navigation entry,
+and React keeps the same DOM nodes rather than rebuilding. It still felt like a
+reload, for two reasons that had nothing to do with the navigation type:
+
+- **The scroll jumped to the top.** Next.js scrolls to the top on navigation by
+  default. That is right for a different page and wrong for a dropdown beside
+  the row you are reading, and it is most of what makes a filter feel like a
+  reload.
+- **The UI froze for the length of the server render.** Without a transition,
+  React blocks the commit until the server component resolves — 1.5 s on a
+  filtered read of the accreditation register — with no sign anything is
+  happening.
+
+`useFilterNav()` (`src/components/app/use-filter-nav.ts`) is the fix for both:
+`router.push(href, { scroll: false })` inside `startTransition`, returning
+`pending`. Every filter control goes through it. `<Link>`-based chips —
+Discussion categories, Feed kinds, chat rooms, the Feed's facet clears — carry
+`scroll={false}` for the same reason.
+
+**Pagination is the deliberate exception** and keeps the default scroll:
+arriving at page 4 still parked at the bottom of page 3 shows the reader the
+end of a list whose start they have not seen. `go()` takes `{ scroll: true }`
+for those.
+
+**The pending state dims, it does not blank.** `FilterPending`
+(`src/components/app/filter-pending.tsx`) drops the result area to 55% and sets
+`aria-busy`, keeping the previous result readable — it is still the true answer
+for the filter that produced it, and replacing it with a skeleton throws away
+information *and* recreates the reload impression this exists to remove. Submit
+buttons say "Updating…" and disable, so a second click cannot queue a second
+navigation.
+
+`<Reveal>` was suspected and is **not** a factor: because React preserves the
+component instance across a same-route navigation, its `shown` state survives
+and the entrance animation does not replay. Worth recording so it is not
+re-investigated.
+
 ### The account menu
 
-`src/components/app/user-menu.tsx`, in the `(app)` header. It absorbed three
-controls that were sitting loose there — the email address, the theme toggle and
-the sign-out button — because they are all answers to "this is me, and here is
-what I can change about that". The original's header does the same with one
-"My Profile" link beside logout.
+`src/components/app/user-menu.tsx`, in the `(app)` header, beside the theme
+toggle and the sign-out button.
+
+**Theme and sign out are in the header, not in the menu — the owner's call, and
+it reverses an earlier decision here.** They were folded into the dropdown on
+the reasoning that everything answering "this is me and what can I change about
+it" belongs together. That grouping is tidy and wrong for these two: switching
+theme because the room got dark and signing out on a shared machine are both
+things people reach for often and want in one tap, and a frequently-used control
+should not be two gestures deep. The menu keeps what is genuinely *about the
+account* — who you are, your profile, and the staff surfaces.
+
+The original's header does the same with one "My Profile" link beside logout.
 
 Both reads behind it are the caller's own row under policies that already exist:
 `profiles` is self-readable, and `user_roles` has **no client write policy at

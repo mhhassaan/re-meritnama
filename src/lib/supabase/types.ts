@@ -222,6 +222,339 @@ export type Database = {
         };
         Relationships: [];
       };
+      chat_messages: {
+        Row: {
+          author_id: string;
+          author_name: string;
+          body: string;
+          created_at: string;
+          hidden_at: string | null;
+          hidden_by: string | null;
+          hidden_reason: string | null;
+          id: number;
+          room_id: string;
+        };
+        Insert: {
+          author_id?: string;
+          author_name?: string;
+          body: string;
+          created_at?: string;
+          hidden_at?: string | null;
+          hidden_by?: string | null;
+          hidden_reason?: string | null;
+          id?: never;
+          room_id: string;
+        };
+        Update: {
+          author_id?: string;
+          author_name?: string;
+          body?: string;
+          created_at?: string;
+          hidden_at?: string | null;
+          hidden_by?: string | null;
+          hidden_reason?: string | null;
+          id?: never;
+          room_id?: string;
+        };
+        Relationships: [];
+      };
+      chat_rooms: {
+        Row: {
+          description: string | null;
+          id: string;
+          label: string;
+          sort_order: number;
+          staff_only_write: boolean;
+        };
+        Insert: {
+          description?: string | null;
+          id: string;
+          label: string;
+          sort_order?: number;
+          staff_only_write?: boolean;
+        };
+        Update: {
+          description?: string | null;
+          id?: string;
+          label?: string;
+          sort_order?: number;
+          staff_only_write?: boolean;
+        };
+        Relationships: [];
+      };
+      community_posts: {
+        Row: {
+          author_id: string;
+          author_name: string;
+          body: string;
+          created_at: string;
+          edited_at: string | null;
+          hidden_at: string | null;
+          hidden_by: string | null;
+          hidden_reason: string | null;
+          hospital: string | null;
+          id: number;
+          kind: string;
+          rating: number | null;
+          specialty: string | null;
+          title: string;
+          updated_at: string;
+        };
+        Insert: {
+          author_id?: string;
+          author_name?: string;
+          body: string;
+          created_at?: string;
+          edited_at?: string | null;
+          hidden_at?: string | null;
+          hidden_by?: string | null;
+          hidden_reason?: string | null;
+          hospital?: string | null;
+          id?: never;
+          kind: string;
+          rating?: number | null;
+          specialty?: string | null;
+          title: string;
+          updated_at?: string;
+        };
+        Update: {
+          author_id?: string;
+          author_name?: string;
+          body?: string;
+          created_at?: string;
+          edited_at?: string | null;
+          hidden_at?: string | null;
+          hidden_by?: string | null;
+          hidden_reason?: string | null;
+          hospital?: string | null;
+          id?: never;
+          kind?: string;
+          rating?: number | null;
+          specialty?: string | null;
+          title?: string;
+          updated_at?: string;
+        };
+        Relationships: [];
+      };
+      community_replies: {
+        Row: {
+          author_id: string;
+          author_name: string;
+          body: string;
+          created_at: string;
+          edited_at: string | null;
+          hidden_at: string | null;
+          hidden_by: string | null;
+          hidden_reason: string | null;
+          id: number;
+          thread_id: number;
+          updated_at: string;
+        };
+        Insert: {
+          author_id?: string;
+          author_name?: string;
+          body: string;
+          created_at?: string;
+          edited_at?: string | null;
+          hidden_at?: string | null;
+          hidden_by?: string | null;
+          hidden_reason?: string | null;
+          id?: never;
+          thread_id: number;
+          updated_at?: string;
+        };
+        Update: {
+          author_id?: string;
+          author_name?: string;
+          body?: string;
+          created_at?: string;
+          edited_at?: string | null;
+          hidden_at?: string | null;
+          hidden_by?: string | null;
+          hidden_reason?: string | null;
+          id?: never;
+          thread_id?: number;
+          updated_at?: string;
+        };
+        Relationships: [];
+      };
+      community_threads: {
+        Row: {
+          author_id: string;
+          author_name: string;
+          body: string;
+          category: string;
+          created_at: string;
+          edited_at: string | null;
+          hidden_at: string | null;
+          hidden_by: string | null;
+          hidden_reason: string | null;
+          hospital: string | null;
+          id: number;
+          last_reply_at: string | null;
+          reply_count: number;
+          specialty: string | null;
+          title: string;
+          updated_at: string;
+          year_stage: string | null;
+        };
+        Insert: {
+          author_id?: string;
+          author_name?: string;
+          body: string;
+          category: string;
+          created_at?: string;
+          edited_at?: string | null;
+          hidden_at?: string | null;
+          hidden_by?: string | null;
+          hidden_reason?: string | null;
+          hospital?: string | null;
+          id?: never;
+          last_reply_at?: string | null;
+          reply_count?: number;
+          specialty?: string | null;
+          title: string;
+          updated_at?: string;
+          year_stage?: string | null;
+        };
+        Update: {
+          author_id?: string;
+          author_name?: string;
+          body?: string;
+          category?: string;
+          created_at?: string;
+          edited_at?: string | null;
+          hidden_at?: string | null;
+          hidden_by?: string | null;
+          hidden_reason?: string | null;
+          hospital?: string | null;
+          id?: never;
+          last_reply_at?: string | null;
+          reply_count?: number;
+          specialty?: string | null;
+          title?: string;
+          updated_at?: string;
+          year_stage?: string | null;
+        };
+        Relationships: [];
+      };
+      content_reports: {
+        Row: {
+          action: string | null;
+          created_at: string;
+          id: number;
+          note: string | null;
+          reason: string;
+          reporter_id: string;
+          resolved_at: string | null;
+          resolved_by: string | null;
+          target_id: number;
+          target_type: string;
+        };
+        Insert: {
+          action?: string | null;
+          created_at?: string;
+          id?: never;
+          note?: string | null;
+          reason: string;
+          reporter_id: string;
+          resolved_at?: string | null;
+          resolved_by?: string | null;
+          target_id: number;
+          target_type: string;
+        };
+        Update: {
+          action?: string | null;
+          created_at?: string;
+          id?: never;
+          note?: string | null;
+          reason?: string;
+          reporter_id?: string;
+          resolved_at?: string | null;
+          resolved_by?: string | null;
+          target_id?: number;
+          target_type?: string;
+        };
+        Relationships: [];
+      };
+      data_change_runs: {
+        Row: {
+          added: number;
+          changed: number;
+          generated_at: string;
+          induction: number;
+          new_count: number;
+          new_source: string | null;
+          old_count: number;
+          old_source: string | null;
+          removed: number;
+          total_updates: number;
+          updated_at: string;
+        };
+        Insert: {
+          added: number;
+          changed: number;
+          generated_at: string;
+          induction: number;
+          new_count: number;
+          new_source?: string | null;
+          old_count: number;
+          old_source?: string | null;
+          removed: number;
+          total_updates: number;
+          updated_at?: string;
+        };
+        Update: {
+          added?: number;
+          changed?: number;
+          generated_at?: string;
+          induction?: number;
+          new_count?: number;
+          new_source?: string | null;
+          old_count?: number;
+          old_source?: string | null;
+          removed?: number;
+          total_updates?: number;
+          updated_at?: string;
+        };
+        Relationships: [];
+      };
+      data_changes: {
+        Row: {
+          applicant_id: number;
+          field: string;
+          id: number;
+          induction: number;
+          kind: string;
+          new_value: number | null;
+          old_value: number | null;
+          program: string;
+          updated_at: string;
+        };
+        Insert: {
+          applicant_id: number;
+          field: string;
+          id?: never;
+          induction: number;
+          kind: string;
+          new_value?: number | null;
+          old_value?: number | null;
+          program?: string;
+          updated_at?: string;
+        };
+        Update: {
+          applicant_id?: number;
+          field?: string;
+          id?: never;
+          induction?: number;
+          kind?: string;
+          new_value?: number | null;
+          old_value?: number | null;
+          program?: string;
+          updated_at?: string;
+        };
+        Relationships: [];
+      };
       joining_status: {
         Row: {
           applicant_id: number;
@@ -529,6 +862,14 @@ export type Database = {
     };
     Functions: {
       apply_applicant_pool: {
+        Args: { p_induction: number; p_rows: Json };
+        Returns: number;
+      };
+      apply_data_change_run: {
+        Args: { p_induction: number; p_run: Json };
+        Returns: undefined;
+      };
+      apply_data_changes: {
         Args: { p_induction: number; p_rows: Json };
         Returns: number;
       };

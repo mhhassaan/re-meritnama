@@ -3,6 +3,9 @@ import Link from "next/link";
 import Image from "next/image";
 import { createClient, getCurrentUser } from "@/lib/supabase/server";
 import { UserMenu } from "@/components/app/user-menu";
+import { ThemeToggle } from "@/components/theme-toggle";
+import { SignOutButton } from "@/components/auth/sign-out-button";
+import { signAvatar } from "@/lib/profile/avatar";
 import { AppNavDrawer, AppSidebar } from "@/components/app/app-nav";
 
 /**
@@ -43,11 +46,18 @@ export default async function AppLayout({
     // Filtered to this user on purpose: `profiles` is readable for every
     // public profile, so an unfiltered `.maybeSingle()` matches several rows
     // and errors out — the header would silently fall back to the email.
-    supabase.from("profiles").select("display_name").eq("user_id", user.id).maybeSingle(),
+    supabase
+      .from("profiles")
+      .select("display_name, avatar_path")
+      .eq("user_id", user.id)
+      .maybeSingle(),
     supabase.from("user_roles").select("role"),
   ]);
 
   const displayName = profile?.display_name?.trim() || null;
+  // The bucket is private with no select policy, so the header's own photo
+  // needs a signed URL like every other read of it.
+  const avatarUrl = await signAvatar(profile?.avatar_path ?? null);
   const initial = (displayName || user.email || "?").trim().charAt(0) || "?";
 
   return (
@@ -73,14 +83,25 @@ export default async function AppLayout({
           </Link>
         </div>
 
-        <UserMenu
-          identity={{
-            email: user.email ?? "",
-            displayName,
-            initial,
-            isStaff: Boolean(roles?.length),
-          }}
-        />
+        {/* Theme and sign out sit in the header rather than inside the account
+            menu. Both are one-tap things people reach for often — switching
+            theme because the room changed, signing out on a shared machine —
+            and a control you use that often should not be two gestures deep.
+            The menu keeps what is genuinely about the account: who you are,
+            your profile, and the staff surfaces. */}
+        <div className="flex items-center gap-2 sm:gap-3">
+          <UserMenu
+            identity={{
+              email: user.email ?? "",
+              displayName,
+              initial,
+              avatarUrl,
+              isStaff: Boolean(roles?.length),
+            }}
+          />
+          <ThemeToggle />
+          <SignOutButton />
+        </div>
       </header>
 
       {/* The rail scrolls with its own sticky container rather than the page,

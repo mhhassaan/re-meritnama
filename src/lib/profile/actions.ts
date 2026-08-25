@@ -3,6 +3,12 @@
 import { revalidatePath } from "next/cache";
 import { createClient, getCurrentUser } from "@/lib/supabase/server";
 import { loadSeats } from "@/lib/portal/data";
+import {
+  AVATAR_BUCKET,
+  AVATAR_MAX_BYTES,
+  AVATAR_MIME_TYPES,
+  avatarPathFor,
+} from "./avatar";
 
 /**
  * Saves the signed-in user's own profile.
@@ -100,5 +106,103 @@ export async function saveProfile(input: {
   // scope, because the menu lives in the shell rather than on this page.
   revalidatePath("/app", "layout");
 
+  return { ok: true };
+}
+
+/**
+ * Uploads the signed-in user's profile photo.
+ *
+ * ## What makes this safe is the storage policy, not this file
+ *
+ * `storage.objects` carries insert/update/delete policies for the `avatars`
+ * bucket that check `(storage.foldername(name))[1] = auth.uid()`. The path is
+ * built here from the session and is never a parameter — there is no field in
+ * which to ask for somebody else's folder — but even if this action were wrong,
+ * the database would refuse the write.
+ *
+ * ## Validated twice, and neither check is the real one
+ *
+ * Size and content type are checked here and again by the bucket's own
+ * `file_size_limit` and `allowed_mime_types`. Both read the type the *client*
+ * declares, so neither proves the bytes are an image. What contains that is the
+ * bucket being private, never rendered as HTML, and refusing SVG — the one
+ * accepted format whose difference from the others is that it can execute.
+ */
+export async function uploadAvatar(form: FormData): Promise<SaveResult> {
+  const user = await getCurrentUser();
+  if (!user) return { ok: false, error: "Sign in to change your photo." };
+
+  const file = form.get("file");
+  if (!(file instanceof File) || file.size === 0) {
+    return { ok: false, error: "Choose an image first." };
+  }
+
+  if (file.size > AVATAR_MAX_BYTES) {
+    return { ok: false, error: "That image is over 2 MB. Choose a smaller one." };
+  }
+
+  if (!AVATAR_MIME_TYPES.includes(file.type)) {
+    return { ok: false, error: "Use a JPEG, PNG or WebP image." };
+  }
+
+  const supabase = await createClient();
+  const path = avatarPathFor(user.id);
+
+  const { error: uploadError } = await supabase.storage
+    .from(AVATAR_BUCKET)
+    .upload(path, file, { contentType: file.type, upsert: true });
+
+  if (uploadError) return { ok: false, error: uploadError.message };
+
+  // Checked by effect, like every other write in this project: PostgREST
+  // answers 204 with zero rows when a policy hides the target.
+  const { data, error } = await supabase
+    .from("profiles")
+    .upsert(
+      { user_id: user.id, avatar_path: path, updated_at: new Date().toISOString() },
+      { onConflict: "user_id" }
+    )
+    .select("user_id");
+
+  if (error) return { ok: false, error: error.message };
+  if (!data?.length) {
+    return { ok: false, error: "The photo uploaded but the profile did not save." };
+  }
+
+  revalidatePath("/app", "layout");
+  return { ok: true };
+}
+
+/**
+ * Removes the photo.
+ *
+ * The object is deleted as well as the column cleared. Clearing the column
+ * alone would leave the file in the bucket, still signable by anything that
+ * knew the path, while the person had been told their photo was gone.
+ *
+ * The order matters the other way round from the upload: the column is cleared
+ * first, so a failure to delete the object leaves an orphan nobody can reach
+ * rather than a profile pointing at a file that is no longer there.
+ */
+export async function removeAvatar(): Promise<SaveResult> {
+  const user = await getCurrentUser();
+  if (!user) return { ok: false, error: "Sign in to change your photo." };
+
+  const supabase = await createClient();
+
+  const { data, error } = await supabase
+    .from("profiles")
+    .update({ avatar_path: null, updated_at: new Date().toISOString() })
+    .eq("user_id", user.id)
+    .select("user_id");
+
+  if (error) return { ok: false, error: error.message };
+  if (!data?.length) {
+    return { ok: false, error: "Nothing was changed. Sign in again and retry." };
+  }
+
+  await supabase.storage.from(AVATAR_BUCKET).remove([avatarPathFor(user.id)]);
+
+  revalidatePath("/app", "layout");
   return { ok: true };
 }

@@ -2,6 +2,7 @@ import "server-only";
 
 import { createClient, getCurrentUser } from "@/lib/supabase/server";
 import { loadSeats } from "@/lib/portal/data";
+import { signAvatar } from "./avatar";
 
 /**
  * The signed-in user's own profile.
@@ -29,6 +30,8 @@ export type MyProfile = {
   specialtyGoal: string | null;
   hospitalGoal: string | null;
   isPublic: boolean;
+  /** A short-lived signed URL, or null when there is no photo. */
+  avatarUrl: string | null;
   /** True once a profile row exists at all — the form inserts on first save. */
   exists: boolean;
 };
@@ -62,7 +65,7 @@ export async function loadMyProfile(): Promise<ProfileView | null> {
     // construction; this table is deliberately readable more widely.
     supabase
       .from("profiles")
-      .select("display_name, specialty_goal, hospital_goal, is_public")
+      .select("display_name, specialty_goal, hospital_goal, is_public, avatar_path")
       .eq("user_id", user.id)
       .maybeSingle(),
     // No applicant id passed from the client: the policy resolves the row
@@ -84,6 +87,11 @@ export async function loadMyProfile(): Promise<ProfileView | null> {
     .filter(Boolean)
     .sort((a, b) => a.localeCompare(b));
 
+  // Minted after the row is read rather than alongside it: there is nothing to
+  // sign until the stored path is known, and a profile with no photo makes no
+  // storage request at all.
+  const avatarUrl = await signAvatar(row?.avatar_path ?? null);
+
   return {
     profile: {
       email: user.email ?? "",
@@ -91,6 +99,7 @@ export async function loadMyProfile(): Promise<ProfileView | null> {
       specialtyGoal: row?.specialty_goal ?? null,
       hospitalGoal: row?.hospital_goal ?? null,
       isPublic: row?.is_public ?? false,
+      avatarUrl,
       exists: Boolean(row),
     },
     linked: candidate
@@ -118,11 +127,11 @@ export type Essential = {
  * The original's "profile strength" checklist, restricted to things that are
  * true or false about data we hold.
  *
- * Its version has six items including a photo and an "inducted status" flag.
- * Neither exists here — `avatar_path` has no upload path and no storage bucket,
- * and inducted status is on the joining export rather than something a person
- * asserts — so listing them would be scoring someone against a control that is
- * not on the page.
+ * Its version has six items, one of which is an "inducted status" flag. That
+ * one is not here: inducted status comes from the joining export rather than
+ * being something a person asserts, so listing it would score someone against a
+ * control that is not on the page. A photo is now a real item, because there is
+ * now a control for it.
  */
 export function essentials(view: ProfileView): Essential[] {
   return [
@@ -132,6 +141,13 @@ export function essentials(view: ProfileView): Essential[] {
       done: Boolean(view.profile.displayName?.trim()),
       actionable: true,
       note: "What other candidates would see if you make your profile public.",
+    },
+    {
+      id: "photo",
+      label: "Add a profile photo",
+      done: Boolean(view.profile.avatarUrl),
+      actionable: true,
+      note: "Stored privately and never served at a public address. Other candidates see it only if you turn discoverability on.",
     },
     {
       id: "specialty",

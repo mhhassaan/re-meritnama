@@ -4,6 +4,7 @@ import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import type { MyProfile } from "@/lib/profile/data";
 import { saveProfile } from "@/lib/profile/actions";
+import { AvatarField } from "@/components/profile/avatar-field";
 import { Bezel } from "@/components/app/bezel";
 import { FieldLabel, FieldHint, Select, TextField } from "@/components/app/field";
 import { SaveIcon } from "@/components/ui/save";
@@ -66,7 +67,15 @@ export function ProfileForm({
 
   return (
     <Bezel className="mt-5" innerClassName="p-6">
-      <form onSubmit={submit}>
+      {/* Outside the form below, and deliberately so: an upload and a set of
+          text fields fail differently, and a rejected image should not discard
+          three typed fields. */}
+      <AvatarField
+        avatarUrl={profile.avatarUrl}
+        initial={(displayName || profile.email || "?").charAt(0)}
+      />
+
+      <form onSubmit={submit} className="mt-6 border-t border-border pt-6">
         <div className="grid gap-5 md:grid-cols-2">
           <div className="flex flex-col gap-1 md:col-span-2">
             <FieldLabel htmlFor="p-name">Display name</FieldLabel>
@@ -136,9 +145,9 @@ export function ProfileForm({
                   page that makes anything visible to anybody else. */}
               <span className="mt-1 block text-xs leading-relaxed text-fg-muted">
                 Off by default. With it on, other verified candidates can see
-                your display name and your two goals — and nothing else. Your
-                email, your marks, your preferences and your applicant id are
-                never part of it.
+                your display name, your photo if you add one, and your two goals
+                — and nothing else. Your email, your marks, your preferences and
+                your applicant id are never part of it.
               </span>
             </span>
           </label>

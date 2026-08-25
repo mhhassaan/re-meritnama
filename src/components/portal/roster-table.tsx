@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useTransition } from "react";
-import { useRouter } from "next/navigation";
+import { useFilterNav } from "@/components/app/use-filter-nav";
 import type { RosterRow, RosterView } from "@/lib/portal/directory";
 import type { DirectoryRecord } from "@/lib/portal/directory";
 import { fetchDirectoryRecord } from "@/lib/portal/directory-action";
@@ -50,7 +50,7 @@ export function RosterTable({
   programs: string[];
   selected: { search: string; program: string; status: string; sort: string };
 }) {
-  const router = useRouter();
+  const { go, pending } = useFilterNav();
   const me = useIdentifiedApplicant();
   const { ref: icon, handlers } = useActionIcon();
 
@@ -61,7 +61,9 @@ export function RosterTable({
 
   const [open, setOpen] = useState<number | null>(null);
   const [record, setRecord] = useState<DirectoryRecord | null>(null);
-  const [pending, startTransition] = useTransition();
+  // Separate from the filter transition the hook owns: this one is about
+  // fetching one candidate's record for the modal, and the two can overlap.
+  const [loadingRecord, startLoadingRecord] = useTransition();
 
   function apply(e: React.FormEvent) {
     e.preventDefault();
@@ -72,13 +74,13 @@ export function RosterTable({
     if (sort && sort !== "marks") next.set("sort", sort);
     // Page is deliberately dropped: narrowing a list should start at its top,
     // not on page 12 of a result that may now have three pages.
-    router.push(`/app/portal/pool?${next.toString()}`);
+    go(`/app/portal/pool?${next.toString()}`);
   }
 
   function openRecord(applicantId: number) {
     setOpen(applicantId);
     setRecord(null);
-    startTransition(async () => {
+    startLoadingRecord(async () => {
       const found = await fetchDirectoryRecord(applicantId);
       setRecord(found);
     });
@@ -91,7 +93,10 @@ export function RosterTable({
     if (selected.status) next.set("status", selected.status);
     if (selected.sort && selected.sort !== "marks") next.set("sort", selected.sort);
     if (page > 1) next.set("page", String(page));
-    router.push(`/app/portal/pool?${next.toString()}`);
+    // Pagination is the one navigation here that SHOULD scroll: arriving at
+    // page 4 still parked at the bottom of page 3 shows the reader the end of a
+    // list they have not seen the start of.
+    go(`/app/portal/pool?${next.toString()}`, { scroll: true });
   }
 
   const from = (view.page - 1) * view.pageSize;
@@ -238,7 +243,7 @@ export function RosterTable({
       {open != null && (
         <DirectoryRecordModal
           record={record}
-          loading={pending}
+          loading={loadingRecord}
           onClose={() => {
             setOpen(null);
             setRecord(null);

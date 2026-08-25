@@ -1,8 +1,9 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import { useRouter } from "next/navigation";
+import { useFilterNav } from "@/components/app/use-filter-nav";
 import { Bezel } from "@/components/app/bezel";
+import { FilterPending } from "@/components/app/filter-pending";
 import { FieldLabel, Select } from "@/components/app/field";
 import { SpecialtyLabel } from "@/components/merit/merit-badges";
 import { TargetIcon } from "@/components/icons/koboyo";
@@ -33,7 +34,12 @@ type Row = {
   placedHigher: boolean;
 };
 
-type Slot = { quota: string; specialty: string; hospital: string; capacity: number };
+type Slot = {
+  quota: string;
+  specialty: string;
+  hospital: string;
+  capacity: number;
+};
 
 export function SlotBrowser({
   program,
@@ -55,7 +61,7 @@ export function SlotBrowser({
   } | null;
   selected: { quota: string; specialty: string; hospital: string };
 }) {
-  const router = useRouter();
+  const { go, pending } = useFilterNav();
   const { ref: icon, handlers } = useActionIcon();
   const manual = useManualCandidate();
 
@@ -82,7 +88,7 @@ export function SlotBrowser({
       selection.quota,
       selection.specialty,
       selection.hospital,
-      manual
+      manual,
     )
       .then((result) => {
         if (!live || !result.ok) return;
@@ -107,16 +113,23 @@ export function SlotBrowser({
   const [hospital, setHospital] = useState(selected.hospital);
 
   const quotas = useMemo(
-    () => [...new Set(slots.map((s) => s.quota))].sort((a, b) => a.localeCompare(b)),
-    [slots]
+    () =>
+      [...new Set(slots.map((s) => s.quota))].sort((a, b) =>
+        a.localeCompare(b),
+      ),
+    [slots],
   );
 
   const specialties = useMemo(
     () =>
-      [...new Set(slots.filter((s) => !quota || s.quota === quota).map((s) => s.specialty))].sort(
-        (a, b) => a.localeCompare(b)
-      ),
-    [slots, quota]
+      [
+        ...new Set(
+          slots
+            .filter((s) => !quota || s.quota === quota)
+            .map((s) => s.specialty),
+        ),
+      ].sort((a, b) => a.localeCompare(b)),
+    [slots, quota],
   );
 
   const hospitals = useMemo(
@@ -124,11 +137,15 @@ export function SlotBrowser({
       [
         ...new Set(
           slots
-            .filter((s) => (!quota || s.quota === quota) && (!specialty || s.specialty === specialty))
-            .map((s) => s.hospital)
+            .filter(
+              (s) =>
+                (!quota || s.quota === quota) &&
+                (!specialty || s.specialty === specialty),
+            )
+            .map((s) => s.hospital),
         ),
       ].sort((a, b) => a.localeCompare(b)),
-    [slots, quota, specialty]
+    [slots, quota, specialty],
   );
 
   const complete = Boolean(quota && specialty && hospital);
@@ -136,7 +153,7 @@ export function SlotBrowser({
   function load() {
     if (!complete) return;
     const next = new URLSearchParams({ program, quota, specialty, hospital });
-    router.push(`/app/portal/slots?${next.toString()}`);
+    go(`/app/portal/slots?${next.toString()}`);
   }
 
   return (
@@ -155,7 +172,9 @@ export function SlotBrowser({
               id="slot-program"
               value={program}
               onChange={(e) =>
-                router.push(`/app/portal/slots?program=${encodeURIComponent(e.target.value)}`)
+                go(
+                  `/app/portal/slots?program=${encodeURIComponent(e.target.value)}`,
+                )
               }
             >
               {programs.map((p) => (
@@ -226,11 +245,11 @@ export function SlotBrowser({
 
           <button
             type="submit"
-            disabled={!complete}
+            disabled={pending || !complete}
             {...handlers}
             className="group flex min-h-[46px] items-center gap-3 rounded-sm bg-accent-strong py-2 pl-5 pr-2 text-sm font-bold text-fg-on-accent shadow-ambient transition-all duration-[250ms] ease-[cubic-bezier(0.32,0.72,0,1)] hover:bg-accent-hover active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-50"
           >
-            Show seat
+            {pending ? "Loading…" : "Show seat"}
             <span className="flex h-8 w-8 items-center justify-center rounded-full bg-white/15 transition-transform duration-[250ms] group-hover:translate-x-0.5">
               <Search01Icon ref={icon} size={ICON_SIZE_SM} />
             </span>
@@ -238,147 +257,164 @@ export function SlotBrowser({
         </form>
       </Bezel>
 
-      {!selection ? (
-        <Bezel className="mt-6" innerClassName="px-8 py-20 text-center">
-          <TargetIcon className="mx-auto h-8 w-auto text-fg-subtle" />
-          <p className="mt-4 font-sans text-base font-bold text-foreground">
-            No seat selected
-          </p>
-          <p className="mx-auto mt-3 max-w-md text-xs leading-relaxed text-fg-muted">
-            Choose a quota, specialty and hospital above to see who applied and
-            where the cutoff falls.
-          </p>
-        </Bezel>
-      ) : (
-        <>
-          <Bezel className="mt-6" innerClassName="p-5">
-            {manual?.preferences.length ? (
-              <p className="mb-3 font-mono text-[11px] text-fg-subtle">
-                {recomputing ? (
-                  "Re-ranking with your manual entry…"
-                ) : withManual ? (
-                  <span className="font-bold text-hope">
-                    Ranked including your manual entry.
-                  </span>
-                ) : null}
-              </p>
-            ) : null}
-
-            <div className="flex flex-wrap items-start justify-between gap-4">
-              <div className="min-w-0">
-                <SpecialtyLabel specialty={selection.specialty} className="text-base" />
-                <p className="mt-1 text-sm leading-snug text-fg-muted">
-                  {selection.hospital}
-                </p>
-                <p className="mt-1 font-mono text-[10px] uppercase tracking-wider text-fg-subtle">
-                  {program} · {selection.quota}
-                </p>
-              </div>
-
-              <div className="flex gap-6">
-                <Figure label="Seats" value={String(selection.capacity)} />
-                <Figure
-                  label="Applied"
-                  value={activeRows.length.toLocaleString("en-GB")}
-                />
-                <Figure
-                  label="Cutoff"
-                  value={activeCutoff != null ? activeCutoff.toFixed(2) : "—"}
-                  tone={activeCutoff != null ? "text-accent" : "text-fg-subtle"}
-                  hint={activeCutoff == null ? "seat did not fill" : undefined}
-                />
-              </div>
-            </div>
+      {/* Dimmed rather than blanked while the next seat loads: what is on
+          screen is still the true answer for the seat that produced it. */}
+      <FilterPending pending={pending}>
+        {!selection ? (
+          <Bezel className="mt-6" innerClassName="px-8 py-20 text-center">
+            <TargetIcon className="mx-auto h-8 w-auto text-fg-subtle" />
+            <p className="mt-4 font-sans text-base font-bold text-foreground">
+              No seat selected
+            </p>
+            <p className="mx-auto mt-3 max-w-md text-xs leading-relaxed text-fg-muted">
+              Choose a quota, specialty and hospital above to see who applied
+              and where the cutoff falls.
+            </p>
           </Bezel>
+        ) : (
+          <>
+            <Bezel className="mt-6" innerClassName="p-5">
+              {manual?.preferences.length ? (
+                <p className="mb-3 font-mono text-[11px] text-fg-subtle">
+                  {recomputing ? (
+                    "Re-ranking with your manual entry…"
+                  ) : withManual ? (
+                    <span className="font-bold text-hope">
+                      Ranked including your manual entry.
+                    </span>
+                  ) : null}
+                </p>
+              ) : null}
 
-          <div className="mt-4 rounded-lg bg-surface-sunken/70 p-1 shadow-ambient ring-1 ring-border">
-            <div className="overflow-x-auto rounded-[0.25rem] bg-surface shadow-[inset_0_1px_0_var(--edge-highlight)]">
-              <table className="w-full border-collapse text-sm">
-                <caption className="sr-only">
-                  Everyone who applied for {selection.specialty} at{" "}
-                  {selection.hospital}, ranked by the mark that applies to this
-                  seat.
-                </caption>
-                <thead className="bg-surface-sunken">
-                  <tr className="border-b border-border">
-                    {["#", "Applicant", "Pref", "Mark", "Outcome"].map((label, i) => (
-                      <th
-                        key={label}
-                        scope="col"
-                        className={`px-3 py-2.5 font-mono text-[10px] font-bold uppercase tracking-wider text-fg-muted ${
-                          i >= 2 ? "text-right" : "text-left"
-                        }`}
-                      >
-                        {label}
-                      </th>
-                    ))}
-                  </tr>
-                </thead>
+              <div className="flex flex-wrap items-start justify-between gap-4">
+                <div className="min-w-0">
+                  <SpecialtyLabel
+                    specialty={selection.specialty}
+                    className="text-base"
+                  />
+                  <p className="mt-1 text-sm leading-snug text-fg-muted">
+                    {selection.hospital}
+                  </p>
+                  <p className="mt-1 font-mono text-[10px] uppercase tracking-wider text-fg-subtle">
+                    {program} · {selection.quota}
+                  </p>
+                </div>
 
-                <tbody>
-                  {activeRows.map((row, i) => (
-                    <tr
-                      key={`${row.applicantId}-${row.preferenceNo}`}
-                      className={`border-b border-border/60 ${
-                        row.applicantId === MANUAL_ID_BASE
-                          ? "bg-hope/10 ring-1 ring-inset ring-hope/40"
-                          : ""
-                      } ${
-                        // Faded: the simulation places them somewhere they
-                        // ranked higher, so they are not really competing here
-                        // and counting them as competition overstates it.
-                        row.placedHigher ? "opacity-45" : ""
-                      } ${row.selected ? "bg-status-safe/[0.06]" : ""}`}
-                    >
-                      <td className="px-3 py-2 font-mono text-xs tabular-nums text-fg-subtle">
-                        {i + 1}
-                      </td>
-                      <td className="px-3 py-2 text-[13px]">
-                        {row.applicantId === MANUAL_ID_BASE ? (
-                          <span className="font-bold text-hope">
-                            {row.name ?? "Your entry"}
-                            <span className="ml-1.5 font-mono text-[9px] uppercase tracking-wider">
-                              you
-                            </span>
-                          </span>
-                        ) : row.name ? (
-                          <span className="font-bold text-foreground">{row.name}</span>
-                        ) : (
-                          <span
-                            className="font-mono text-xs text-fg-muted"
-                            title="Not named in any published merit list"
+                <div className="flex gap-6">
+                  <Figure label="Seats" value={String(selection.capacity)} />
+                  <Figure
+                    label="Applied"
+                    value={activeRows.length.toLocaleString("en-GB")}
+                  />
+                  <Figure
+                    label="Cutoff"
+                    value={activeCutoff != null ? activeCutoff.toFixed(2) : "—"}
+                    tone={
+                      activeCutoff != null ? "text-accent" : "text-fg-subtle"
+                    }
+                    hint={
+                      activeCutoff == null ? "seat did not fill" : undefined
+                    }
+                  />
+                </div>
+              </div>
+            </Bezel>
+
+            <div className="mt-4 rounded-lg bg-surface-sunken/70 p-1 shadow-ambient ring-1 ring-border">
+              <div className="overflow-x-auto rounded-[0.25rem] bg-surface shadow-[inset_0_1px_0_var(--edge-highlight)]">
+                <table className="w-full border-collapse text-sm">
+                  <caption className="sr-only">
+                    Everyone who applied for {selection.specialty} at{" "}
+                    {selection.hospital}, ranked by the mark that applies to
+                    this seat.
+                  </caption>
+                  <thead className="bg-surface-sunken">
+                    <tr className="border-b border-border">
+                      {["#", "Applicant", "Pref", "Mark", "Outcome"].map(
+                        (label, i) => (
+                          <th
+                            key={label}
+                            scope="col"
+                            className={`px-3 py-2.5 font-mono text-[10px] font-bold uppercase tracking-wider text-fg-muted ${
+                              i >= 2 ? "text-right" : "text-left"
+                            }`}
                           >
-                            #{row.applicantId}
-                          </span>
-                        )}
-                      </td>
-                      <td className="px-3 py-2 text-right font-mono text-xs tabular-nums text-fg-muted">
-                        {row.preferenceNo}
-                      </td>
-                      <td className="px-3 py-2 text-right font-mono text-xs font-bold tabular-nums text-foreground">
-                        {row.mark.toFixed(2)}
-                      </td>
-                      <td className="px-3 py-2 text-right">
-                        {row.selected ? (
-                          <Tag tone="border-status-safe/50 text-status-safe">Selected</Tag>
-                        ) : row.placedHigher ? (
-                          <Tag tone="border-border-strong text-fg-subtle">
-                            Placed higher
-                          </Tag>
-                        ) : (
-                          <Tag tone="border-status-reach/50 text-status-reach">
-                            Competing
-                          </Tag>
-                        )}
-                      </td>
+                            {label}
+                          </th>
+                        ),
+                      )}
                     </tr>
-                  ))}
-                </tbody>
-              </table>
+                  </thead>
+
+                  <tbody>
+                    {activeRows.map((row, i) => (
+                      <tr
+                        key={`${row.applicantId}-${row.preferenceNo}`}
+                        className={`border-b border-border/60 ${
+                          row.applicantId === MANUAL_ID_BASE
+                            ? "bg-hope/10 ring-1 ring-inset ring-hope/40"
+                            : ""
+                        } ${
+                          // Faded: the simulation places them somewhere they
+                          // ranked higher, so they are not really competing here
+                          // and counting them as competition overstates it.
+                          row.placedHigher ? "opacity-45" : ""
+                        } ${row.selected ? "bg-status-safe/[0.06]" : ""}`}
+                      >
+                        <td className="px-3 py-2 font-mono text-xs tabular-nums text-fg-subtle">
+                          {i + 1}
+                        </td>
+                        <td className="px-3 py-2 text-[13px]">
+                          {row.applicantId === MANUAL_ID_BASE ? (
+                            <span className="font-bold text-hope">
+                              {row.name ?? "Your entry"}
+                              <span className="ml-1.5 font-mono text-[9px] uppercase tracking-wider">
+                                you
+                              </span>
+                            </span>
+                          ) : row.name ? (
+                            <span className="font-bold text-foreground">
+                              {row.name}
+                            </span>
+                          ) : (
+                            <span
+                              className="font-mono text-xs text-fg-muted"
+                              title="Not named in any published merit list"
+                            >
+                              #{row.applicantId}
+                            </span>
+                          )}
+                        </td>
+                        <td className="px-3 py-2 text-right font-mono text-xs tabular-nums text-fg-muted">
+                          {row.preferenceNo}
+                        </td>
+                        <td className="px-3 py-2 text-right font-mono text-xs font-bold tabular-nums text-foreground">
+                          {row.mark.toFixed(2)}
+                        </td>
+                        <td className="px-3 py-2 text-right">
+                          {row.selected ? (
+                            <Tag tone="border-status-safe/50 text-status-safe">
+                              Selected
+                            </Tag>
+                          ) : row.placedHigher ? (
+                            <Tag tone="border-border-strong text-fg-subtle">
+                              Placed higher
+                            </Tag>
+                          ) : (
+                            <Tag tone="border-status-reach/50 text-status-reach">
+                              Competing
+                            </Tag>
+                          )}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
             </div>
-          </div>
-        </>
-      )}
+          </>
+        )}
+      </FilterPending>
     </>
   );
 }
@@ -399,7 +435,9 @@ function Figure({
       <p className="font-mono text-[9px] uppercase tracking-[0.18em] text-fg-muted">
         {label}
       </p>
-      <p className={`mt-1 font-mono text-xl font-bold tabular-nums ${tone}`}>{value}</p>
+      <p className={`mt-1 font-mono text-xl font-bold tabular-nums ${tone}`}>
+        {value}
+      </p>
       {hint && <p className="font-mono text-[9px] text-fg-subtle">{hint}</p>}
     </div>
   );

@@ -21,21 +21,13 @@ Last checked against the deployed site on **2026-08-24**, signed in.
 
 | Feature | Status | Notes |
 | :-- | :-- | :-- |
-| Start Here, Merit Table, My Prediction, Calculator, Compare, Previous Merit Lists | **built** | — |
-| **Jobs** | scope | `#tab-jobs` — "Current Job Openings. Browse current medical job openings. Filter by role, organization, location, or status — deadlines and availability update live." Needs a jobs table and someone to maintain it. |
-| **Policy** | scope | `#tab-policy` — "Scoring Policy History: how the PRP merit formula evolved across induction cycles and why normalization is essential." We already hold `policy_by_induction.json` and do this normalisation in `src/lib/compare` — this is mostly presentation over data we have. |
-| **Guide** | scope | `#tab-guide` — "How to Use MeritNama. A complete reference for every term, metric, and feature in the app." Pure content. |
+| Start Here, Merit Table, My Prediction, Calculator, Compare, Previous Merit Lists, Policy, Guide, Jobs | **built** | — |
 
 ### Induction Portal (`simulation.html`)
 
 | Tab | Status | Notes |
 | :-- | :-- | :-- |
-| Overview, Candidate Pool, Merit List, Joining Status, Config, Where Merit Falls, Schedule, Hospitals, Training Seats, Competition | **built** | — |
-| **Consent What-If** | scope | "Compare normal seat allocation with a rerun where one candidate does not consent. The report shows the released seat, who moves in, and the subsequent candidate list changes." Hidden on the live site in Merit List Mode. **The engine already exists** — `runCascade` plus the Simulate Next Round action do this for a whole round; this is the single-candidate version of it. Closest to shippable of anything on this page. |
-| **Profiles** | scope + decision | "Community Profiles — browse registered members who have shared their profile." Our `profiles` table and its `own OR is_public OR staff` policy already support it. The live site notes **66 members are private**, which is the model we would follow. The decision is what a directory entry shows. |
-| **Chat** | decision | "Live Chat — choose a room, see who is online, mention @username or @everyone." Rooms: General, Announcements, Preference Strategy and more. **The first feature where one user writes what another reads**, so it needs moderation, reporting, blocking, rate limits and a retention policy designed before any of it is built. |
-| **Data Changes** | data | `candidatesChanges.html` — "Candidate Data Changes". We hold `candidates_changes.json` and `induction21_revisions.json` in `ingest/`, and the ✎ amended badge already reads revisions, so this is largely presentation. |
-| **Accreditation** | data | `accreditation.html` — "CPSP Accredited Programs. Official FCPS accreditation data from CPSP." Live: **5,587 accredited programs, 537 hospitals, 92 cities, 92 specialities**. This is a CPSP dataset we do not have; it is not derivable from the seat matrix. |
+| Overview, Candidate Pool, Merit List, Joining Status, Config, Where Merit Falls, Schedule, Hospitals, Training Seats, Competition, Consent What-If, Profiles, Data Changes, Accreditation, Chat | **built** | — |
 
 ### Standalone pages
 
@@ -43,8 +35,6 @@ Last checked against the deployed site on **2026-08-24**, signed in.
 | :-- | :-- | :-- |
 | `hospital.html` | **built** | Ported as `/app/portal/hospitals/[slug]`. |
 | `candidate.html` (My Profile) | **partly built** | See §3. |
-| **`reviews.html` — Discussion** | decision | Persistent Q&A forum: searchable threads and hospital reviews. Same user-writes-content problem as Chat. |
-| **`community.html` — Community Feed** | decision | Questions, hospital reviews, resources and result updates, filtered to your specialty. Same problem. |
 | **`editorial.html` — Editorial** | scope | "In-depth analysis, policy commentary, and data-driven insights." Content, plus somewhere to author it. |
 | **`donate.html` — Support** | scope | "Keep MeritNama Running." Payments are the owner's, not ours — see §5. |
 | **`admin.html`** | n/a | We have our own `/admin`. The original's is not a porting target. |
@@ -73,12 +63,11 @@ Built: identity (display name, aspiring specialty, aspiring hospital), discovera
 
 | Feature | Status | Notes |
 | :-- | :-- | :-- |
-| **Profile photo** | scope | `profiles.avatar_path` exists and nothing writes it. Needs a storage bucket and its own access policy. The account menu shows an initial rather than a broken image. |
 | **Page animation** | declined | Twelve full-page background effects — Pulse, Drift, Aurora, Particles, Vortex, Shimmer, Cascade, Breathe, Prism, Wave, Nebula — tinted from the avatar's colour. Decorative, and at odds with the design system. |
 | **Message the admin / inbox** | decision | Pick a "data-backed responder", supply an **applicant id**, and the system drafts a reply from that dataset for an admin to approve. One responder reads grievance verification records — a lookup surface over one of the three files in the historic leak. |
 | **Invite Members** | declined | Two invites per account, generating a shareable **PIN**. That is the credential model this rebuild exists to replace: identity is proven by delivery to an address already on the record, never by a code someone can forward. Needs redesigning, not porting. |
 | **My Contributions** | scope | Ties a donation to an account. Depends on Support (§5). |
-| **Community & Mentorship block** | decision | Links to sub-forums, feed, "Request a Chat", "Become a Mentor", "Find a Mentor", anonymous Q&A and hospital reviews. Every destination is §1's community work. |
+| **Mentorship** | decision | "Request a Chat", "Become a Mentor", "Find a Mentor". The forum, feed and hospital reviews the rest of this block links to are now built; mentorship is a matching problem with its own consent questions and is not. |
 | **Trust signals row** | scope | "Unverified context · Public profile · No contribution linked · Photo added". Two of the four depend on features above. |
 
 ---
@@ -102,7 +91,8 @@ Not missing — different on purpose, and each is stated on the page it affects.
 Not developer work. Listed so they are not mistaken for scope.
 
 - **Support / donations.** Payments, the account they land in, and any receipting.
-- **The CPSP accreditation dataset.** 5,587 programs; we do not have the source.
+- **Moderating the community surfaces.** The queue at `/app/admin/reports` is built and you hold `super_admin`, but somebody has to read it. Nothing hides itself on a report count, deliberately, so an unread queue means an unmoderated forum.
+- **A current jobs feed.** `public/data/jobs.json` was scraped on 11 July 2026 and every deadline in it has passed. The live board's 153 postings live in the owner's Firestore, which is out of scope; a refreshed snapshot or an export of that collection would make the Jobs page current with no code change.
 - **Father's names.** Needed for nothing currently built, and deliberately absent.
 - **Anything touching DNS, production billing, or the live site's Firebase project.**
 
@@ -110,12 +100,69 @@ Not developer work. Listed so they are not mistaken for scope.
 
 ## 6. Suggested order
 
-1. **Consent What-If** — the engine exists; this is a narrower entry point into it.
-2. **Policy** and **Guide** — content over data we already hold.
-3. **Profiles directory** — one read policy, and the table is ready.
-4. **Data Changes** — ingest exists in `ingest/`.
-5. **Photo upload** — a storage bucket and one policy.
-6. **Chat, Discussion, Community Feed** — one project, with moderation designed first.
+Nothing on the original's feature list is outstanding. What remains is
+operational rather than scope — see §5.
+
+~~Chat, Discussion, Community Feed~~ — built as one project, with the
+moderation substrate first. Authorship comes from a database trigger reading
+the session, so nobody can post under another name (the original's form has a
+free-text name field, which is why its live forum is almost entirely
+"Anonymous" and one thread is signed "Admin"). Rate limits are predicates
+inside the insert policies. Reports are invisible to the person reported, one
+per person per item, and **nothing auto-hides on a count** — a person decides
+every case at `/app/admin/reports`. Hiding never deletes.
+
+~~Photo upload~~ — built. Private bucket, writes scoped to the uploader's own
+folder, and reads of anybody else's photo only through a server-minted signed
+URL. It needed **four** policies rather than one: `upsert` reads the row it may
+replace, so with no select policy every upload failed. The select is scoped to
+the caller's own folder, which keeps the enumeration property intact. The
+discoverability copy on `/app/profile` now names the photo — changed before the
+feature shipped, and safe to change because no avatar existed yet.
+
+~~Jobs~~ — built, against the 75-posting snapshot in `public/data/jobs.json`.
+This one **is** genuinely data-limited, unlike Accreditation: the deployed site
+shows 153 because its Jobs tab reads the owner's Firestore, which the snapshot
+only seeds, and that project is out of scope. Every deadline in the snapshot has
+passed, so the page reports 0 open and says so at the top. Status is computed
+from the deadline on every render rather than read from the source's frozen
+`isOpen` flag — the flag is why the official board currently shows 149 of 153
+expired postings as open. A fresher file needs no code change.
+
+**Outstanding for this page:** a refreshed `jobs.json`, or an export of the
+Firestore collection. Owner's call — see §5.
+
+~~Accreditation~~ — built, and it was never blocked on data. This list had it
+tagged **data** on the reasoning that 5,587 CPSP programmes are a dataset we do
+not hold; `public/data/cpsp_accreditation.json` had been in the repo the whole
+time. No table, no policy, no ingest. Three inconsistencies in the register are
+left uncorrected and stated on the page rather than silently fixed: `Unit-I`
+versus `Unit-1`, 58 byte-identical duplicate rows plus institutions listed under
+several spellings, and the unexplained `F.A.` / `P.A.` / `T.A.` codes.
+
+~~Data Changes~~ — built. Three things are withheld from the source diff: CNIC
+values (397 records, and the original renders none of them either), the old and
+new name strings (400 records), and the individual preference seats (21,796
+deltas). Preference **counts** are kept, because 113 of the 622 changed records
+changed nothing else and would otherwise be missing from the page. The page also
+corrects the original's central claim: a zero in the applicant file means *no
+record*, so of the 440 total-marks movements only **57** are a mark actually
+being revised.
+
+~~Profiles~~ — built, and it needed **no** new policy after all: `profiles_select`
+was already `own OR is_public OR staff`. Cards carry three fields, because
+`/app/profile` already promises exactly that to anyone who opts in. The
+original's merit band, inducted status and programme tags are all derived
+from marks or preferences, which that promise rules out.
+
+~~Policy~~ and ~~Guide~~ — built. Both read data already loaded by other
+surfaces; no new source, no new policy.
 
 ~~Competition~~ — built. No new data (`loadPool` + `loadSeats`, both already
 cached), no new policy.
+
+~~Consent What-If~~ — built. **Correction to this list's earlier entry**: it
+does not reuse the cascade. The original runs it on the blank-slate placement
+engine — the same one behind Seat Allocation — not on `runCascade`. Two full
+placement runs per request (baseline, then the pool minus one applicant), so
+it is closer in cost to Seat Allocation than to a narrow diff.

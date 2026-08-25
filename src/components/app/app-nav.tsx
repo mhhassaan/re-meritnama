@@ -25,6 +25,7 @@ import { ListViewIcon } from "@/components/ui/list-view";
 import { Location01Icon } from "@/components/ui/location-01";
 import { Login01Icon } from "@/components/ui/login-01";
 import { Message01Icon } from "@/components/ui/message-01";
+import { RedoIcon } from "@/components/ui/redo";
 import { Settings01Icon } from "@/components/ui/settings-01";
 import { Shield02Icon } from "@/components/ui/shield-02";
 import { SlidersHorizontalIcon } from "@/components/ui/sliders-horizontal";
@@ -101,16 +102,17 @@ export const NAV_GROUPS: NavGroup[] = [
       // One door into the portal, not a flattened list of its tabs. The portal
       // is a second application and swaps this nav for its own.
       { label: "Induction Portal", href: "/app/portal", Icon: Login01Icon },
-      { label: "Accreditation", href: null, Icon: Shield02Icon },
-      { label: "Jobs", href: null, Icon: ClipboardIcon },
+      { label: "Accreditation", href: "/app/accreditation", Icon: Shield02Icon },
+      { label: "Jobs", href: "/app/jobs", Icon: ClipboardIcon },
     ],
   },
   {
     label: "Resources",
     items: [
-      { label: "Policy", href: null, Icon: File01Icon },
-      { label: "Guide", href: null, Icon: HelpCircleIcon },
-      { label: "Discussion", href: null, Icon: Message01Icon },
+      { label: "Policy", href: "/app/policy", Icon: File01Icon },
+      { label: "Guide", href: "/app/guide", Icon: HelpCircleIcon },
+      { label: "Discussion", href: "/app/discussion", Icon: Message01Icon },
+      { label: "Community Feed", href: "/app/community", Icon: UserGroupIcon },
     ],
   },
 ];
@@ -125,13 +127,15 @@ export const NAV_GROUPS: NavGroup[] = [
  * produced a nav the original does not have — the second time a stale local
  * file has nearly shipped the wrong thing.
  *
- * Where Merit Falls and Seat Allocation are **ours**. The live portal has
- * neither as a tab — its Merit List does both jobs, next-in-line per slot and
- * the cascade, behind one screen. Ours are kept because they work and are
- * tested, but they sit AFTER Config rather than beside the Merit List, so the
- * original's five appear in the original's order and our additions read as
- * additions. An earlier version interleaved them, which quietly presented our
- * own pages as part of the portal's own sequence.
+ * Where Merit Falls, Seat Allocation and Consent What-If sit AFTER Config
+ * rather than interleaved with the original's five, so those five stay in the
+ * original's order and this trio reads as additions rather than as part of
+ * the portal's own sequence — a mistake an earlier version made once already.
+ * All three are hidden on the live site right now by its own
+ * `applyMode('merit-list')`, which switches off once a merit list has
+ * published for the cycle; built here anyway, on the same reasoning each
+ * time: the pane and its script both still ship, and the feature is the live
+ * experience in the phase of a cycle where that gate has not yet fired.
  */
 export const PORTAL_NAV_GROUPS: NavGroup[] = [
   {
@@ -144,6 +148,7 @@ export const PORTAL_NAV_GROUPS: NavGroup[] = [
       { label: "Config", href: "/app/portal/config", Icon: Settings01Icon },
       { label: "Where Merit Falls", href: "/app/portal/slots", Icon: Target01Icon },
       { label: "Seat Allocation", href: "/app/portal/allocation", Icon: GridViewIcon },
+      { label: "Consent What-If", href: "/app/portal/consent", Icon: RedoIcon },
     ],
   },
   {
@@ -151,8 +156,8 @@ export const PORTAL_NAV_GROUPS: NavGroup[] = [
     items: [
       { label: "Schedule", href: "/app/portal/schedule", Icon: Calendar03Icon },
       { label: "Hospitals", href: "/app/portal/hospitals", Icon: Location01Icon },
-      { label: "Profiles", href: null, Icon: UserIcon },
-      { label: "Chat", href: null, Icon: Message01Icon },
+      { label: "Profiles", href: "/app/portal/profiles", Icon: UserIcon },
+      { label: "Chat", href: "/app/portal/chat", Icon: Message01Icon },
     ],
   },
   {
@@ -160,8 +165,8 @@ export const PORTAL_NAV_GROUPS: NavGroup[] = [
     items: [
       { label: "Competition", href: "/app/portal/competition", Icon: CrownIcon },
       { label: "Training Seats", href: "/app/portal/seats", Icon: DatabaseIcon },
-      { label: "Accreditation", href: null, Icon: Shield02Icon },
-      { label: "Data Changes", href: null, Icon: HistoryIcon },
+      { label: "Accreditation", href: "/app/accreditation", Icon: Shield02Icon },
+      { label: "Data Changes", href: "/app/portal/changes", Icon: HistoryIcon },
     ],
   },
 ];
