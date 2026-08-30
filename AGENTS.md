@@ -1552,6 +1552,56 @@ never written cannot later leak:
   typed a CNIC into the pool's name field. It renders as "Anonymous supporter",
   amount and date intact.
 
+### Loading, empty, and broken states
+
+**`loading.tsx` skeletons.** One at `(app)/app/loading.tsx` covers every page
+under `/app`, because nearly all of them are built from the same template —
+eyebrow, display heading, standfirst, figure strip, content — so a single
+placeholder matches closely enough that nothing jumps when the real page lands.
+Routes whose shape genuinely differs (merit table and accreditation are tables,
+Editorial is prose, an article has no figure strip) get their own alongside
+`page.tsx`.
+
+**A skeleton belongs only where there is nothing on screen yet.** Never on a
+filter change: the previous result is still the true answer for the filter that
+produced it, so swapping it for grey boxes discards information *and* recreates
+the "it reloads the whole page" complaint. That case dims — `FilterPending`.
+The two do not collide because `useFilterNav` wraps its navigation in
+`startTransition`, and React keeps the old UI rather than falling back to the
+Suspense boundary. Verified: filtering Accreditation shows zero `.skeleton`
+nodes and holds scroll at 1200.
+
+**The sweep is a composited `translateX` on an `::after`, not an animated
+`background-position`** — a page can hold forty of these while a table loads.
+It runs left to right, the direction the text it stands in for is read.
+`--skeleton-sheen` is a per-theme token because one translucent white is
+invisible on the light ground: light gets a dark wash, dark gets a light one.
+
+**Reduced motion is now handled globally** in `globals.css`, which it was not
+before. The skeleton keeps its shape and loses only the sweep — still a
+placeholder, just a still one. Deliberately not a blanket `animation: none`:
+that would also kill the icon animations, which already check the preference
+themselves in `use-icon-animation.ts`.
+
+**`NavPending` uses `useLinkStatus`**, which only reports while its own `<Link>`
+is navigating — so it fires on a real route change and never on a filter change.
+The bar eases toward the far edge and stops at 92%: the app does not know how
+long a read will take, and a bar that reaches 100% and sits there is a promise
+it cannot keep.
+
+**Three error surfaces.** `(app)/app/not-found.tsx` renders inside the shell and
+deliberately does not guess why — `notFound()` covers a mistyped slug, a hidden
+thread and an unpublished draft, and telling them apart would confirm the hidden
+thing exists. `(app)/app/error.tsx` shows the **digest**, never `error.message`:
+a thrown Postgres error names tables, columns and policies. `global-error.tsx`
+replaces the whole document, so it carries its own `<html>`/`<body>` and inline
+literal colours — the one place a hardcoded hex is correct, because no
+stylesheet is guaranteed to have loaded, and a plain `<a>` rather than
+`next/link` because the router is what failed.
+
+**Note for testing:** a folder starting with `_` is a **private folder** in the
+App Router and is not routable at all. An `__error-probe` route silently 404s.
+
 ### The account menu
 
 `src/components/app/user-menu.tsx`, in the `(app)` header, beside the theme

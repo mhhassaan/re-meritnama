@@ -10,6 +10,7 @@ import {
   type AnimatedIcon,
 } from "@/components/app/action-icon";
 import { ArrowLeft02Icon } from "@/components/ui/arrow-left-02";
+import { NavPending } from "@/components/app/nav-pending";
 import { Archive02Icon } from "@/components/ui/archive-02";
 import { Calendar03Icon } from "@/components/ui/calendar-03";
 import { ClipboardIcon } from "@/components/ui/clipboard";
@@ -221,7 +222,7 @@ function NavRow({
         onClick={onNavigate}
         {...handlers}
         aria-current={active ? "page" : undefined}
-        className={`flex items-center gap-3 rounded-sm px-3 py-2 text-sm transition-colors duration-[150ms] ${
+        className={`relative flex items-center gap-3 rounded-sm px-3 py-2 text-sm transition-colors duration-[150ms] ${
           active
             ? "bg-accent-quiet font-bold text-accent"
             : "text-fg-muted hover:bg-surface-sunken hover:text-foreground"
@@ -229,6 +230,7 @@ function NavRow({
       >
         <Icon ref={icon} size={ICON_SIZE} className="shrink-0" />
         <span className="min-w-0 flex-1 truncate">{label}</span>
+        <NavPending />
       </Link>
     </li>
   );

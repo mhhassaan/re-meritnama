@@ -23,6 +23,7 @@
    ========================================================================== */
 
 :root {
+  --skeleton-sheen: rgb(0 0 0 / 0.055);
   /* --- 1. Brand ramp (theme-invariant) ------------------------------------ */
   --brand-cream: #faf9f5; /* warm paper base */
   --brand-white: #ffffff;
@@ -211,6 +212,8 @@
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
     color-scheme: dark;
+    /* A light sweep on the dark ground — the inverse of the light theme's. */
+    --skeleton-sheen: rgb(255 255 255 / 0.06);
     --background: var(--brand-midnight);
     --surface: var(--brand-midnight-raised);
     --surface-raised: #17403b;
@@ -278,6 +281,7 @@
 /* --- Dark theme: explicit user choice ------------------------------------ */
 :root[data-theme="dark"] {
   color-scheme: dark;
+  --skeleton-sheen: rgb(255 255 255 / 0.06);
   --background: var(--brand-midnight);
   --surface: var(--brand-midnight-raised);
   --surface-raised: #17403b;
@@ -605,3 +609,99 @@ body {
   background-size: 100% 100%;
 }
 
+
+/* Nav pending bar. Eases toward the far edge and stops short — it never
+   reaches 100%, because the app does not know how long a read will take and a
+   full bar that then sits there is a promise it cannot keep. `scaleX` on a
+   composited layer, not an animated width. */
+@keyframes navPending {
+  from {
+    transform: scaleX(0.02);
+  }
+  to {
+    transform: scaleX(0.92);
+  }
+}
+
+/* Skeletons fade in rather than popping. 120ms is under the threshold where a
+   fade reads as a delay, and it stops a fast route flashing a placeholder. */
+@keyframes skeletonIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* --- Skeletons -----------------------------------------------------------
+   A placeholder is a promise about shape, so the sweep runs left to right the
+   way the text it stands in for is read.
+
+   The sweep is a `translateX` on an overlay, not an animated
+   `background-position`. Both look identical; only the transform is composited,
+   and a page can hold thirty of these while a table loads. The same rule as
+   every other animation in this project.
+
+   `--skeleton-sheen` is defined per theme rather than being one translucent
+   white: on the light ground a white sweep is invisible, so the light value is
+   a dark wash and the dark value a light one. */
+@keyframes skeletonSweep {
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: translateX(100%);
+  }
+}
+
+.skeleton {
+  position: relative;
+  overflow: hidden;
+  background: var(--surface-sunken);
+  /* `isolate` so the overlay's blend stays inside the placeholder rather than
+     picking up whatever sits behind the card. */
+  isolation: isolate;
+}
+
+.skeleton::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  transform: translateX(-100%);
+  background-image: linear-gradient(
+    90deg,
+    transparent 0%,
+    var(--skeleton-sheen) 50%,
+    transparent 100%
+  );
+  animation: skeletonSweep 1.6s cubic-bezier(0.32, 0.72, 0, 1) infinite;
+}
+
+/* --- Reduced motion ------------------------------------------------------
+   Someone who has asked the system for less motion gets the end state, not a
+   faster version of the animation. The skeleton keeps its shape and loses only
+   the sweep — it is still a placeholder, just a still one.
+
+   Deliberately not `animation: none !important` on everything: that would also
+   kill the icon animations, which already check the preference themselves in
+   `use-icon-animation.ts`, and a blanket rule would leave a control mid-state
+   if it were ever mid-animation. */
+@media (prefers-reduced-motion: reduce) {
+  .skeleton::after {
+    animation: none;
+    opacity: 0;
+  }
+
+  .animate-float-slow,
+  .animate-float-reverse {
+    animation: none;
+  }
+
+  *,
+  *::before,
+  *::after {
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
