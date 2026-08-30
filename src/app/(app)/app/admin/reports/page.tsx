@@ -191,7 +191,7 @@ function Item({ item, resolved }: { item: ReportedItem; resolved?: boolean }) {
             </span>
             {report.note && (
               <p className="mt-0.5 whitespace-pre-wrap text-fg-muted break-words">
-                &ldquo;{report.note}&rdquo;
+                “{report.note}”
               </p>
             )}
           </div>

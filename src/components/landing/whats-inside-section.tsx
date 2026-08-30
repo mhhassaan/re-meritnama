@@ -6,7 +6,7 @@ import { motion } from "framer-motion";
 
 const ITEMS = [
   {
-    href: "/app.html",
+    href: "/app/merit",
     title: "Analyze",
     eyebrow: "GAZETTE ANALYTICS",
     desc: "Merit tables, score prediction, aggregate calculator, and specialty comparisons across 13 induction cycles.",
@@ -14,7 +14,7 @@ const ITEMS = [
     alt: "Analyze Merit Checklist",
   },
   {
-    href: "/simulation.html",
+    href: "/app/portal",
     title: "Induction Portal",
     eyebrow: "CASCADE SIMULATOR",
     desc: "Live seat allocation simulation, candidate pool browser, and consent what-if preference analysis.",
@@ -22,7 +22,7 @@ const ITEMS = [
     alt: "Working Cascade Simulation",
   },
   {
-    href: "/app.html#directory",
+    href: "/app/portal/hospitals",
     title: "Directory",
     eyebrow: "HOSPITALS & SEATS",
     desc: "Every training hospital and CPSP-accredited programme, searchable by specialty, quota, and city.",
@@ -30,7 +30,7 @@ const ITEMS = [
     alt: "Punjab Training Hospitals Directory",
   },
   {
-    href: "/reviews.html",
+    href: "/app/community",
     title: "Community",
     eyebrow: "CANDIDATE NETWORK",
     desc: "Discussion forum, live chat during induction rounds, and independent editorial candidate guidance.",

@@ -90,7 +90,7 @@ export default async function CompetitionPage({
         <p className="mt-3 max-w-2xl text-xs leading-relaxed text-fg-subtle">
           A combination is one (specialty, programme, quota) — a specialty
           under two quotas is two rows, and each is contested separately.
-          &ldquo;Applicants&rdquo; counts a person once even if they listed
+          “Applicants” counts a person once even if they listed
           several hospitals under the same combination.
         </p>
 
@@ -193,7 +193,7 @@ export default async function CompetitionPage({
           <span>
             Counted over the whole applicant pool, not only those cleared by
             verification — demand is a fact about who applied, not about who
-            passed verification, so the Config tab&rsquo;s status scope does not
+            passed verification, so the Config tab’s status scope does not
             apply here.
           </span>
         </p>

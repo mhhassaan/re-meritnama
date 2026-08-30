@@ -61,7 +61,7 @@ export default async function ProfilesPage({
           <p className="mt-7 max-w-2xl text-[15px] leading-relaxed text-fg-muted">
             Candidates who chose to be discoverable, and the specialty and
             hospital they are aiming for. Everything here is self-reported and
-            shown by the person&rsquo;s own choice.
+            shown by the person’s own choice.
           </p>
         </Reveal>
 

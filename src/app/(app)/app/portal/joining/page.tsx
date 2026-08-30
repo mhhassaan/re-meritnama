@@ -129,9 +129,9 @@ export default async function JoiningStatusPage({
             than invent a threshold, the deadline is printed against each person
             and the reader can see it. */}
         <p className="mt-3 max-w-3xl text-xs leading-relaxed text-fg-subtle">
-          The official portal splits &ldquo;not joined&rdquo; into{" "}
+          The official portal splits “not joined” into{" "}
           <em>within window</em> and <em>likely wasted</em>. Nothing in the
-          export distinguishes them, so each candidate&rsquo;s deadline is shown
+          export distinguishes them, so each candidate’s deadline is shown
           on their row instead of a bucket derived from a rule we would be
           guessing at.
         </p>

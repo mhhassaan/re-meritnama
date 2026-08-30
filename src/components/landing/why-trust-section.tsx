@@ -114,7 +114,7 @@ export function WhyTrustSection() {
 
           <div className="pt-2">
             <Link
-              href="/app.html#trust"
+              href="/app/merit-lists"
               className="group inline-flex items-center gap-2.5 rounded-sm bg-brand-teal-deep px-7 py-3.5 text-sm font-bold text-white shadow-md hover:bg-brand-teal-deeper transition-all active:scale-[0.96]"
             >
               <span>Verify Official Gazette Data</span>

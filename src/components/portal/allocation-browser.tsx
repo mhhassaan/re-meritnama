@@ -202,7 +202,7 @@ export function AllocationBrowser({
       <p className="mt-3 font-mono text-[11px] leading-relaxed text-fg-subtle">
         Simulated over {activePool.toLocaleString("en-GB")} applicants under{" "}
         <span className="font-bold text-foreground">{scopeLabel}</span> — the
-        whole cycle&rsquo;s pool, not only those who placed. A candidate holding
+        whole cycle’s pool, not only those who placed. A candidate holding
         preferences under both a civilian and an Armed Force quota competes in
         each, which is why entries can exceed applicants.
       </p>

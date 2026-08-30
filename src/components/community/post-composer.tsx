@@ -179,7 +179,7 @@ export function PostComposer({
             />
             <FieldHint>
               {body.length} / {LIMITS.postBody.toLocaleString("en-GB")}. Never
-              post anyone&rsquo;s CNIC, phone number or address.
+              post anyone’s CNIC, phone number or address.
             </FieldHint>
           </div>
         </div>

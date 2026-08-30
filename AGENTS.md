@@ -1552,6 +1552,75 @@ never written cannot later leak:
   typed a CNIC into the pool's name field. It renders as "Anonymous supporter",
   amount and date intact.
 
+### Privacy and Terms
+
+`/privacy` and `/terms`, linked from the landing footer. Both are **static and
+reachable signed out** — a privacy policy behind a login is not a privacy
+policy — so they live outside the `(app)` group with their own shell
+(`src/components/legal/legal-page.tsx`) and read nothing from the database.
+
+They are marketing surfaces, so they use the `brand-*` family and stay light in
+both themes. That rule is stronger here than on the landing page: a legal
+document should look identical to every reader, and to the same reader on two
+different days.
+
+**Every claim on the privacy page is checkable in this repository** — the tier
+split, the private avatar bucket, the EXIF strip, the exact list of
+`localStorage` keys, and the fact that no analytics dependency exists in
+`package.json`. Nothing is aspirational, because a policy describing an
+intention rather than a behaviour is what eventually becomes a lie. It says
+plainly that the merit list is a public record we republish rather than a file
+collected from anybody, and names the three things stripped at ingest —
+parentage, CNIC-as-name, and the joining export's employment columns.
+
+The terms lead with the disclaimer rather than burying it: not affiliated with
+PHF, PRP, PMDC, CPSP or any hospital, every figure derived rather than issued,
+and where this site and PHF disagree, PHF is right.
+
+**`updated` is a printed string, not a computed date.** A page that silently
+claims to have been revised today, every day, is worse than one with an honest
+date — the date is the reader's only handle on which version they agreed to.
+
+Two things the owner should confirm before this goes anywhere near production:
+the contact address (currently the one already published on the original site)
+and the governing-law clause naming Pakistan.
+
+**The contents rail** (`src/components/legal/legal-toc.tsx`) reads its entries
+**out of the rendered DOM**, not from a prop. The headings are already on the
+page, and a second copy beside the prose is the one that goes stale. The cost is
+that it is absent from the server HTML, which is acceptable only because it is
+`position: fixed` and moves nothing when it appears; the small-screen fallback
+is a *closed* `<details>`, so populating its list after mount shifts nothing
+either.
+
+Three things it gets right that are easy to get wrong:
+
+- **Closed, the labels are `max-w-0 overflow-hidden`, not merely invisible.**
+  Laid out and hidden, they made the nav 280px wide at every viewport, putting
+  an invisible click target over the right-hand third of the prose below about
+  1400px. Closed it is 65px, so it fits the gutter; it starts at `xl`, where the
+  gap to the text is 115px.
+- **Active section is computed from scroll position, not
+  `IntersectionObserver`.** The question is "which heading did I last pass",
+  which an observer does not answer. It also **clamps to the last entry at the
+  bottom of the document**: the final section is often too short to ever reach
+  the offset, so without the clamp the rail reports the section above it for the
+  whole tail of the page — measured on the terms page, heading 10 sitting at
+  191px with the rail saying 09.
+- **Labels open on focus as well as hover**, and every entry is a real anchor.
+  Hover-only would make it a pointer cue, the same reason `useActionIcon` wires
+  `onFocus` beside `onMouseEnter`.
+- **It fades out as the footer arrives**, over the first 180px of footer, and
+  stops taking pointer events once it is invisible. The rail belongs to the
+  article; left at full strength it hangs beside a block of links it has nothing
+  to do with, still claiming a section is current after the reader has left the
+  prose. The trigger is the footer's own position rather than a scroll
+  percentage, because the two pages are different lengths. Hovering or focusing
+  it overrides the fade, so a control somebody has reached for is never fading
+  under their pointer. **No CSS transition on that opacity** — the value is
+  already driven frame by frame from scroll, so a transition only chases it and
+  reads as the rail lagging the page.
+
 ### Loading, empty, and broken states
 
 **`loading.tsx` skeletons.** One at `(app)/app/loading.tsx` covers every page
@@ -1795,6 +1864,17 @@ observations — the scale changed, not the sample.
 ## Traps already hit — do not rediscover
 
 **UI / hydration**
+- **An HTML entity in JSX text eats the leading space of its run.** Write
+  `<strong>No interference.</strong> Do not overload the site` where the same
+  text run later contains `&rsquo;`, and the compiler emits
+  `interference.</strong>Do not` — the space is gone in the server HTML, not
+  just after hydration. The identical markup one list item away, without an
+  entity anywhere in the run, keeps its space, which is what makes it so easy
+  to stare past. Found on two bullets of the new Terms page and then on 24
+  other files that were already shipping. **Use the literal character — `’`,
+  `“`, `”` — never the entity.** All 67 occurrences in `src/` were converted;
+  a sweep of 18 rendered pages for `</strong>`, `</em>`, `</a>` or `</span>`
+  followed immediately by a letter now returns only decorative bullet dots.
 - **Every render of user-written text needs `break-words`.** `whitespace-pre-wrap`
   preserves an unbroken run rather than wrapping it, so one long token widens
   its container past the page — measured at **17,665px** inside a 1,190px column

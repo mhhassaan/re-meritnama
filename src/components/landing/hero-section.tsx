@@ -174,7 +174,7 @@ export function HeroSection({ heroImageRef, handleNavClick }: HeroSectionProps) 
               <span>Sign In</span>
             </Link>
             <Link
-              href="/app.html"
+              href="/app"
               className="group flex min-h-[40px] items-center gap-2 rounded-sm bg-brand-teal-deep px-5 py-2.5 text-[14px] font-medium text-white shadow-[0_2px_10px_rgba(0,0,0,0.1)] transition-all duration-150 ease-out will-change-transform hover:bg-brand-teal-deeper active:scale-[0.96]"
             >
               <span>Launch App</span>
@@ -372,7 +372,7 @@ export function HeroSection({ heroImageRef, handleNavClick }: HeroSectionProps) 
               >
                 {/* Primary Button */}
                 <Link
-                  href="/app.html"
+                  href="/app"
                   className="group flex min-h-[52px] items-center gap-2.5 rounded-sm bg-brand-teal-deep px-8 py-3.5 text-[16px] font-bold text-white shadow-[0_4px_14px_rgba(0,0,0,0.15)] transition-all duration-150 ease-out will-change-transform hover:bg-brand-teal-deeper active:scale-[0.96]"
                 >
                   <span>Launch Candidate App</span>

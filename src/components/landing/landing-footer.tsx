@@ -15,40 +15,46 @@ export interface Footer15Column {
   links: Footer15Link[];
 }
 
+// Both footer CTAs point inside the app, so they must go through the router
+// rather than a plain anchor — an `<a>` to an internal route is a full document
+// load, which is the reload behaviour every filtered surface in this app was
+// deliberately moved away from.
+const MotionLink = motion.create(Link);
+
 const defaultColumns: Footer15Column[] = [
   {
     title: "Product",
     links: [
-      { label: "Merit Calculator", href: "/app.html" },
-      { label: "Cutoff Analytics", href: "/app.html#cutoffs" },
-      { label: "Cascade Simulator", href: "/simulation.html" },
-      { label: "Hospital Directory", href: "/app.html#directory" },
+      { label: "Merit Calculator", href: "/app/calculator" },
+      { label: "Cutoff Analytics", href: "/app/merit" },
+      { label: "Cascade Simulator", href: "/app/portal/allocation" },
+      { label: "Hospital Directory", href: "/app/portal/hospitals" },
     ],
   },
   {
     title: "Induction",
     links: [
-      { label: "100% PHF Policy", href: "#how" },
-      { label: "Gazette Verifier", href: "#trust" },
-      { label: "Attempt Deductions", href: "#how" },
-      { label: "PMDC Mentors", href: "/reviews.html" },
+      { label: "100% PHF Policy", href: "/app/policy" },
+      { label: "Gazette Verifier", href: "/app/merit-lists" },
+      { label: "Attempt Deductions", href: "/app/calculator" },
+      { label: "PMDC Mentors", href: "/app/portal/profiles" },
     ],
   },
   {
     title: "Community",
     links: [
-      { label: "Trainee Forum", href: "/reviews.html" },
-      { label: "Live Round Chat", href: "/reviews.html" },
-      { label: "Editorial Analysis", href: "#how" },
-      { label: "Support Project", href: "mailto:itskaero@gmail.com" },
+      { label: "Trainee Forum", href: "/app/discussion" },
+      { label: "Live Round Chat", href: "/app/portal/chat" },
+      { label: "Editorial Analysis", href: "/app/editorial" },
+      { label: "Support Project", href: "/app/support" },
     ],
   },
   {
     title: "Legal & Source",
     links: [
-      { label: "Privacy Policy", href: "#" },
-      { label: "Terms of Service", href: "#" },
-      { label: "Official Disclaimer", href: "#trust" },
+      { label: "Privacy Policy", href: "/privacy" },
+      { label: "Terms of Service", href: "/terms" },
+      { label: "Official Disclaimer", href: "/terms" },
       { label: "GitHub (@itskaero)", href: "https://github.com/itskaero" },
     ],
   },
@@ -150,25 +156,25 @@ export function LandingFooter() {
 
             {/* Action Buttons: Request Access & Support Project matching site button style */}
             <div className="flex flex-col gap-3 pt-2">
-              <motion.a
-                href="/app.html"
+              <MotionLink
+                href="/signup"
                 variants={ctaVariant}
                 whileTap={{ scale: 0.96 }}
                 className="group flex min-h-[44px] items-center justify-between gap-2.5 rounded-sm bg-brand-teal-deep px-5 py-3 text-[14px] font-bold text-white shadow-sm transition-all duration-150 ease-out hover:bg-brand-teal-deeper active:scale-[0.96]"
               >
                 <span>Request Access</span>
                 <ArrowRight className="h-4 w-4 text-white transition-transform duration-200 ease-out group-hover:translate-x-1" />
-              </motion.a>
+              </MotionLink>
 
-              <motion.a
-                href="mailto:itskaero@gmail.com"
+              <MotionLink
+                href="/app/support"
                 variants={ctaVariant}
                 whileTap={{ scale: 0.96 }}
                 className="group flex min-h-[44px] items-center justify-between gap-2.5 rounded-sm border border-stone-700/80 bg-stone-800/80 px-5 py-3 text-[14px] font-bold text-brand-ivory shadow-sm transition-all duration-150 ease-out hover:bg-stone-700 active:scale-[0.96]"
               >
                 <span>Support Project</span>
                 <ArrowRight className="h-4 w-4 text-brand-ivory transition-transform duration-200 ease-out group-hover:translate-x-1" />
-              </motion.a>
+              </MotionLink>
             </div>
           </motion.div>
 

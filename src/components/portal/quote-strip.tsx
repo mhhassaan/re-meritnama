@@ -116,7 +116,7 @@ export function PortalQuoteStrip({ className = "" }: { className?: string }) {
               fading ? "opacity-0" : "opacity-100"
             }`}
           >
-            &ldquo;{quote.text}&rdquo;
+            “{quote.text}”
             <span className="ml-2 whitespace-nowrap font-mono text-[10px] not-italic uppercase tracking-[0.14em] text-hope sm:text-[11px]">
               — {quote.author}
             </span>

@@ -75,7 +75,7 @@ export default async function DataChangesPage() {
 
           <p className="mt-7 max-w-2xl text-[15px] leading-relaxed text-fg-muted">
             The applicant file is edited between snapshots, and every edit moves
-            somebody&rsquo;s position. This compares the two —{" "}
+            somebody’s position. This compares the two —{" "}
             <span className="font-mono font-bold text-foreground">
               {summary.totalUpdates.toLocaleString("en-GB")}
             </span>{" "}
@@ -158,7 +158,7 @@ export default async function DataChangesPage() {
 
           <p className="mt-4 max-w-3xl text-xs leading-relaxed text-fg-subtle">
             The official page labels all {marksTouched} the same way, in the
-            second person — &ldquo;Your total went up by 17.1343 points&rdquo;.
+            second person — “Your total went up by 17.1343 points”.
             Filter to <em>Revised between two real marks</em> to see the ones
             where that sentence is true.
           </p>
@@ -175,10 +175,10 @@ export default async function DataChangesPage() {
             </span>{" "}
             The source diff records all three. CNIC is a national identity
             number and the official page does not render it either. A
-            &ldquo;previous name&rdquo; column is free text already shown to
+            “previous name” column is free text already shown to
             contain identity numbers, so only the fact that a name record was
             filled in is kept — the names printed here come from the candidate
-            roster, where a father&rsquo;s name is stripped at ingest. Preference
+            roster, where a father’s name is stripped at ingest. Preference
             changes are counted rather than listed, because the seats themselves
             are already on the{" "}
             <Link href="/app/portal/pool" className="font-bold text-accent underline">

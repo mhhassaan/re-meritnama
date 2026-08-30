@@ -85,7 +85,7 @@ export default function GuidePage() {
 
           <p className="mt-7 max-w-2xl text-[15px] leading-relaxed text-fg-muted">
             A reference for every term and metric in the app. Start here if
-            you&rsquo;re new.
+            you’re new.
           </p>
         </Reveal>
 
@@ -135,7 +135,7 @@ export default function GuidePage() {
                 from a 32 in another.
               </p>
               <Formula>
-                % of Max = (closing merit ÷ that cycle&rsquo;s total marks) × 100
+                % of Max = (closing merit ÷ that cycle’s total marks) × 100
               </Formula>
               <p>
                 Every comparison, average, percentile and chart on this site
@@ -213,7 +213,7 @@ export default function GuidePage() {
             <Term name="Safe / Target / Reach" tag="My Prediction" id="buckets">
               <p>
                 Each option is placed in one of three bands by comparing your
-                normalised score to that seat&rsquo;s historical average.
+                normalised score to that seat’s historical average.
               </p>
               <div className="flex flex-col gap-2">
                 <div className="flex flex-wrap items-baseline gap-2">
@@ -251,7 +251,7 @@ export default function GuidePage() {
 
             <Term name="Trend" tag="Prediction & table" id="trend">
               <p>
-                The direction of a seat&rsquo;s closing merit over recent
+                The direction of a seat’s closing merit over recent
                 cycles, from the slope of its % of Max values.
               </p>
               <ul className="flex flex-col gap-1.5">
@@ -286,7 +286,7 @@ export default function GuidePage() {
                 </Bullet>
                 <Bullet>
                   <strong className="text-foreground">Low</strong> — one cycle.
-                  The &ldquo;average&rdquo; is a single data point; treat any
+                  The “average” is a single data point; treat any
                   prediction as speculative.
                 </Bullet>
               </ul>
@@ -294,7 +294,7 @@ export default function GuidePage() {
 
             <Term name="Volatility" tag="Merit table" id="volatility">
               <p>
-                How much a seat&rsquo;s closing merit has swung between cycles —
+                How much a seat’s closing merit has swung between cycles —
                 the standard deviation of its % of Max values.
               </p>
               <ul className="flex flex-col gap-1.5">
@@ -337,7 +337,7 @@ export default function GuidePage() {
                 </Bullet>
               </ul>
               <Note>
-                It is &ldquo;last cycle, nudged&rdquo; — not a forecast. Policy
+                It is “last cycle, nudged” — not a forecast. Policy
                 changes, seat withdrawals and who happens to apply all move a
                 real cutoff in ways no amount of history predicts.
               </Note>
@@ -351,7 +351,7 @@ export default function GuidePage() {
                 on quota.
               </p>
               <p>
-                The quotas in this cycle&rsquo;s seat matrix are{" "}
+                The quotas in this cycle’s seat matrix are{" "}
                 <strong className="text-foreground">
                   Punjab, Armed Force, AJK/G&amp;B/ICT, KPK/Sindh/Balochistan,
                   Foriegn, Disable, Dental
@@ -361,7 +361,7 @@ export default function GuidePage() {
                 reading any prediction.
               </p>
               <Note>
-                &ldquo;Foriegn&rdquo; and &ldquo;Disable&rdquo; are spelled that
+                “Foriegn” and “Disable” are spelled that
                 way in the official data. We match the published spelling rather
                 than correcting it, because a filter has to join to what the
                 portal actually publishes.
@@ -410,7 +410,7 @@ export default function GuidePage() {
               as likely but not guaranteed, Target as genuinely competitive, and
               Reach as worth considering mainly when the trend is falling.
               Always check the confidence label — a seat with one cycle of data
-              has an &ldquo;average&rdquo; that is a single number.
+              has an “average” that is a single number.
             </Faq>
 
             <Faq q="Why is the percentile based on % of Max rather than raw marks?">

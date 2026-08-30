@@ -103,7 +103,7 @@ export default async function EditorialAdminPage({
       {articles.length === 0 ? (
         <p className="mt-3 text-sm text-fg-muted">
           Nothing yet. Nothing was carried over from the original either — its
-          pieces are the owner&rsquo;s writing rather than data, so they are
+          pieces are the owner’s writing rather than data, so they are
           theirs to bring across.
         </p>
       ) : (

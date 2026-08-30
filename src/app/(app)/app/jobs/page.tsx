@@ -122,7 +122,7 @@ export default async function JobsPage() {
               scraper ran, and nothing recomputes it, so its board currently
               shows 149 of 153 postings as open while their closing dates have
               passed. Nothing here reads that flag; every status and countdown on
-              this page is derived from the deadline against today&rsquo;s date
+              this page is derived from the deadline against today’s date
               in Pakistan.
             </p>
           </div>
@@ -137,7 +137,7 @@ export default async function JobsPage() {
               Postings are scraped from jobz.pk, not collected from employers.
             </span>{" "}
             Titles, deadlines and vacancy lists are theirs, and every deadline in
-            this source carries the qualifier &ldquo;or as per paper ad&rdquo; —
+            this source carries the qualifier “or as per paper ad” —
             the newspaper advertisement is the authority, not this table. Follow
             the link on any posting before applying.
           </span>

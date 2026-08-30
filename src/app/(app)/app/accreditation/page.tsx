@@ -61,7 +61,7 @@ export default async function AccreditationPage({
           </h1>
 
           <p className="mt-7 max-w-2xl text-[15px] leading-relaxed text-fg-muted">
-            CPSP&rsquo;s accreditation register —{" "}
+            CPSP’s accreditation register —{" "}
             <span className="font-mono font-bold text-foreground">
               {stats.programs.toLocaleString("en-GB")}
             </span>{" "}
@@ -182,11 +182,11 @@ export default async function AccreditationPage({
             </span>{" "}
             Accreditation is granted, renewed and withdrawn continuously, and a
             unit that lapsed last week still reads as accredited here. Confirm on
-            CPSP&rsquo;s own register before choosing a preference on the
+            CPSP’s own register before choosing a preference on the
             strength of it. Unit numbers are printed exactly as published, which
             is why both <span className="font-mono">Unit-I</span> and{" "}
             <span className="font-mono">Unit-1</span> appear — the inconsistency
-            is CPSP&rsquo;s and correcting it here would misquote the source.
+            is CPSP’s and correcting it here would misquote the source.
             Accreditation is also not the same question as{" "}
             <Link
               href="/app/portal/hospitals"

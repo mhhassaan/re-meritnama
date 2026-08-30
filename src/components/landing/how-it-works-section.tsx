@@ -12,21 +12,21 @@ const STEPS = [
     title: "Calculate your merit",
     eyebrow: "OFFICIAL PHF FORMULA",
     body: "Enter your MBBS/BDS marks, experience points, and publications. The calculator applies official PHF attempt deductions automatically — no guesswork, no manual formula lookups.",
-    cta: { href: "/app.html", label: "Open Calculator" },
+    cta: { href: "/app/calculator", label: "Open Calculator" },
     illustration: "/illustrations/person verified.svg",
   },
   {
     title: "See where you stand",
     eyebrow: "13 GAZETTE CYCLES",
     body: "Compare your score against historical closing cutoffs from 13 gazette cycles. Get Safe, Target, and Reach indicators across all PMDC-accredited training hospitals — district by district.",
-    cta: { href: "/app.html#cutoffs", label: "View Cutoffs" },
+    cta: { href: "/app/merit", label: "View Cutoffs" },
     illustration: "/illustrations/user rank one.svg",
   },
   {
     title: "Simulate your induction",
     eyebrow: "CASCADE ENGINE",
     body: "Test your preference list against the live seat allocation algorithm. See how consent choices cascade across multiple rounds and how your final hospital placement shifts.",
-    cta: { href: "/simulation.html", label: "Simulate Cascade" },
+    cta: { href: "/app/portal/allocation", label: "Simulate Cascade" },
     illustration: "/illustrations/man hospital.svg",
   },
 ];
@@ -160,7 +160,7 @@ export function HowItWorksSection() {
           {/* Monospace CTA */}
           <div className="pt-2">
             <Link
-              href="/app.html"
+              href="/app/calculator"
               className="inline-flex items-center gap-2 group/cta"
             >
               <span className="font-mono text-[11px] font-bold tracking-[0.3em] uppercase border-b border-stone-400 pb-1 transition-colors duration-200 group-hover/cta:border-brand-teal group-hover/cta:text-brand-teal">

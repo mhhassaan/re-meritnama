@@ -73,12 +73,12 @@ export default async function PolicyPage() {
             <span className="font-mono font-bold text-foreground">32</span> in one
             cycle is not the same achievement as a 32 in another, so every score
             here is converted to{" "}
-            <strong className="text-foreground">% of that cycle&rsquo;s maximum</strong>{" "}
+            <strong className="text-foreground">% of that cycle’s maximum</strong>{" "}
             before it is ranked, averaged, or charted.
           </p>
 
           <div className="mt-4 rounded-sm bg-surface-sunken p-4 font-mono text-[13px] text-foreground">
-            % of Max = (closing merit ÷ that cycle&rsquo;s total marks) × 100
+            % of Max = (closing merit ÷ that cycle’s total marks) × 100
           </div>
 
           <p className="mt-4 max-w-3xl text-sm leading-relaxed text-fg-muted">
@@ -181,7 +181,7 @@ export default async function PolicyPage() {
               {neverUsed.length === 1 ? "it is" : "they are"} left out of the
               table above — a row of dashes would say nothing. The Calculator
               lists {neverUsed.length === 1 ? "it" : "them"} under{" "}
-              &ldquo;no longer counted&rdquo; for the same reason.
+              “no longer counted” for the same reason.
             </p>
           )}
         </section>

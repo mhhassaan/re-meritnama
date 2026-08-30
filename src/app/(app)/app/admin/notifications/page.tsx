@@ -135,7 +135,7 @@ export default async function NotificationsAdminPage() {
           A banner above every page is the most trusted surface here, and the
           people reading it are being asked for verification details elsewhere in
           the same week. An external link would be refused by the database as
-          well as by the form. Dismissals are remembered in each person&rsquo;s
+          well as by the form. Dismissals are remembered in each person’s
           own browser, so a new announcement reaches everybody.
         </span>
       </p>

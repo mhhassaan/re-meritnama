@@ -149,7 +149,7 @@ export function ThreadComposer({
             <FieldHint>
               {body.length.toLocaleString("en-GB")} of{" "}
               {LIMITS.threadBody.toLocaleString("en-GB")}. Do not post anyone
-              else&rsquo;s CNIC, phone number or address — yours or theirs.
+              else’s CNIC, phone number or address — yours or theirs.
             </FieldHint>
           </div>
 

@@ -137,7 +137,7 @@ export default async function ChatPage({
             after they are read is a way to rewrite a conversation other people
             have already acted on. You can withdraw your own, and staff can
             remove anything; either way it stops being visible to everyone else.
-            Never post anyone&rsquo;s CNIC, phone number or address, and treat
+            Never post anyone’s CNIC, phone number or address, and treat
             anything said here about marks or seats as a rumour until the gazette
             says it.
           </span>

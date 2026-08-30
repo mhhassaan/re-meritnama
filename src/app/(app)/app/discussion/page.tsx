@@ -113,7 +113,7 @@ export default async function DiscussionPage({
             </li>
             <li>
               <span className="font-bold text-foreground">
-                Never post anyone&rsquo;s CNIC, phone number or address.
+                Never post anyone’s CNIC, phone number or address.
               </span>{" "}
               Not theirs, and not your own. This site exists because a previous
               version of it published exactly that.

@@ -218,7 +218,7 @@ export default async function SupportPage() {
               this page is updated.
             </p>
             <p className="mt-3">
-              Names appear without a father&rsquo;s name, which the original
+              Names appear without a father’s name, which the original
               prints on 143 of the 185. This site strips parentage from the
               candidate roster, the joining export and the gazette names, and a
               page that also shows what somebody gave is not where to stop doing
@@ -231,7 +231,7 @@ export default async function SupportPage() {
 
         <p className="mt-10 border-t border-border pt-6 text-xs leading-relaxed text-fg-subtle">
           Contributions fund the infrastructure that fetches and hosts this data.
-          They buy nothing on a merit list, change nobody&rsquo;s position, and
+          They buy nothing on a merit list, change nobody’s position, and
           are not a condition of using anything here.
         </p>
       </div>

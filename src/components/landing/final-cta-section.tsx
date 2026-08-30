@@ -57,7 +57,7 @@ export function FinalCtaSection() {
               </p>
               <div className="pt-2">
                 <Link
-                  href="/app.html"
+                  href="/app"
                   className="group inline-flex items-center justify-center gap-2.5 px-8 py-4 rounded-sm bg-brand-teal-deep text-white font-bold text-base hover:bg-brand-teal-deeper transition-all shadow-md active:scale-[0.96]"
                 >
                   <span>Launch Candidate App</span>

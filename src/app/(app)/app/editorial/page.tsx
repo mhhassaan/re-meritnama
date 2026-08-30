@@ -149,7 +149,7 @@ export default async function EditorialPage({
           Pieces here are argument and interpretation, not gazette. Where one
           quotes a number, the number comes from the same published merit lists
           the rest of this site reads — but the reading of it is the
-          author&rsquo;s.
+          author’s.
         </p>
       </div>
     </div>

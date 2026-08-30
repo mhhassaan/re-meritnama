@@ -163,7 +163,7 @@ export default async function PortalConfigPage() {
             What each scope means
           </h2>
           <p className="mt-2 max-w-2xl text-sm leading-relaxed text-fg-muted">
-            The portal&rsquo;s own verification ids. A candidate with{" "}
+            The portal’s own verification ids. A candidate with{" "}
             <Pill tone="plain">no record</Pill> is not the same as one marked
             pending, and only the unfiltered scope admits them — a named scope
             lists explicit ids, so nobody slips in by default.
@@ -200,10 +200,10 @@ export default async function PortalConfigPage() {
           <Bezel className="mt-5" innerClassName="p-6">
             <p className="max-w-3xl text-sm leading-relaxed text-fg-muted">
               <span className="font-bold text-foreground">Merit formula.</span>{" "}
-              The official portal offers a second option, &ldquo;MS/MD Marks
-              Adjusted&rdquo;. A formula there is a definition — which fields to
+              The official portal offers a second option, “MS/MD Marks
+              Adjusted”. A formula there is a definition — which fields to
               sum and which to add or subtract — stored in the site
-              owner&rsquo;s own configuration, and that definition is not
+              owner’s own configuration, and that definition is not
               something this app holds. Offering the option without it would
               produce a number with no basis.
             </p>
@@ -212,7 +212,7 @@ export default async function PortalConfigPage() {
               <span className="font-bold text-foreground">
                 Candidate revision.
               </span>{" "}
-              Selecting an amendment re-derives every candidate&rsquo;s mark by
+              Selecting an amendment re-derives every candidate’s mark by
               subtracting a per-field delta across house job, position, MDCAT
               and degree. The amendments are held here and are shown on a
               record in the Candidate Pool, but the engines read a precomputed
@@ -235,7 +235,7 @@ export default async function PortalConfigPage() {
             what the gazette published. Widening it past{" "}
             <span className="font-bold text-foreground">Accepted only</span>{" "}
             puts unverified candidates into every simulation, which is useful
-            for asking &ldquo;what if verification goes the other way&rdquo; and
+            for asking “what if verification goes the other way” and
             misleading as a prediction.
           </span>
         </p>

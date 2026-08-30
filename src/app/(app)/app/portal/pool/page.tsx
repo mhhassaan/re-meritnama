@@ -116,7 +116,7 @@ export default async function CandidatePoolPage({
           </h1>
 
           <p className="mt-7 max-w-2xl text-[15px] leading-relaxed text-fg-muted">
-            The whole cycle&rsquo;s applicants, not only those who reached a
+            The whole cycle’s applicants, not only those who reached a
             merit list. This is the denominator behind every cutoff on the site
             — and the reason a seat that looks comfortable often is not.
           </p>
@@ -207,7 +207,7 @@ export default async function CandidatePoolPage({
             Profile verification
           </h2>
           <p className="mt-2 max-w-2xl text-sm leading-relaxed text-fg-muted">
-            The portal&rsquo;s own status. Only <Term tone="safe">Accepted</Term>{" "}
+            The portal’s own status. Only <Term tone="safe">Accepted</Term>{" "}
             competes — <Term tone="reach">Pending</Term>,{" "}
             <Term tone="danger">Rejected</Term> and{" "}
             <Term tone="plain">No record</Term> are all excluded from every
@@ -386,9 +386,9 @@ export default async function CandidatePoolPage({
 
             <p className="mt-3 max-w-3xl text-sm leading-relaxed text-fg-muted">
               <strong className="text-foreground">CNIC, email address, contact
-              number and father&rsquo;s name are not here.</strong> They exist on
+              number and father’s name are not here.</strong> They exist on
               the candidate record, readable only by that candidate and by staff,
-              and they are not copied into this table — the portal&rsquo;s own
+              and they are not copied into this table — the portal’s own
               version of this screen does not show them either.
             </p>
 

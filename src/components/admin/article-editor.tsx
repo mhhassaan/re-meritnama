@@ -179,7 +179,7 @@ export function ArticleEditor({ article }: { article?: Article }) {
               line starting <span className="text-foreground">##</span>;
               everything else is a paragraph. No HTML and no Markdown — anything
               else is shown exactly as typed, which is deliberate: this page is
-              read by every candidate and speaks in the site&rsquo;s voice.
+              read by every candidate and speaks in the site’s voice.
             </FieldHint>
           </div>
         </div>

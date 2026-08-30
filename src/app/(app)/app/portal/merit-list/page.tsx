@@ -106,7 +106,7 @@ export default async function PortalMeritListPage({
 
           <p className="mt-7 max-w-2xl text-[15px] leading-relaxed text-fg-muted">
             The published placements for this round, one card per seat, with
-            each occupant&rsquo;s consent decision and the queue of candidates
+            each occupant’s consent decision and the queue of candidates
             behind them.
           </p>
         </Reveal>

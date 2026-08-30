@@ -135,7 +135,7 @@ export default async function ArticlePage({
         <p className="mt-16 border-t border-border pt-6 text-xs leading-relaxed text-fg-subtle">
           This is argument and interpretation, not gazette. Numbers quoted here
           come from the same published merit lists the rest of the site reads;
-          the reading of them is the author&rsquo;s. Verify against official PHF
+          the reading of them is the author’s. Verify against official PHF
           and PGMI sources before acting on anything.
         </p>
       </article>
