@@ -69,8 +69,8 @@ export default async function SlotsPage({
           </h1>
 
           <p className="mt-7 max-w-2xl text-[15px] leading-relaxed text-fg-muted">
-            Pick a seat and see everyone who applied for it, ranked by the mark
-            that counts there. The cutoff is where the simulation says the last
+            Pick a seat and see everyone who applied for it, ranked by the
+            mark that counts there. The cutoff is where the simulation says the last
             place goes.
           </p>
         </Reveal>

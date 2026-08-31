@@ -268,9 +268,7 @@ export function MeritCalculator({
             No longer counted
           </p>
           <p className="mt-2 max-w-3xl text-xs leading-relaxed text-fg-muted">
-            These carried marks in earlier cycles and carry none in this one.
-            Listed rather than hidden, because a candidate who scored well on one
-            of them deserves to see that it no longer counts.
+            These carried marks in earlier cycles and none in this one.
           </p>
           <ul className="mt-4 flex flex-wrap gap-2">
             {removed.map((component) => (
@@ -290,10 +288,8 @@ export function MeritCalculator({
         <AlertIcon className="mt-px h-4 w-auto shrink-0 text-status-reach" />
         <span>
           <span className="font-bold text-status-reach">Disclaimer.</span> This
-          calculator follows the publicly known PHF policy components. Your
-          actual merit as calculated by PHF may differ through rounding,
-          verification, or a policy update. Always verify your official score
-          directly with PHF.
+          calculator follows the publicly known PHF policy. Your official
+          merit may differ — always verify it with PHF.
         </span>
       </p>
     </div>

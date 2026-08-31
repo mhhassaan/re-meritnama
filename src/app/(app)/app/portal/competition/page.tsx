@@ -60,9 +60,8 @@ export default async function CompetitionPage({
           </h1>
 
           <p className="mt-7 max-w-2xl text-[15px] leading-relaxed text-fg-muted">
-            How many candidates applied per seat, for each specialty under each
-            programme and quota. Higher ratios mean tougher competition — this
-            is the pressure behind every cutoff on the site.
+            How many candidates applied per seat. Higher ratios mean tougher
+            competition.
           </p>
         </Reveal>
 
@@ -88,10 +87,9 @@ export default async function CompetitionPage({
             specialty appears in several rows under different programmes and
             quotas. Ours says what it counts. */}
         <p className="mt-3 max-w-2xl text-xs leading-relaxed text-fg-subtle">
-          A combination is one (specialty, programme, quota) — a specialty
-          under two quotas is two rows, and each is contested separately.
-          “Applicants” counts a person once even if they listed
-          several hospitals under the same combination.
+          A combination is one specialty under one programme and quota. A
+          person is counted once even if they listed several hospitals in
+          it.
         </p>
 
         <Suspense fallback={null}>
@@ -191,10 +189,8 @@ export default async function CompetitionPage({
         <p className="mt-16 flex items-start gap-2.5 border-t border-border pt-6 text-xs leading-relaxed text-fg-subtle">
           <AlertIcon className="mt-px h-4 w-auto shrink-0 text-status-reach" />
           <span>
-            Counted over the whole applicant pool, not only those cleared by
-            verification — demand is a fact about who applied, not about who
-            passed verification, so the Config tab’s status scope does not
-            apply here.
+            Counted over the whole applicant pool, so the Config tab’s
+            status scope does not apply here.
           </span>
         </p>
       </div>

@@ -125,9 +125,8 @@ export function SimulationBar() {
                 <p className="mt-2 text-[13px] text-fg-muted">
                   Not placed in this run. The cascade only fills seats that
                   become <strong className="text-foreground">vacant</strong> —
-                  it moves people between rounds rather than reallocating
-                  everything — so a new entrant takes a seat only when one opens.
-                  Your standing below holds either way.
+                  it moves people between rounds rather than reallocating,
+                  so a new entrant takes a seat only when one opens.
                 </p>
               )}
 
@@ -169,9 +168,9 @@ export function SimulationBar() {
               )}
 
               <p className="mt-3 font-mono text-[10px] text-fg-subtle">
-                Unverified, and no certificate bonus is applied — a bonus would
-                move you up. An illustration of where your aggregate falls, not a
-                prediction of your result.
+                Unverified, and no certificate bonus is applied. An
+                illustration of where your aggregate falls, not a
+                prediction.
               </p>
             </div>
           )}

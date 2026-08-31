@@ -61,9 +61,8 @@ export default async function ReportsPage() {
         </h1>
 
         <p className="mt-7 max-w-2xl text-[15px] leading-relaxed text-fg-muted">
-          Every report is read by a person. Nothing on this site hides itself on
-          a count of reports, so a group cannot silence a post by agreeing to
-          flag it.
+          Every report is read by a person. Nothing is hidden
+          automatically on a count of reports.
         </p>
       </Reveal>
 

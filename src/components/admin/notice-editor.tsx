@@ -183,9 +183,8 @@ export function NoticeEditor({ notice }: { notice?: Notice }) {
               placeholder="/app/portal/merit-list"
             />
             <FieldHint>
-              Internal paths only, starting with a slash. External links are
-              refused — a banner everyone sees is not a place to send people off
-              the site.
+              Internal paths only, starting with a slash. External links
+              are refused.
             </FieldHint>
           </div>
 

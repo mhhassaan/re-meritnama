@@ -319,10 +319,8 @@ function CertificatesTab({ record }: { record: DirectoryRecord }) {
       <p className="mt-4 flex items-start gap-2.5 text-xs leading-relaxed text-fg-subtle">
         <AlertIcon className="mt-px h-3.5 w-auto shrink-0 text-fg-subtle" />
         <span>
-          A certificate only lifts a mark on a seat whose preference names the
-          same discipline, so it counts on some of these preferences and not
-          others. The merit list prints the effective mark for the seat it is
-          listing, which is why it can exceed the total above.
+          A certificate only lifts the mark on seats in the same
+          discipline, so it counts on some preferences and not others.
         </span>
       </p>
     </>

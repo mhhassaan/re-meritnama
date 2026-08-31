@@ -38,9 +38,8 @@ export default function AppNotFound() {
       </h1>
 
       <p className="mt-7 max-w-xl text-[15px] leading-relaxed text-fg-muted">
-        Either this address is wrong, or what was here is no longer visible to
-        you — a withdrawn thread and an unpublished piece both land on this page,
-        deliberately. Nothing is broken.
+        Either this address is wrong, or what was here is no longer
+        visible to you. Nothing is broken.
       </p>
 
       <Bezel className="mt-10" innerClassName="p-6">
@@ -75,9 +74,8 @@ export default function AppNotFound() {
       <p className="mt-8 flex items-start gap-2.5 text-xs leading-relaxed text-fg-subtle">
         <CompassIcon className="mt-px h-4 w-auto shrink-0" />
         <span>
-          If you followed a link from inside the site and expected something to
-          be here, that is worth reporting — it means a page is pointing at an
-          address that no longer resolves.
+          If you followed a link from inside the site and expected
+          something here, that is worth reporting.
         </span>
       </p>
     </div>

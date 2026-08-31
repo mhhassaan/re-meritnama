@@ -43,9 +43,7 @@ export default async function ComparePage() {
           </h1>
 
           <p className="mt-7 max-w-2xl text-[15px] leading-relaxed text-fg-muted">
-            Pick a programme, then the specialty and hospital combinations you
-            are weighing up. Every metric is read across a single row, so each
-            comparison answers one question at a time.
+            Pick a programme, then the seats you are weighing up.
           </p>
         </Reveal>
 
@@ -61,9 +59,8 @@ export default async function ComparePage() {
         </Suspense>
 
         <p className="mt-16 border-t border-border pt-6 text-xs leading-relaxed text-fg-subtle">
-          Closing merits are what the last candidate placed on, not a pass mark.
-          A combination with two cycles of history is a much weaker guide than
-          one with eleven — read the Confidence row before the cutoffs.
+          A closing merit is what the last candidate placed on, not a pass
+          mark. Read the Confidence row before the cutoffs.
         </p>
       </div>
     </div>

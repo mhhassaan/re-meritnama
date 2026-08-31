@@ -68,9 +68,8 @@ export default async function PortalSchedulePage() {
           </h1>
 
           <p className="mt-7 max-w-2xl text-[15px] leading-relaxed text-fg-muted">
-            Every stage of the induction and when its window opens. Times are
-            Pakistan Standard Time, as PHF publishes them — a deadline reads the
-            same here as it does on the official portal.
+            Every stage of the induction and when its window opens. Times
+            are Pakistan Standard Time.
           </p>
         </Reveal>
 
@@ -104,9 +103,9 @@ export default async function PortalSchedulePage() {
               </span>
             </div>
 
-            <div className="mt-4 flex flex-col gap-3">
+            <div className="mt-4 flex flex-col gap-px bg-border">
               {group.map((step) => (
-                <Bezel key={step.id} innerClassName="flex flex-wrap items-baseline gap-x-4 gap-y-2 p-4">
+                <div key={step.id} className="bg-background flex flex-wrap items-baseline gap-x-4 gap-y-2 p-4">
                   <span className="font-mono text-[10px] tabular-nums text-fg-subtle">
                     {step.order}
                   </span>
@@ -135,7 +134,7 @@ export default async function PortalSchedulePage() {
                       Date not published
                     </span>
                   )}
-                </Bezel>
+                </div>
               ))}
             </div>
           </section>

@@ -111,7 +111,7 @@ export function HospitalDirectory({
         <>
           {/* `auto-rows-fr`: both cells in a row take the same height, so a
               short card never leaves a gap beneath it. */}
-          <div className="mt-3 grid auto-rows-fr gap-4 lg:grid-cols-2">
+          <div className="mt-3 grid auto-rows-fr gap-px bg-border lg:grid-cols-2">
             {visible.slice(0, shown).map((hospital) => (
               <HospitalCard
                 key={hospital.slug}
@@ -145,9 +145,11 @@ function HospitalCard({
   return (
     <Link
       href={`/app/portal/hospitals/${hospital.slug}`}
-      className="group block h-full rounded-lg outline-none focus-visible:ring-2 focus-visible:ring-ring"
+      // A cell in a hairline grid, not a card: opaque so the grid's border
+      // colour does not show through it, and hovered with a fill rather than a
+      // border, which would put the box back.
+      className="group flex h-full flex-col bg-background p-5 outline-none transition-colors duration-[200ms] hover:bg-surface focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ring"
     >
-      <Bezel innerClassName="flex h-full flex-col p-5 transition-colors duration-[200ms] group-hover:bg-surface-sunken">
         {/* ── Identity, on a fixed two lines ───────────────────────────── */}
         <div className="flex min-h-[2.75rem] items-start gap-2">
           <div className="min-w-0 flex-1">
@@ -260,7 +262,6 @@ function HospitalCard({
             {hospital.specialties.length} in total · open for the full breakdown
           </p>
         </div>
-      </Bezel>
     </Link>
   );
 }

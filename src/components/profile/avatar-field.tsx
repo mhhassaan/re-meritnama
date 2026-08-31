@@ -165,10 +165,10 @@ export function AvatarField({
         </div>
 
         <p className="mt-2 text-xs leading-relaxed text-fg-muted">
-          JPEG, PNG or WebP. Resized in your browser before it is sent, which
-          also strips the camera and location data a phone photo carries. Stored
-          privately — never served at a public address, and it only reaches
-          another candidate if you turn discoverability on below.
+          JPEG, PNG or WebP. Resized in your browser, which strips the
+          camera and location data a phone photo carries. Stored privately
+          — it only reaches another candidate if you turn discoverability
+          on.
         </p>
 
         {error && (

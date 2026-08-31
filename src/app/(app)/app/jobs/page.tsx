@@ -103,10 +103,8 @@ export default async function JobsPage() {
               )}
               {stats.open === 0 ? (
                 <>
-                  every deadline in it has now passed — so nothing here is still
-                  open. Treat it as a record of what the market advertised rather
-                  than as somewhere to apply, and check the original posting
-                  before acting on any row.
+                  every deadline in it has now passed. Check the original
+                  posting before acting on any row.
                 </>
               ) : (
                 <>
@@ -117,13 +115,8 @@ export default async function JobsPage() {
             </p>
 
             <p className="mt-3 text-xs leading-relaxed text-fg-subtle">
-              The official page says deadlines and availability update live. They
-              do not — each posting carries an open/closed flag written when the
-              scraper ran, and nothing recomputes it, so its board currently
-              shows 149 of 153 postings as open while their closing dates have
-              passed. Nothing here reads that flag; every status and countdown on
-              this page is derived from the deadline against today’s date
-              in Pakistan.
+              Every status and countdown here is worked out from the
+              deadline against today, not from the flag the scraper wrote.
             </p>
           </div>
         </Bezel>

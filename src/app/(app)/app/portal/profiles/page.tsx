@@ -7,6 +7,7 @@ import { ProfilesControls } from "@/components/portal/profiles-controls";
 import { PortalQuoteStrip } from "@/components/portal/quote-strip";
 import { Reveal } from "@/components/app/reveal";
 import { Bezel, Eyebrow } from "@/components/app/bezel";
+import { HairlineCard, HairlineGrid } from "@/components/app/hairline-grid";
 import { Pill } from "@/components/portal/portal-terms";
 import { SpecialtyLabel } from "@/components/merit/merit-badges";
 import { AlertIcon, CompassIcon } from "@/components/icons/koboyo";
@@ -59,9 +60,8 @@ export default async function ProfilesPage({
           </h1>
 
           <p className="mt-7 max-w-2xl text-[15px] leading-relaxed text-fg-muted">
-            Candidates who chose to be discoverable, and the specialty and
-            hospital they are aiming for. Everything here is self-reported and
-            shown by the person’s own choice.
+            Candidates who chose to be discoverable, and what they are
+            aiming for. All self-reported.
           </p>
         </Reveal>
 
@@ -133,9 +133,9 @@ export default async function ProfilesPage({
             </p>
           </Bezel>
         ) : (
-          <div className="mt-3 grid auto-rows-fr gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          <HairlineGrid className="mt-3 auto-rows-fr sm:grid-cols-2 lg:grid-cols-3">
             {view.profiles.map((profile) => (
-              <Bezel key={profile.key} innerClassName="flex h-full flex-col p-5">
+              <HairlineCard key={profile.key} className="flex h-full flex-col p-5">
                 <div className="flex items-start gap-3">
                   {profile.avatarUrl ? (
                     /* Not `next/image`: a signed URL that expires within the
@@ -186,9 +186,9 @@ export default async function ProfilesPage({
                     </p>
                   )}
                 </div>
-              </Bezel>
+              </HairlineCard>
             ))}
-          </div>
+          </HairlineGrid>
         )}
 
         <p className="mt-16 flex items-start gap-2.5 border-t border-border pt-6 text-xs leading-relaxed text-fg-subtle">

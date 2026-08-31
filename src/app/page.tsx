@@ -80,7 +80,17 @@ export default function Home() {
   };
 
   return (
-    <div ref={containerRef} className="min-h-screen bg-brand-cream text-brand-ink selection:bg-brand-ivory selection:text-brand-teal-deeper font-sans antialiased">
+    <div
+      ref={containerRef}
+      // `overflow-x-clip`, not `overflow-x-hidden`. The Final CTA's border glow
+      // is an `.edge-light` inset by -40px, so it bleeds past a full-width card
+      // and gave the page a 15px horizontal scroll on a phone. `hidden` would
+      // fix that and break both scrollytelling sections with it: it creates a
+      // scroll container, and `position: sticky` then sticks to that instead of
+      // to the viewport. `clip` creates no scroll container, so the glow is
+      // trimmed and the sticky sections are untouched.
+      className="min-h-screen overflow-x-clip bg-brand-cream text-brand-ink selection:bg-brand-ivory selection:text-brand-teal-deeper font-sans antialiased"
+    >
       {/* Hero Section */}
       <HeroSection heroImageRef={heroImageRef} handleNavClick={handleNavClick} />
 

@@ -8,6 +8,7 @@ import { loadCycleSummaries } from "@/lib/merit/data";
 import { PortalQuoteStrip } from "@/components/portal/quote-strip";
 import { Reveal } from "@/components/app/reveal";
 import { Bezel, Eyebrow } from "@/components/app/bezel";
+import { HairlineCard, HairlineGrid } from "@/components/app/hairline-grid";
 import { SeatsByProgram } from "@/components/portal/seats-by-program";
 import { Pill, Term, type TermTone } from "@/components/portal/portal-terms";
 import { AlertIcon } from "@/components/icons/koboyo";
@@ -295,8 +296,9 @@ export default async function PortalOverviewPage() {
 
       <div className="mx-auto max-w-[1400px] px-4 py-14 sm:px-6 md:py-20 lg:px-8">
         <div className="grid gap-6 lg:grid-cols-[minmax(0,1.6fr)_minmax(0,1fr)] lg:items-start">
+          {/* No enclosure on a page's own opening — see `/app`. */}
           <Reveal>
-            <Bezel innerClassName="p-6 sm:p-8">
+            <div className="lg:pt-1">
               <Eyebrow>What this shows</Eyebrow>
 
               <h1 className="mt-6 max-w-[20ch] font-sans text-[2rem] font-black leading-[1.05] tracking-[-0.02em] sm:text-4xl lg:text-5xl">
@@ -304,11 +306,9 @@ export default async function PortalOverviewPage() {
               </h1>
 
               <p className="mt-6 max-w-2xl text-[15px] leading-relaxed text-fg-muted">
-                The official merit list for each round, overlaid with consent
-                data — who accepted, who rejected, and who has not answered.
-                Browse by programme, specialty, hospital and quota, see who
-                occupies each seat, check who is next in line, and run a cascade
-                simulation to predict the next round.
+                The official merit list for each round, with consent data
+                over it — who accepted, who rejected, and who has not
+                answered.
               </p>
 
               <div className="mt-8 flex flex-wrap items-center gap-3">
@@ -326,7 +326,7 @@ export default async function PortalOverviewPage() {
                   Run seat allocation
                 </Link>
               </div>
-            </Bezel>
+            </div>
           </Reveal>
 
           <Reveal delay={120}>
@@ -396,17 +396,17 @@ export default async function PortalOverviewPage() {
             How to read it
           </h2>
 
-          <div className="mt-6 grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+          <HairlineGrid className="mt-6 md:grid-cols-2 xl:grid-cols-3">
             {HOW_TO_READ.map(({ title, body }) => (
-              <Bezel key={title} innerClassName="h-full p-5">
+              <HairlineCard key={title} className="h-full p-5">
                 <h3 className="font-sans text-sm font-bold text-foreground">{title}</h3>
                 {/* A div, not a <p>: these bodies carry pills and stacked rows,
                     and block content inside a paragraph is invalid HTML that
                     throws a hydration error. */}
                 <div className="mt-3 text-xs leading-relaxed text-fg-muted">{body}</div>
-              </Bezel>
+              </HairlineCard>
             ))}
-          </div>
+          </HairlineGrid>
         </section>
 
         <section className="mt-16">
@@ -414,93 +414,19 @@ export default async function PortalOverviewPage() {
             Key concepts
           </h2>
 
-          <div className="mt-6 grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+          <HairlineGrid className="mt-6 md:grid-cols-2 xl:grid-cols-4">
             {KEY_CONCEPTS.map(({ term, meaning }) => (
-              <Bezel key={term} innerClassName="h-full p-5">
+              <HairlineCard key={term} className="h-full p-5">
                 <p className="font-mono text-[10px] font-bold uppercase tracking-[0.2em] text-accent">
                   {term}
                 </p>
                 <p className="mt-3 text-xs leading-relaxed text-fg-muted">{meaning}</p>
-              </Bezel>
+              </HairlineCard>
             ))}
-          </div>
+          </HairlineGrid>
         </section>
 
-        <section className="mt-16">
-          <h2 className="font-sans text-2xl font-black tracking-tight sm:text-3xl">
-            Detailed reference
-          </h2>
-          <p className="mt-3 max-w-2xl text-sm leading-relaxed text-fg-muted">
-            Consent resolution, queue logic, and the cascade algorithm.
-          </p>
 
-          <div className="mt-6 grid gap-4 lg:grid-cols-2">
-            <Bezel innerClassName="p-6">
-              <p className="font-mono text-[10px] font-bold uppercase tracking-[0.2em] text-accent">
-                Consent resolution
-              </p>
-              <p className="mt-4 text-xs leading-relaxed text-fg-muted">
-                Each merit entry is matched against the consent file by applicant
-                id, programme, quota, specialty and hospital.
-              </p>
-              <DefinitionList items={CONSENT_RESOLUTION} />
-            </Bezel>
-
-            <Bezel innerClassName="p-6">
-              <p className="font-mono text-[10px] font-bold uppercase tracking-[0.2em] text-accent">
-                Queue logic
-              </p>
-              <p className="mt-4 text-xs leading-relaxed text-fg-muted">
-                For each slot, eligible candidates are sorted by effective mark —
-                aggregate plus the certificate bonus that applies to that seat.
-              </p>
-              <DefinitionList items={QUEUE_TAGS} />
-            </Bezel>
-
-            <Bezel className="lg:col-span-2" innerClassName="p-6">
-              <p className="font-mono text-[10px] font-bold uppercase tracking-[0.2em] text-accent">
-                The cascade algorithm
-              </p>
-
-              <ol className="mt-4 flex flex-col gap-2 text-sm leading-relaxed text-fg-muted">
-                <li>Load the published merit list as initial occupancy.</li>
-                <li>
-                  Generate vacancies from consent removals and failed
-                  verification.
-                </li>
-                <li>
-                  Each wave processes every vacated seat — fill it with the best
-                  eligible candidate, or upgrade someone already placed.
-                </li>
-                <li>
-                  Sort within a specialty, so a certificate bonus earned
-                  elsewhere cannot inflate a ranking here.
-                </li>
-                <li>
-                  Single-track candidates may hold a seat in the Armed Force and
-                  a civilian quota independently.
-                </li>
-                <li>Multi-track candidates are restricted to their consented quota.</li>
-                <li>Repeat until a wave changes nothing.</li>
-              </ol>
-
-              {/* The live portal states its own agreement figure. Ours is
-                  measured the same way, against the same round, and reported
-                  rather than borrowed — `npm run test:cascade` is where it
-                  comes from. */}
-              <p className="mt-5 border-t border-border pt-4 text-xs leading-relaxed text-fg-subtle">
-                Our port of this engine reproduces{" "}
-                <span className="font-mono font-bold text-foreground">93.3%</span>{" "}
-                of the official round 2 placements — 1,123 of 1,204 candidates in
-                the same seat — and averages{" "}
-                <span className="font-mono font-bold text-foreground">91.8%</span>{" "}
-                across all seven published round pairs. The remaining differences
-                are cross-specialty placements and tiebreakers the portal applies
-                but does not publish.
-              </p>
-            </Bezel>
-          </div>
-        </section>
 
         <section className="mt-16">
           <h2 className="font-sans text-2xl font-black tracking-tight sm:text-3xl">

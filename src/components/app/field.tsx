@@ -1,19 +1,23 @@
 "use client";
 
-import type { ReactNode, SelectHTMLAttributes, InputHTMLAttributes } from "react";
-import { ChevronsDownIcon } from "@/components/icons/koboyo";
+import type { ReactNode, InputHTMLAttributes } from "react";
+import { Select } from "@/components/app/select";
+
+export { Select };
 
 /**
  * Form controls, shared by the calculator and the merit filters.
  *
- * Native `<select>` and `<input>` render their own chrome — the OS arrow, the
- * number spinners — and that chrome is what makes an otherwise considered form
+ * Native inputs render their own chrome — the number spinners, the search
+ * clear button — and that chrome is what makes an otherwise considered form
  * look unfinished, because it is the one part of the page that does not follow
- * the design system. Both are suppressed here and replaced.
+ * the design system. It is suppressed here and replaced.
  *
- * The controls stay native underneath. A custom listbox would mean rebuilding
- * keyboard interaction, type-ahead and the mobile picker, and would be worse at
- * all three than what the platform ships.
+ * `Select` used to live in this file as a styled native `<select>`. The trigger
+ * was never the problem: the popup list is drawn by the operating system, so it
+ * ignored the design entirely. It is now a real listbox in
+ * `@/components/app/select` and is re-exported here, so every call site keeps
+ * importing it from the same place.
  */
 
 const CONTROL_BASE =
@@ -55,30 +59,6 @@ export function FieldHint({ children }: { children: ReactNode }) {
     <p className="mt-2 font-mono text-[10px] leading-relaxed text-fg-subtle">
       {children}
     </p>
-  );
-}
-
-export function Select({
-  className = "",
-  children,
-  ...props
-}: SelectHTMLAttributes<HTMLSelectElement>) {
-  return (
-    <div className="relative">
-      <select
-        {...props}
-        // `appearance-none` removes the platform arrow; the right padding
-        // reserves room for ours so a long option never runs under it.
-        className={`${CONTROL_BASE} ${CONTROL_HEIGHT} appearance-none border-border-strong py-2.5 pl-3 pr-10 ${className}`}
-      >
-        {children}
-      </select>
-
-      <ChevronsDownIcon
-        className="pointer-events-none absolute right-3 top-1/2 h-3 w-auto -translate-y-1/2 text-fg-subtle"
-        aria-hidden
-      />
-    </div>
   );
 }
 

@@ -116,9 +116,9 @@ export default async function EditorialPage({
             </p>
           </Bezel>
         ) : (
-          <div className="mt-6 flex flex-col gap-3">
+          <div className="mt-6 flex flex-col gap-px bg-border">
             {articles.map((article) => (
-              <Bezel key={article.id} innerClassName="p-6">
+              <div key={article.id} className="bg-background p-6">
                 <div className="flex flex-wrap items-center gap-2">
                   <Chip tone="accent">{article.category}</Chip>
                   {!article.isPublished && <Chip tone="reach">draft</Chip>}
@@ -140,7 +140,7 @@ export default async function EditorialPage({
                   {article.readMinutes ? ` · ${article.readMinutes} min read` : ""}
                   {article.publishedAt ? ` · ${formatDate(article.publishedAt)}` : " · unpublished"}
                 </p>
-              </Bezel>
+              </div>
             ))}
           </div>
         )}

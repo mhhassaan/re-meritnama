@@ -51,10 +51,8 @@ export default async function AdminAccessRequestsPage() {
         {pendingCount} awaiting review
       </h1>
       <p className="mt-3 max-w-2xl text-sm leading-relaxed text-fg-muted">
-        Each request was already matched against an Induction 21 record before it
-        reached this queue — the email and Applicant ID pair verified server-side.
-        Approving sends an invite to the address <em>on that record</em>, which is
-        what actually establishes identity.
+        Each request was already matched against an Induction 21 record.
+        Approving sends an invite to the address on that record.
       </p>
 
       {error && (

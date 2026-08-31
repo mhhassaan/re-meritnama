@@ -106,8 +106,7 @@ export default async function MeritListsPage({
               No merit list loaded yet
             </p>
             <p className="mx-auto mt-3 max-w-md text-xs leading-relaxed text-fg-muted">
-              Select an induction cycle and round above, then choose Load to
-              view candidate-level merit data.
+              Pick a cycle and round above, then choose Load.
             </p>
           </Bezel>
         ) : list.entries.length === 0 ? (
@@ -245,10 +244,8 @@ export default async function MeritListsPage({
         )}
 
         <p className="mt-16 border-t border-border pt-6 text-xs leading-relaxed text-fg-subtle">
-          Candidate-level data as published in the official merit lists. Names,
-          PMDC numbers and marks appear here because the gazette publishes them;
-          contact details never do. Verify any figure against the official PHF
-          list before relying on it.
+          As published in the official merit lists. Check any figure against
+          the official PHF list before relying on it.
         </p>
       </div>
     </div>

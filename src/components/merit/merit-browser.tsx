@@ -102,14 +102,13 @@ export function MeritBrowser({
             No records match those filters
           </p>
           <p className="mx-auto mt-3 max-w-sm text-xs leading-relaxed text-fg-muted">
-            Not every specialty runs at every hospital, and not every hospital
-            offers every quota. Try clearing one filter.
+            Try clearing one filter.
           </p>
         </Bezel>
       ) : (
         <>
           {/* Mobile */}
-          <ul className="flex flex-col gap-3 md:hidden">
+          <ul className="flex flex-col gap-px bg-border md:hidden">
             {shown.map((row) => (
               <MeritCard
                 key={`${row.program}|${row.quota}|${row.specialty}|${row.hospital}`}
@@ -187,7 +186,8 @@ export function MeritBrowser({
             to % of max to compare across years.
           </>
         ) : (
-          <>Each closing merit shown as a percentage of that year&apos;s total marks, so years are comparable despite the scoring policy changing.</>
+          <>Each closing merit as a percentage of that year&apos;s total marks, so
+years are comparable.</>
         )}
       </p>
     </div>

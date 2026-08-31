@@ -193,9 +193,9 @@ export default async function CommunityFeedPage({
             </p>
           </Bezel>
         ) : (
-          <div className="mt-3 flex flex-col gap-3">
+          <div className="mt-3 flex flex-col gap-px bg-border">
             {view.posts.map((post) => (
-              <Bezel key={post.id} innerClassName="p-5">
+              <div key={post.id} className="bg-background p-5">
                 <div className="flex flex-wrap items-center gap-2">
                   <Chip tone="accent">
                     <KindIcon kind={post.kind} />
@@ -241,7 +241,7 @@ export default async function CommunityFeedPage({
                     )}
                   </div>
                 </div>
-              </Bezel>
+              </div>
             ))}
           </div>
         )}

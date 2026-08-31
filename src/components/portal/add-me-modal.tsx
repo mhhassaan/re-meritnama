@@ -201,10 +201,8 @@ export function AddMeModal({
             <AlertIcon className="mt-px h-3.5 w-auto shrink-0 text-status-reach" />
             <span>
               This stays in <strong className="text-foreground">this browser</strong>.
-              It is never sent to us or saved to any account — only passed to the
-              engine when you run a simulation, and nothing about it is verified,
-              so treat the result as an illustration of where your marks would
-              fall.
+              It is never sent to us — it is only passed to the engine when
+              you run a simulation, and nothing about it is verified.
             </span>
           </p>
 

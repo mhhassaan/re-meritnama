@@ -102,14 +102,12 @@ export default async function EditorialAdminPage({
 
       {articles.length === 0 ? (
         <p className="mt-3 text-sm text-fg-muted">
-          Nothing yet. Nothing was carried over from the original either — its
-          pieces are the owner’s writing rather than data, so they are
-          theirs to bring across.
+          Nothing yet. Write the first one.
         </p>
       ) : (
-        <div className="mt-3 flex flex-col gap-3">
+        <div className="mt-3 flex flex-col gap-px bg-border">
           {articles.map((article) => (
-            <Bezel key={article.id} innerClassName="p-5">
+            <div key={article.id} className="bg-background p-5">
               <div className="flex flex-wrap items-center gap-2">
                 <Chip tone="accent">{article.category}</Chip>
                 <Chip tone={article.isPublished ? "plain" : "reach"}>
@@ -144,7 +142,7 @@ export default async function EditorialAdminPage({
                   </Link>
                 </div>
               </div>
-            </Bezel>
+            </div>
           ))}
         </div>
       )}

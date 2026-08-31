@@ -57,9 +57,8 @@ export default async function TrainingSeatsPage() {
           </h1>
 
           <p className="mt-7 max-w-2xl text-[15px] leading-relaxed text-fg-muted">
-            Every seat in the cycle by programme, quota, specialty and hospital.
-            This is what exists — who ends up in each one is the rest of the
-            portal.
+            Every seat in the cycle by programme, quota, specialty and
+            hospital.
           </p>
         </Reveal>
 
@@ -93,9 +92,8 @@ export default async function TrainingSeatsPage() {
         <p className="mt-16 flex items-start gap-2.5 border-t border-border pt-6 text-xs leading-relaxed text-fg-subtle">
           <AlertIcon className="mt-px h-4 w-auto shrink-0 text-status-reach" />
           <span>
-            Seat counts are withdrawn and added between rounds as hospitals gain
-            or lose accreditation. Confirm against the official seat notification
-            before choosing preferences on the strength of a count here.
+            Seat counts change between rounds. Confirm against the
+            official seat notification before choosing preferences.
           </span>
         </p>
       </div>

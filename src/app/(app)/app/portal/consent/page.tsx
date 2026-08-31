@@ -50,9 +50,8 @@ export default async function ConsentWhatIfPage() {
           </h1>
 
           <p className="mt-7 max-w-2xl text-[15px] leading-relaxed text-fg-muted">
-            Compare normal seat allocation with a rerun where one candidate
-            does not consent. The report shows the released seat, who moves
-            in, and the subsequent candidate list changes.
+            Compare the normal allocation with a rerun where one candidate
+            does not consent.
           </p>
         </Reveal>
 

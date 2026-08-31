@@ -51,12 +51,11 @@ export function MeritCard({
   );
 
   return (
-    <li
-      className={`rounded-lg bg-surface-sunken/70 p-1 ring-1 ring-border transition-shadow duration-[350ms] ease-[cubic-bezier(0.32,0.72,0,1)] ${
-        open ? "shadow-lifted" : "shadow-ambient"
-      }`}
-    >
-      <div className="overflow-hidden rounded-[0.25rem] bg-surface shadow-[inset_0_1px_0_var(--edge-highlight)]">
+    // A row in a hairline list, not a card. Sixty stacked enclosures was the
+    // single boxiest thing in the app; the list's 1px gaps separate them and an
+    // open row is marked by its fill rather than by a lifted shadow.
+    <li className={`bg-background ${open ? "bg-surface" : ""}`}>
+      <div className="overflow-hidden">
       <div className="p-4">
         <SpecialtyLabel specialty={row.specialty} className="text-sm" />
 

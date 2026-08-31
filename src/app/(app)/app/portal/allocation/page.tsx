@@ -53,9 +53,8 @@ export default async function AllocationPage({
           </h1>
 
           <p className="mt-7 max-w-2xl text-[15px] leading-relaxed text-fg-muted">
-            Every applicant walks their preference list in order and the highest
-            mark wins each seat, exactly as the portal allocates. This is a
-            planning aid, not the official result.
+            Every applicant walks their preference list and the highest mark
+            wins each seat. A planning aid, not the official result.
           </p>
         </Reveal>
 

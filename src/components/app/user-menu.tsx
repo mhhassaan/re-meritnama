@@ -10,6 +10,7 @@ import { Message01Icon } from "@/components/ui/message-01";
 import { File01Icon } from "@/components/ui/file-01";
 import { ChevronDownIcon } from "@/components/ui/chevron-down";
 import { ICON_SIZE_SM, useActionIcon } from "@/components/app/action-icon";
+import { ThemeToggle } from "@/components/theme-toggle";
 
 /**
  * The account menu in the app header.
@@ -102,7 +103,15 @@ export function UserMenu({ identity }: { identity: Identity }) {
           id={menuId}
           role="menu"
           aria-label="Account"
-          className="absolute right-0 z-40 mt-2 w-72 rounded-lg bg-surface-sunken p-1 shadow-lifted ring-1 ring-border"
+          /* Anchored differently on either side of `sm`, because anchoring to
+             the trigger does not work on a phone. This button is not the last
+             thing in the header — sign out sits to its right — so a 288px panel
+             hung off its right edge starts about 120px off the left of a 390px
+             screen. Below `sm` it is therefore a fixed panel inset from both
+             edges of the viewport, which cannot overflow whatever else the
+             header holds. `position: sticky` on the header does not create a
+             containing block for it, so `fixed` really is the viewport here. */
+          className="fixed inset-x-3 top-[4.25rem] z-40 max-h-[calc(100dvh-5.5rem)] overflow-y-auto rounded-lg bg-surface-sunken p-1 shadow-lifted ring-1 ring-border sm:absolute sm:inset-x-auto sm:right-0 sm:top-auto sm:mt-2 sm:max-h-none sm:w-72 sm:overflow-visible"
         >
           <div className="rounded-[0.3rem] bg-surface p-4 shadow-[inset_0_1px_0_var(--edge-highlight)]">
             {/* ── Who you are ────────────────────────────────────────── */}
@@ -175,6 +184,20 @@ export function UserMenu({ identity }: { identity: Identity }) {
                   </Link>
                 </>
               )}
+            </div>
+
+            {/* ── Theme, on small screens only ───────────────────────────
+                It lives in the header from `sm` up, where there is room for
+                three 32px buttons beside everything else. There is not on a
+                phone, and a theme control is worth one extra tap in a place it
+                can be found rather than a header that has run out of room.
+                Rendered here rather than moved, so the header stays the primary
+                home for it — see the comment in `(app)/layout.tsx`. */}
+            <div className="mt-3 flex items-center justify-between gap-3 border-t border-border pt-3 sm:hidden">
+              <span className="font-mono text-[10px] uppercase tracking-wider text-fg-subtle">
+                Theme
+              </span>
+              <ThemeToggle />
             </div>
           </div>
         </div>

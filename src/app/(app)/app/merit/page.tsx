@@ -49,11 +49,8 @@ export default async function MeritTablePage() {
             </h1>
 
             <p className="mt-7 max-w-2xl text-[15px] leading-relaxed text-fg-muted">
-              What each seat actually closed at, by specialty, hospital,
-              programme and quota. Trend and confidence are derived from how
-              many years of data exist for that combination — a projection from
-              eleven years is a different claim from one built on two. Click any
-              row for the full year-by-year breakdown.
+              What each seat actually closed at. Click any row for the
+              year-by-year breakdown.
             </p>
           </Reveal>
 
@@ -81,11 +78,9 @@ export default async function MeritTablePage() {
         </div>
 
         <p className="mt-20 border-t border-border pt-6 text-xs leading-relaxed text-fg-subtle">
-          Historical data only, sourced from official PHF merit lists. Closing
-          merits shift with applicant numbers, seat counts and policy changes, so
-          past figures indicate but never guarantee. Verify eligibility, seat
-          counts and official lists with PHF, PMDC and PGMI before making
-          application decisions.
+          Historical data from official PHF merit lists. Past figures
+          indicate but never guarantee — check seat counts and official lists
+          with PHF before deciding.
         </p>
       </div>
     </div>

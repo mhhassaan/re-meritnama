@@ -101,12 +101,13 @@ function CandidateRow({ candidate }: { candidate: CandidateChange }) {
   const [open, setOpen] = useState(false);
 
   return (
-    <Bezel innerClassName="p-0">
+    // A row in a hairline stack: opaque, so the seam shows only between rows.
+    <div className="bg-background">
       <button
         type="button"
         onClick={() => setOpen((v) => !v)}
         aria-expanded={open}
-        className="flex w-full flex-wrap items-center gap-x-4 gap-y-2 px-5 py-4 text-left transition-colors hover:bg-surface-sunken"
+        className="flex w-full flex-wrap items-center gap-x-4 gap-y-2 px-5 py-4 text-left transition-colors hover:bg-surface"
       >
         <span className="font-mono text-[11px] font-bold text-accent">
           {candidate.applicantId}
@@ -154,7 +155,7 @@ function CandidateRow({ candidate }: { candidate: CandidateChange }) {
           ))}
         </div>
       )}
-    </Bezel>
+    </div>
   );
 }
 
@@ -284,13 +285,12 @@ export function DataChangesBrowser({
             Nothing matches
           </p>
           <p className="mx-auto mt-3 max-w-md text-xs leading-relaxed text-fg-muted">
-            Try a different change type, or clear the search. Only candidates
-            whose record moved between the two snapshots appear here at all.
+            Try a different change type, or clear the search.
           </p>
         </Bezel>
       ) : (
         <>
-          <div className="mt-3 flex flex-col gap-2">
+          <div className="mt-3 flex flex-col gap-px bg-border">
             {matched.slice(0, shown).map((candidate) => (
               <CandidateRow key={candidate.applicantId} candidate={candidate} />
             ))}

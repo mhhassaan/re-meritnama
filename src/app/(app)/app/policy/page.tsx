@@ -192,9 +192,9 @@ export default async function PolicyPage() {
             Cycle by cycle
           </h2>
 
-          <div className="mt-5 flex flex-col gap-4">
+          <div className="mt-5 flex flex-col gap-px bg-border">
             {cycles.map((cycle) => (
-              <Bezel key={cycle.induction} innerClassName="p-6">
+              <div key={cycle.induction} className="bg-background p-6">
                 <div className="flex flex-wrap items-baseline justify-between gap-3">
                   <div className="flex flex-wrap items-center gap-2">
                     <h3 className="font-sans text-base font-bold text-foreground">
@@ -268,7 +268,7 @@ export default async function PolicyPage() {
                     Source: {cycle.policyRef}
                   </p>
                 )}
-              </Bezel>
+              </div>
             ))}
           </div>
         </section>

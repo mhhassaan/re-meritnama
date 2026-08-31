@@ -101,7 +101,7 @@ export function MeritSlotList({
         of {total.toLocaleString("en-GB")} seats
       </p>
 
-      <div className="mt-3 grid gap-4 2xl:grid-cols-2">
+      <div className="mt-3 grid gap-px bg-border 2xl:grid-cols-2">
         {slots.map((slot) => (
           <MeritSlotCard key={keyOf(slot)} slot={slot} />
         ))}

@@ -4,6 +4,7 @@ import { loadCycleSummaries } from "@/lib/merit/data";
 import { VerseStrip } from "@/components/app/verse-strip";
 import { Reveal } from "@/components/app/reveal";
 import { Bezel, Eyebrow } from "@/components/app/bezel";
+import { HairlineCard, HairlineGrid } from "@/components/app/hairline-grid";
 import { CycleTrendChart } from "@/components/merit/cycle-trend-chart";
 import {
   AlertIcon,
@@ -127,8 +128,9 @@ export default async function StartHerePage() {
 
       <div className="mx-auto max-w-[1400px] px-4 py-14 sm:px-6 md:py-20 lg:px-8">
         <div className="grid gap-6 lg:grid-cols-[minmax(0,1.6fr)_minmax(0,1fr)] lg:items-start">
+          {/* No enclosure on a page's own opening — see `/app`. */}
           <Reveal>
-            <Bezel innerClassName="p-6 sm:p-8">
+            <div className="lg:pt-1">
               <Eyebrow>New to MeritNama?</Eyebrow>
 
               <h1 className="mt-6 max-w-[20ch] font-sans text-[2rem] font-black leading-[1.05] tracking-[-0.02em] sm:text-4xl lg:text-5xl">
@@ -137,10 +139,8 @@ export default async function StartHerePage() {
               </h1>
 
               <p className="mt-6 max-w-2xl text-[15px] leading-relaxed text-fg-muted">
-                Use this dashboard as a step-by-step companion: calculate your
-                score, compare it with historical closing merits, explore
-                current induction data, and then move into the live Induction
-                Portal tools.
+                Calculate your score, compare it with past closing merits,
+                then move into the Induction Portal.
               </p>
 
               <div className="mt-8 flex flex-wrap items-center gap-3">
@@ -166,7 +166,7 @@ export default async function StartHerePage() {
                   Open Induction Portal
                 </Link>
               </div>
-            </Bezel>
+            </div>
           </Reveal>
 
           <Reveal delay={120}>
@@ -189,9 +189,9 @@ export default async function StartHerePage() {
           </Reveal>
         </div>
 
-        <div className="mt-6 grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+        <HairlineGrid className="mt-6 md:grid-cols-2 xl:grid-cols-4">
           {STEPS.map(({ number, title, description, action, href, Icon }) => (
-            <Bezel key={number} innerClassName="flex h-full flex-col p-5">
+            <HairlineCard key={number} className="flex h-full flex-col p-5">
               <Icon className="h-6 w-auto text-accent" />
 
               <h2 className="mt-4 font-sans text-sm font-bold text-foreground">
@@ -214,9 +214,9 @@ export default async function StartHerePage() {
                   {action} · soon
                 </span>
               )}
-            </Bezel>
+            </HairlineCard>
           ))}
-        </div>
+        </HairlineGrid>
 
         <section className="mt-16">
           <h2 className="font-sans text-2xl font-black tracking-tight sm:text-3xl">
@@ -227,7 +227,7 @@ export default async function StartHerePage() {
             begin.
           </p>
 
-          <div className="mt-6 grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+          <HairlineGrid className="mt-6 md:grid-cols-2 xl:grid-cols-4">
             {AREAS.map(({ label, description, href, Icon }) => {
               const body = (
                 <>
@@ -248,19 +248,23 @@ export default async function StartHerePage() {
                 </>
               );
 
+              // Hover is a fill, not a border: a border appearing on hover
+              // puts back the box the hairline grid just removed.
               return href ? (
-                <Link key={label} href={href} className="group">
-                  <Bezel innerClassName="h-full p-4 transition-colors group-hover:bg-surface-sunken/40">
-                    {body}
-                  </Bezel>
+                <Link
+                  key={label}
+                  href={href}
+                  className="group flex h-full flex-col bg-background p-4 transition-colors hover:bg-surface"
+                >
+                  {body}
                 </Link>
               ) : (
-                <Bezel key={label} innerClassName="h-full p-4">
+                <HairlineCard key={label} className="h-full p-4">
                   {body}
-                </Bezel>
+                </HairlineCard>
               );
             })}
-          </div>
+          </HairlineGrid>
         </section>
 
         <section className="mt-16">
@@ -276,12 +280,13 @@ export default async function StartHerePage() {
             <CycleTrendChart cycles={cycles} />
           </Bezel>
 
-          <div className="mt-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+          <HairlineGrid className="mt-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
             {cycles.map((cycle) => (
-              <Bezel
+              // The open cycle is marked by its own "Active" pill rather than by
+              // a coloured ring, which a hairline grid has nowhere to put.
+              <HairlineCard
                 key={cycle.induction}
-                innerClassName="flex h-full flex-col p-4"
-                className={cycle.isCurrent ? "ring-accent/40" : undefined}
+                className="flex h-full flex-col p-4"
               >
                 <div className="flex items-center justify-between gap-2">
                   {/* Year AND induction. Two cards read "2026" otherwise, and
@@ -318,9 +323,9 @@ export default async function StartHerePage() {
                     entries
                   </span>
                 </div>
-              </Bezel>
+              </HairlineCard>
             ))}
-          </div>
+          </HairlineGrid>
         </section>
 
         <p className="mt-16 flex items-start gap-2.5 border-t border-border pt-6 text-xs leading-relaxed text-fg-subtle">

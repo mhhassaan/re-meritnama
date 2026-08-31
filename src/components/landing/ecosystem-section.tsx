@@ -127,11 +127,20 @@ export function EcosystemSection() {
           {/* Prominent Logo & Duplicated Loop Horizontal Cards Track */}
           {/* Edge fade is an alpha mask on the track, not an opaque gradient
               overlay. An overlay only spans its own width (112px) while a card
-              is 340-390px wide, so a partially-visible card had a wash drawn
+              is 290-390px wide, so a partially-visible card had a wash drawn
               across its title and read as a rendering fault. Masking fades the
-              card itself, so it leaves the runway cleanly at any scroll offset. */}
+              card itself, so it leaves the runway cleanly at any scroll offset.
+
+              The fade is a **fixed 18px** below `sm` and a percentage above it,
+              because a percentage is measured against the runway and the runway
+              on a phone is barely wider than one card. Measured at a 500px
+              viewport: a 442px runway, a 340px card, and 14% each side put 62px
+              of fade on both edges — 36% of the card washed out, which is what
+              made it look hidden rather than framed. A percentage is right on a
+              wide screen, where 14% of 1400px is a generous 196px of runway and
+              lands on the gaps between cards. */}
           <div
-            className="relative overflow-hidden py-2 [mask-image:linear-gradient(to_right,transparent_0%,black_14%,black_86%,transparent_100%)] [-webkit-mask-image:linear-gradient(to_right,transparent_0%,black_14%,black_86%,transparent_100%)]"
+            className="relative overflow-hidden py-2 [mask-image:linear-gradient(to_right,transparent_0px,black_18px,black_calc(100%-18px),transparent_100%)] [-webkit-mask-image:linear-gradient(to_right,transparent_0px,black_18px,black_calc(100%-18px),transparent_100%)] sm:[mask-image:linear-gradient(to_right,transparent_0%,black_14%,black_86%,transparent_100%)] sm:[-webkit-mask-image:linear-gradient(to_right,transparent_0%,black_14%,black_86%,transparent_100%)]"
           >
             <motion.div
               style={{ x: smoothX }}
@@ -148,7 +157,7 @@ export function EcosystemSection() {
                         key={`${setIndex}-${idx}`}
                         whileHover={{ y: -6, scale: 1.02 }}
                         transition={{ type: "spring", stiffness: 220, damping: 20 }}
-                        className="w-[340px] sm:w-[390px] h-[340px] shrink-0 rounded-3xl bg-brand-midnight-raised/95 border border-transparent p-7 flex flex-col justify-between relative overflow-hidden group shadow-xl select-none"
+                        className="w-[290px] sm:w-[390px] h-[340px] shrink-0 rounded-3xl bg-brand-midnight-raised/95 border border-transparent p-7 flex flex-col justify-between relative overflow-hidden group shadow-xl select-none"
                       >
                         {/* Top Header Row with Prominent Hero Icon Badge */}
                         <div>

@@ -91,9 +91,7 @@ export default async function PortalConfigPage() {
           </h1>
 
           <p className="mt-7 max-w-2xl text-[15px] leading-relaxed text-fg-muted">
-            The settings every simulation in this portal runs under. Change the
-            status scope and every tab recomputes against it — the merit list
-            queues, both allocations, and the cascade.
+            The settings every simulation in this portal runs under.
           </p>
         </Reveal>
 
@@ -221,9 +219,8 @@ export default async function PortalConfigPage() {
             </p>
 
             <p className="mt-4 max-w-3xl text-xs leading-relaxed text-fg-subtle">
-              Both are shown rather than hidden, because someone arriving from
-              the official portal will look for them, and a missing control
-              reads as a lost feature rather than a stated limit.
+              Both are shown rather than hidden, so a missing control does
+              not read as a lost feature.
             </p>
           </Bezel>
         </section>

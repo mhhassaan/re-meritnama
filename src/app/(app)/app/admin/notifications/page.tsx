@@ -81,15 +81,13 @@ export default async function NotificationsAdminPage() {
             Nothing announced
           </p>
           <p className="mx-auto mt-3 max-w-md text-xs leading-relaxed text-fg-muted">
-            Nothing carried over from the original site. Its two live banners
-            point at pages that do not exist here, so starting empty was better
-            than importing something already wrong.
+            Nothing here yet.
           </p>
         </Bezel>
       ) : (
-        <div className="mt-3 flex flex-col gap-3">
+        <div className="mt-3 flex flex-col gap-px bg-border">
           {notices.map((notice) => (
-            <Bezel key={notice.id} innerClassName="p-5">
+            <div key={notice.id} className="bg-background p-5">
               <div className="flex flex-wrap items-center gap-2">
                 <Chip tone={notice.hiddenFromReaders ? "plain" : "accent"}>
                   {notice.hiddenFromReaders ? "not showing" : "live"}
@@ -121,7 +119,7 @@ export default async function NotificationsAdminPage() {
                 </p>
                 <NoticeEditor notice={notice} />
               </div>
-            </Bezel>
+            </div>
           ))}
         </div>
       )}

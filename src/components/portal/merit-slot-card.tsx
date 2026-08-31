@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import type { MeritSlot, QueueEntry, QueueTag } from "@/lib/portal/merit-list";
-import { Bezel } from "@/components/app/bezel";
 import { SpecialtyLabel } from "@/components/merit/merit-badges";
 import { Pill } from "@/components/portal/portal-terms";
 import { useSimulation } from "@/components/portal/simulation-provider";
@@ -55,7 +54,9 @@ export function MeritSlotCard({ slot }: { slot: MeritSlot }) {
   const vacated = slot.occupants.filter((o) => current(o) !== "Accepted");
 
   return (
-    <Bezel innerClassName="flex h-full flex-col p-5">
+    // A cell in the merit list's hairline grid: opaque, so the seam colour
+    // shows only between seats.
+    <div className="flex h-full flex-col bg-background p-5">
       <div className="flex items-start justify-between gap-3">
         <div className="min-w-0">
           <SpecialtyLabel specialty={slot.specialty} className="text-[13px]" />
@@ -168,7 +169,7 @@ export function MeritSlotCard({ slot }: { slot: MeritSlot }) {
           )}
         </div>
       )}
-    </Bezel>
+    </div>
   );
 }
 

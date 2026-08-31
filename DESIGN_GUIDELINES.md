@@ -34,7 +34,15 @@ MeritNama balances **precision data engineering** (merit calculation, 13 gazette
    - Panels do not sit flat on the page. A recessed outer tray (`rounded-lg bg-surface-sunken/70 p-1 ring-1 ring-border`) holds an inner plate (`rounded-[0.25rem] bg-surface`) with a lit top edge (`shadow-[inset_0_1px_0_var(--edge-highlight)]`).
    - **The inner radius is the outer radius minus the shell padding.** Concentric curves only look right when they actually are; equal radii pinch the inner corner.
    - Use the `Bezel` component (`src/components/app/bezel.tsx`) rather than repeating the classes.
-7. **Depth is tokenised**: `--edge-highlight`, `--shadow-ambient`, `--shadow-lifted`. Never a hard `rgba(0,0,0,0.3)` drop shadow — ambient shadows are two layers, a tight contact shadow plus a wide diffused one. `lifted` is reserved for something that came forward in response to an action.
+   - **The enclosure is now opt-in, behind `<Bezel enclosed>`, and nothing uses it.** `Bezel`'s default is the marketing pages' construction: one surface, one hairline, no tray and no ambient shadow. Reach for `enclosed` only for a panel that genuinely has to read as an instrument; if you find yourself using it on a page of cards, the answer is a hairline grid instead.
+   - What made the enclosure read as heavy is **not** the hairline, which is 8%. It is that a card was built from four steps of value at once — tray, plate, lit edge and a 32px ambient shadow. Softening the border token would not have fixed that and would have washed out every divider on the site.
+7. **Only what needs a box gets one, and a repeated grid never does.**
+   - A page's own opening — eyebrow, headline, calls to action — carries no enclosure. A box around the top of a page draws a line between the page and itself.
+   - A grid or stack of like items needs a *boundary*, not an *enclosure*. Use `HairlineGrid` / `HairlineCard` (`src/components/app/hairline-grid.tsx`), or its construction written out for a real `<ul>`: `gap-px bg-border` on the container, `bg-background` on every cell. Cells must be opaque or the container colour tints them, and hover is a **fill**, never a border — a border on hover puts the box straight back.
+   - An enclosure is for content of a genuinely different class sitting beside other content, where without an edge it would read as part of its neighbour.
+8. **Dropdowns are a real listbox, not a styled `<select>`.** `Select` (`src/components/app/select.tsx`) keeps a hidden native `<select>` for value, `onChange` and form submission, and draws its own trigger and options panel. The trigger was never the problem — the popup list is drawn by the operating system and ignores the design entirely.
+9. **Text selection is tokenised** — `--selection-bg` / `--selection-fg`, per theme. The browser default is a hard blue belonging to no palette here, and selection is a colour the reader summons themselves. Not a reuse of `--accent-quiet`: that is a 10% wash meant to sit behind a badge and is too faint to read as a highlight.
+10. **Depth is tokenised**: `--edge-highlight`, `--shadow-ambient`, `--shadow-lifted`. Never a hard `rgba(0,0,0,0.3)` drop shadow — ambient shadows are two layers, a tight contact shadow plus a wide diffused one. `lifted` is reserved for something that came forward in response to an action.
 
 ---
 

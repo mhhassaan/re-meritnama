@@ -193,9 +193,9 @@ export default async function DiscussionPage({
             </p>
           </Bezel>
         ) : (
-          <div className="mt-3 flex flex-col gap-3">
+          <div className="mt-3 flex flex-col gap-px bg-border">
             {view.threads.map((thread) => (
-              <Bezel key={thread.id} innerClassName="p-5">
+              <div key={thread.id} className="bg-background p-5">
                 <div className="flex flex-wrap items-center gap-2">
                   <Chip tone="accent">
                     <CategoryIcon category={thread.category} />
@@ -237,7 +237,7 @@ export default async function DiscussionPage({
                     )}
                   </div>
                 </div>
-              </Bezel>
+              </div>
             ))}
           </div>
         )}

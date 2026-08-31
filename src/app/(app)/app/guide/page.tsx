@@ -95,9 +95,9 @@ export default function GuidePage() {
             Four steps
           </h2>
 
-          <div className="mt-5 flex flex-col gap-3">
+          <div className="mt-5 flex flex-col gap-px bg-border">
             {STEPS.map((step) => (
-              <Bezel key={step.n} innerClassName="flex items-start gap-4 p-5">
+              <div key={step.n} className="bg-background flex items-start gap-4 p-5">
                 <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-accent-quiet font-mono text-sm font-bold text-accent">
                   {step.n}
                 </span>
@@ -115,7 +115,7 @@ export default function GuidePage() {
                     Open {step.linkLabel}
                   </Link>
                 </div>
-              </Bezel>
+              </div>
             ))}
           </div>
         </section>
@@ -126,7 +126,7 @@ export default function GuidePage() {
             Glossary
           </h2>
 
-          <div className="mt-5 flex flex-col gap-4">
+          <div className="mt-5 flex flex-col gap-px bg-border">
             <Term name="% of Max" tag="Normalisation" id="pct-of-max">
               <p>
                 The scoring formula changed between cycles — the maximum was 95
@@ -389,7 +389,7 @@ export default function GuidePage() {
             Frequently asked
           </h2>
 
-          <div className="mt-5 flex flex-col gap-2">
+          <div className="mt-5 flex flex-col gap-px bg-border">
             <Faq q="Why does my calculated score look nothing like the historical numbers?">
               Historical values are closing merits from past cycles, scored
               under the formula in force at the time — often out of 95 marks.
@@ -470,7 +470,9 @@ function Term({
   children: React.ReactNode;
 }) {
   return (
-    <Bezel innerClassName="p-6">
+    // A row in the glossary's hairline stack: opaque so the seam colour shows
+    // only between terms.
+    <div className="bg-background p-6">
       {/* `scroll-mt` so a deep link does not park the heading under the sticky
           header — the app shell's is `h-16`. */}
       <div id={id} className="scroll-mt-20">
@@ -484,7 +486,7 @@ function Term({
           {children}
         </div>
       </div>
-    </Bezel>
+    </div>
   );
 }
 
@@ -527,7 +529,7 @@ function Bullet({ children }: { children: React.ReactNode }) {
  */
 function Faq({ q, children }: { q: string; children: React.ReactNode }) {
   return (
-    <Bezel innerClassName="p-0">
+    <div className="bg-background">
       <details className="group">
         <summary className="flex cursor-pointer items-center justify-between gap-3 p-5 font-sans text-sm font-bold text-foreground marker:content-['']">
           {q}
@@ -542,6 +544,6 @@ function Faq({ q, children }: { q: string; children: React.ReactNode }) {
           {children}
         </p>
       </details>
-    </Bezel>
+    </div>
   );
 }

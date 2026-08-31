@@ -24,10 +24,19 @@ export function SignOutButton() {
       onClick={signOut}
       disabled={pending}
       {...handlers}
-      className="flex min-h-[36px] items-center gap-2 rounded-sm border border-border-strong px-3 py-1.5 text-xs font-semibold text-fg-muted transition-colors hover:text-foreground disabled:opacity-60"
+      // The label is dropped below `sm`, where the header has the nav trigger,
+      // the logo, the account menu and this button competing for about 360
+      // pixels. The icon carries it, and `aria-label` carries the icon — an
+      // icon-only control with no accessible name is a button that only sighted
+      // pointer users can identify.
+      aria-label={pending ? "Signing out" : "Sign out"}
+      title="Sign out"
+      className="flex min-h-[36px] items-center gap-2 rounded-sm border border-border-strong px-2.5 py-1.5 text-xs font-semibold text-fg-muted transition-colors hover:text-foreground disabled:opacity-60 sm:px-3"
     >
       <Logout01Icon ref={icon} size={ICON_SIZE_SM} />
-      <span>{pending ? "Signing out…" : "Sign out"}</span>
+      <span className="hidden sm:inline">
+        {pending ? "Signing out…" : "Sign out"}
+      </span>
     </button>
   );
 }

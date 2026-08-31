@@ -135,8 +135,8 @@ export default async function HospitalProfilePage({
             Seat distribution by specialty
           </h2>
           <p className="mt-2 max-w-2xl text-sm leading-relaxed text-fg-muted">
-            Largest first. A specialty with seats under more than one programme
-            is contested separately in each — the allocation runs per programme.
+            Largest first. A specialty running under two programmes is
+            contested separately in each.
           </p>
 
           <Bezel className="mt-5" innerClassName="overflow-x-auto">
@@ -197,9 +197,7 @@ export default async function HospitalProfilePage({
             Seats by quota
           </h2>
           <p className="mt-2 max-w-2xl text-sm leading-relaxed text-fg-muted">
-            Quota decides which pool a seat is contested in, so two candidates
-            with the same mark can face completely different competition at the
-            same hospital.
+            Quota decides which pool a seat is contested in.
           </p>
 
           <div className="mt-5 flex flex-wrap gap-2">
@@ -317,9 +315,8 @@ export default async function HospitalProfilePage({
         <p className="mt-16 flex items-start gap-2.5 border-t border-border pt-6 text-xs leading-relaxed text-fg-subtle">
           <AlertIcon className="mt-px h-4 w-auto shrink-0 text-status-reach" />
           <span>
-            Seat counts are withdrawn and added between rounds as accreditation
-            changes. Confirm against the official seat notification before
-            choosing preferences on the strength of a count here.
+            Seat counts change between rounds. Confirm against the official
+          seat notification before choosing preferences.
           </span>
         </p>
       </div>

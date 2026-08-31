@@ -14,6 +14,7 @@ import {
 } from "@/lib/predict/predict";
 import { bandFor } from "@/lib/calculator/score";
 import { Bezel } from "@/components/app/bezel";
+import { HairlineCard, HairlineGrid } from "@/components/app/hairline-grid";
 import {
   FieldHint,
   FieldLabel,
@@ -458,17 +459,16 @@ function ScoreMode({
                 No combinations within reach of that score
               </p>
               <p className="mx-auto mt-3 max-w-md text-xs leading-relaxed text-fg-muted">
-                Every seat on record closed more than 15 points of max above this
-                score. Nothing is listed rather than showing options that are not
-                realistically available.
+                Every seat on record closed more than 15 points of max
+                above this score.
               </p>
             </Bezel>
           ) : filter === "all" ? (
-            <div className="grid gap-4 lg:grid-cols-3">
+            <HairlineGrid className="lg:grid-cols-3">
               {BUCKETS.map(({ id, label, description, Icon, accent }) => {
                 const items = shown.filter((r) => r.bucket === id);
                 return (
-                  <Bezel key={id} innerClassName="flex flex-col">
+                  <HairlineCard key={id} className="flex flex-col">
                     <header className="border-b border-border p-4">
                       <div className="flex items-center gap-2">
                         <Icon size={18} className={accent} />
@@ -502,10 +502,10 @@ function ScoreMode({
                         </li>
                       )}
                     </ul>
-                  </Bezel>
+                  </HairlineCard>
                 );
               })}
-            </div>
+            </HairlineGrid>
           ) : (
             <Bezel innerClassName="p-3">
               <ul className="grid gap-2 md:grid-cols-2 xl:grid-cols-3">

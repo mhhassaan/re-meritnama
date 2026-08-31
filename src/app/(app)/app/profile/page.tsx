@@ -60,9 +60,7 @@ export default async function ProfilePage() {
           <p className="mt-7 max-w-2xl text-[15px] leading-relaxed text-fg-muted">
             Signed in as{" "}
             <span className="font-mono text-foreground">{view.profile.email}</span>.
-            Two different things live on this page and the difference matters:
-            what the gazette says about you, which nobody can edit, and what you
-            say about yourself, which is yours alone.
+            What the gazette says about you, and what you say about yourself.
           </p>
         </Reveal>
 
@@ -129,8 +127,7 @@ export default async function ProfilePage() {
             Your Induction Portal record
           </h2>
           <p className="mt-2 max-w-2xl text-sm leading-relaxed text-fg-muted">
-            Read-only, and not editable by anyone here. It arrives from the
-            published gazette and the portal export.
+            From the published gazette. Nobody can edit it here.
           </p>
 
           {view.linked ? (
@@ -154,8 +151,7 @@ export default async function ProfilePage() {
               </div>
 
               <p className="mt-4 text-xs leading-relaxed text-fg-subtle">
-                An applicant id belongs to one cycle and no other — the same
-                number is a different person next induction, so a new cycle
+                An applicant id belongs to one cycle only, so a new cycle
                 needs verifying again.
               </p>
             </Bezel>
@@ -182,8 +178,7 @@ export default async function ProfilePage() {
             About you
           </h2>
           <p className="mt-2 max-w-2xl text-sm leading-relaxed text-fg-muted">
-            Self-asserted and editable at any time. Nothing here is checked
-            against the gazette, and nothing here changes your merit position.
+            Yours to edit. None of it affects your merit position.
           </p>
 
           <ProfileForm profile={view.profile} facets={view.facets} />
@@ -196,21 +191,9 @@ export default async function ProfilePage() {
               Not built yet
             </p>
             <ul className="mt-4 flex flex-col gap-2 text-sm leading-relaxed text-fg-muted">
-              <NotYet label="Message the admin">
-                The original drafts a reply from a dataset keyed by applicant id
-                — a lookup surface over grievance records, which needs its own
-                decision before it is built.
-              </NotYet>
-              <NotYet label="Invite colleagues">
-                Two invites per account, sharing a generated PIN. Our access
-                model sends a single-use link to a known address instead, so this
-                needs redesigning rather than porting.
-              </NotYet>
-              <NotYet label="Mentorship and chat">
-                The first feature where one user writes something another reads,
-                so it needs moderation, reporting and retention designed up
-                front.
-              </NotYet>
+              <NotYet label="Message the admin" />
+              <NotYet label="Invite colleagues" />
+              <NotYet label="Mentorship and chat" />
             </ul>
           </Bezel>
         </section>
@@ -240,20 +223,11 @@ function Cell({
   );
 }
 
-function NotYet({
-  label,
-  children,
-}: {
-  label: string;
-  children: React.ReactNode;
-}) {
+function NotYet({ label }: { label: string }) {
   return (
     <li className="flex flex-wrap items-baseline gap-x-2">
       <span className="font-sans text-sm font-bold text-foreground">{label}</span>
       <Pill tone="plain">Soon</Pill>
-      <span className="min-w-0 flex-1 basis-full text-xs leading-relaxed text-fg-subtle sm:basis-auto">
-        {children}
-      </span>
     </li>
   );
 }

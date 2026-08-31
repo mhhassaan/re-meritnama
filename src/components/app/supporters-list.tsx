@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import type { Supporter } from "@/lib/support/supporters";
-import { Bezel } from "@/components/app/bezel";
 
 const BATCH = 30;
 
@@ -25,10 +24,14 @@ export function SupportersList({ supporters }: { supporters: Supporter[] }) {
 
   return (
     <>
-      <ul className="mt-4 grid gap-2 sm:grid-cols-2">
+      {/* 185 supporters was 185 boxes. The hairline grid's construction,
+          written out here because a list wants a real `<ul>`: the container
+          paints the border colour and shows through only the 1px gaps between
+          opaque cells. */}
+      <ul className="mt-4 grid gap-px bg-border sm:grid-cols-2">
         {visible.map((s, i) => (
-          <li key={`${s.name ?? "anon"}-${s.date}-${i}`}>
-            <Bezel innerClassName="flex items-center gap-3 p-3">
+          <li key={`${s.name ?? "anon"}-${s.date}-${i}`} className="bg-background">
+            <div className="flex items-center gap-3 p-3">
               <span
                 aria-hidden
                 className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-accent-quiet font-sans text-[11px] font-black uppercase text-accent"
@@ -50,7 +53,7 @@ export function SupportersList({ supporters }: { supporters: Supporter[] }) {
               <span className="shrink-0 font-mono text-xs font-bold tabular-nums text-accent">
                 {s.usd == null ? "—" : `$${s.usd.toFixed(2)}`}
               </span>
-            </Bezel>
+            </div>
           </li>
         ))}
       </ul>

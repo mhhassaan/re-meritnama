@@ -129,11 +129,7 @@ export default async function JoiningStatusPage({
             than invent a threshold, the deadline is printed against each person
             and the reader can see it. */}
         <p className="mt-3 max-w-3xl text-xs leading-relaxed text-fg-subtle">
-          The official portal splits “not joined” into{" "}
-          <em>within window</em> and <em>likely wasted</em>. Nothing in the
-          export distinguishes them, so each candidate’s deadline is shown
-          on their row instead of a bucket derived from a rule we would be
-          guessing at.
+          Each candidate’s joining deadline is shown on their row.
         </p>
 
         {/* ── Seats nobody appears against ──────────────────────────────── */}
@@ -220,7 +216,7 @@ export default async function JoiningStatusPage({
              beside one holding four left a block of dead space under the
              shorter card — and the amount varied down the page, which reads as
              a rendering fault rather than as a layout. */
-          <div className="mt-3 flex flex-col gap-4">
+          <div className="mt-3 flex flex-col gap-px bg-border">
             {view.slots.map((slot) => (
               <JoiningSlotCard
                 key={`${slot.program}|${slot.specialty}|${slot.hospital}|${slot.quota}`}

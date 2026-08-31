@@ -91,7 +91,13 @@ export default async function AppLayout({
             theme because the room changed, signing out on a shared machine —
             and a control you use that often should not be two gestures deep.
             The menu keeps what is genuinely about the account: who you are,
-            your profile, and the staff surfaces. */}
+            your profile, and the staff surfaces.
+
+            Below `sm` that argument loses to arithmetic: the theme control is
+            three 32px buttons in a row, and with the nav trigger, the logo and
+            the account menu already in the row there is no space left for it.
+            It moves inside the menu at that width only — see `UserMenu` — and
+            sign out keeps its place with the label dropped. */}
         <div className="flex items-center gap-2 sm:gap-3">
           <UserMenu
             identity={{
@@ -102,7 +108,9 @@ export default async function AppLayout({
               isStaff: Boolean(roles?.length),
             }}
           />
-          <ThemeToggle />
+          <div className="hidden sm:block">
+            <ThemeToggle />
+          </div>
           <SignOutButton />
         </div>
       </header>

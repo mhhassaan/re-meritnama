@@ -1,7 +1,6 @@
 "use client";
 
 import type { JoiningSlot } from "@/lib/portal/joining";
-import { Bezel } from "@/components/app/bezel";
 import { SpecialtyLabel } from "@/components/merit/merit-badges";
 import { Pill } from "@/components/portal/portal-terms";
 import { useIdentifiedApplicant } from "@/components/portal/find-me-bar";
@@ -27,7 +26,9 @@ export function JoiningSlotCard({ slot }: { slot: JoiningSlot }) {
   const allJoined = slot.joined === all;
 
   return (
-    <Bezel innerClassName="p-5">
+    // A row in the hairline stack on the joining page: opaque, so the seam
+    // colour shows only between rows. 679 of these were 679 boxes.
+    <div className="bg-background p-5">
       <div className="flex flex-wrap items-start justify-between gap-3 border-b border-border pb-3">
         <div className="min-w-0">
           <SpecialtyLabel specialty={slot.specialty} className="text-[13px]" />
@@ -103,6 +104,6 @@ export function JoiningSlotCard({ slot }: { slot: JoiningSlot }) {
           date — the export records both in one field.
         </p>
       )}
-    </Bezel>
+    </div>
   );
 }

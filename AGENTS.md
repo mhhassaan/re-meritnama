@@ -378,6 +378,68 @@ marker beside a heading, an empty-state illustration, an inline status glyph.
 Motion is what separates a control from ornament, and a screen whose icons never
 react reads as a picture of an interface rather than one.
 
+**Cards come in two weights, and the quiet one is the landing's.** `Bezel` still
+defaults to the double enclosure — recessed tray, inner plate, lit edge, ambient
+shadow — and `<Bezel quiet>` renders a single surface with one hairline and no
+shadow. The owner asked for the app's boxes to read closer to the marketing
+pages, starting with `/app`.
+
+Worth recording *why* the obvious fix was wrong: the hairline was never the
+problem. `--border` is 8% and already soft. What reads as a heavy box is a card
+built from four steps of value at once — measured on `/app`, page `#0f2825`,
+tray `#0b1e1c` at 70%, plate `#143733`, plus
+`0 12px 32px -12px rgba(0,0,0,0.55)` — where the landing uses one step and a
+hairline. Lowering the border token would have washed out every divider,
+table rule and input on the site and left the boxes looking exactly as heavy.
+
+Both variants take the same props, so moving a surface between them is one word
+and never a layout change. Roll-out is per page, deliberately.
+
+**Quieter borders were not enough on their own — the count of boxes is the
+other half.** The standing instruction from the owner is that **only what
+absolutely needs a box on that page gets one**. Two rules came out of applying
+it to `/app`:
+
+- **A page's own opening never gets an enclosure.** The hero is the page's
+  eyebrow, headline and calls to action; there is nothing there it needs
+  separating from, and a box around the top of a page draws a line between the
+  page and itself.
+- **A grid of link targets needs boundaries, not boxes.** Six bordered cards was
+  most of what made that page feel boxy. `grid gap-px bg-border` with
+  `bg-background` cells gives every cell an edge from a shared hairline, and
+  because the container only shows through the 1px gaps there is no outer ring
+  at all. Hover is a fill (`hover:bg-surface`), not a border change — a border
+  that appears on hover reintroduces the box being removed.
+
+What survives on `/app`: the eyebrow pill, the secondary button's outline, and
+the one aside carrying the candidate record or its absence — content of a
+different class sitting beside the hero, which is exactly the case an enclosure
+is for.
+
+**This is now the whole app, not one page.** `Bezel`'s default *is* the flat
+card and the enclosure is opt-in behind `enclosed`, which nothing currently
+uses — so all 183 call sites moved at once. On top of that, every repeated grid
+or stack was converted to a hairline: `HairlineGrid` / `HairlineCard`
+(`src/components/app/hairline-grid.tsx`), or its construction written out where
+the markup needs a real `<ul>`.
+
+The worst offenders and where they landed, counted from the rendered HTML:
+
+| Page | Before | After |
+| :-- | --: | --: |
+| `/app/portal/joining` | 693 | 14 |
+| `/app/portal/seats` | 59 | 14 |
+| `/app/guide` | 53 | 11 |
+| `/app/portal/changes` | 44 | 14 |
+| `/app/policy` | 41 | 13 |
+| `/app/portal/schedule` | 41 | 11 |
+| `/app/portal/merit-list` | 50 | 26 |
+| `/app/jobs` | 26 | 14 |
+
+About ten of the remainder on any page is the shell — the header, the nav rail,
+the account menu — so a page reading 11–14 is close to carrying no card of its
+own.
+
 `src/components/app/action-icon.ts` is the whole wiring:
 
 ```tsx
@@ -1621,6 +1683,93 @@ Three things it gets right that are easy to get wrong:
   already driven frame by frame from scroll, so a transition only chases it and
   reads as the rail lagging the page.
 
+### Dropdowns, and the selection colour
+
+**`Select` is a real listbox now** (`src/components/app/select.tsx`), not a
+styled native `<select>`. The old note in `field.tsx` argued a custom one would
+be worse at keyboard, type-ahead and the mobile picker — so all three are
+implemented rather than skipped. What that note missed is that the *trigger* was
+never the problem: **the popup list is drawn by the operating system**, so it was
+the one surface in the product that ignored the design entirely, down to a hard
+blue highlight bar in the middle of a teal page.
+
+**A real `<select>` is still rendered, hidden**, carrying `value`, `onChange`,
+`name` and `disabled`. Choosing an option sets its value through the prototype
+setter and dispatches a real `change` event, so React hands the call site's own
+`onChange` a genuine `ChangeEvent<HTMLSelectElement>`. That is why **none of the
+69 call sites changed** — and why form submission by `name` still works. Setting
+`.value` directly does *not* work: React tracks the last value it wrote and
+swallows the event as a no-op.
+
+Three things that each cost a bug:
+
+- **The button must come before the hidden select in the DOM.** Several call
+  sites wrap the control in a `<label>` rather than using `htmlFor`, and an
+  implicit label activates the *first* labelable descendant. With the select
+  first, clicking "Specialty" focused something invisible and nothing opened.
+  A `<button>` is labelable, so ordering it first restores the click; the
+  select's option text stays out of the accessible name because it is
+  `aria-hidden`.
+- **The hidden select still needs an `id`.** The trigger takes the call site's
+  `id`, which left the select with neither `id` nor `name` — flagged by the
+  browser and invisible to autofill. It gets a derived one.
+- **Options are chosen on `pointerdown`, not `click`.** The outside-close
+  listener is also on `pointerdown`, so on a click the panel is gone before the
+  click lands.
+
+Type-ahead matters more here than anywhere: the specialty filter has 44 options
+and the hospital filter 69, and typing "card" is how anyone actually uses those.
+The buffer clears after a second of no typing, as a native select does.
+
+**Text selection is tokenised** — `--selection-bg` / `--selection-fg` in
+`globals.css`, per theme. Not a reuse of `--accent-quiet`, which is a 10% wash
+sized to sit behind a badge and disappears as a highlight. `::selection` is not
+inherited, so it is declared for both `::selection` and `*::selection` or a
+selection spanning a child element reverts to the browser default halfway
+through. The marketing pages keep their own via `selection:` utilities, which
+are more specific and still win.
+
+### Page copy is short, and the reasoning lives here instead
+
+Standing instruction from the owner: **there is too much text on the app pages.**
+Descriptions, "how this works" sections and methodology notes are more than a
+candidate will read, and anything a normal user does not need should not be on
+screen at all.
+
+The distinction is **audience**. Most of what accumulated was written for a
+reader who wants to know *why* a number is what it is — how a figure was
+derived, where the port differs from the original, why a field was excluded,
+what a rule prevents. That reasoning is worth keeping and is not being deleted:
+it moves into the code comment above the thing it explains, into this file, and
+into the devlog. It does not belong in a paragraph under a heading.
+
+What stays on a page: one short sentence saying what it shows; anything a reader
+must act on — a deadline, that this is not the official source, a figure that
+means something other than the obvious; and the labels and units that make a
+number readable.
+
+**Text-by-purpose pages are excluded and were not touched**: `/app/guide`,
+`/app/policy`, `/app/editorial`, `/app/support`, `/privacy` and `/terms`.
+Trimming those removes the content rather than the packaging.
+
+**Do not drop a factual correction while shortening.** Several notes exist
+because the original site states something misleading — the Candidate Pool's
+"applied to no programme" count, Jobs' frozen open/closed flag, Data Changes'
+zero-is-not-a-score. The correction stays, in fewer words; only the explanation
+of how it was reached comes out.
+
+Measured across the 61 files touched: **4,620 on-screen words to 3,219, 30%
+removed.**
+
+Two sections went entirely, both engine internals with a better home:
+
+- The portal Overview's **Detailed reference** — consent matching, queue
+  sorting and the cascade's seven steps. `/app/guide` is where an explanation
+  belongs; somebody opening the portal wants the merit list.
+- `/app/profile`'s **Not built yet** reasons. The labels stay, so a reader
+  arriving from the original sees the feature is known about rather than lost;
+  the paragraph explaining why each is unbuilt was written for us.
+
 ### Loading, empty, and broken states
 
 **`loading.tsx` skeletons.** One at `(app)/app/loading.tsx` covers every page
@@ -1686,6 +1835,24 @@ should not be two gestures deep. The menu keeps what is genuinely *about the
 account* — who you are, your profile, and the staff surfaces.
 
 The original's header does the same with one "My Profile" link beside logout.
+
+**Below `sm` the theme control moves into the menu, and only there.** That is
+arithmetic beating the argument above rather than a change of mind: the control
+is three 32px buttons, and with the nav trigger, the logo, the account menu and
+sign out already in the row there is no space for it on a phone. Sign out keeps
+its place with the label dropped to an icon, carrying `aria-label` — an
+icon-only control with no accessible name is a button only sighted pointer users
+can identify. The header is still the primary home for both; the menu row is
+`sm:hidden` and the header's is `hidden sm:block`.
+
+**The menu panel is anchored differently on either side of `sm`.** The trigger is
+not the last thing in the header — sign out sits to its right — so a 288px panel
+hung off its right edge starts about 120px off the left of a 390px screen. Below
+`sm` it is a `fixed` panel inset from both viewport edges, capped at
+`calc(100dvh-5.5rem)` and scrollable, so a staff account with five links plus the
+theme row cannot run off a short screen. `position: sticky` on the header does
+not create a containing block for `fixed`, so the viewport really is the
+reference.
 
 Both reads behind it are the caller's own row under policies that already exist:
 `profiles` is self-readable, and `user_roles` has **no client write policy at
@@ -1875,6 +2042,19 @@ observations — the scale changed, not the sample.
   `“`, `”` — never the entity.** All 67 occurrences in `src/` were converted;
   a sweep of 18 rendered pages for `</strong>`, `</em>`, `</a>` or `</span>`
   followed immediately by a letter now returns only decorative bullet dots.
+- **`overflow-x: hidden` breaks `position: sticky`; `overflow-x: clip` does
+  not.** `hidden` creates a scroll container, and a sticky descendant then
+  sticks to that container rather than to the viewport. The landing page needed
+  a horizontal clip to trim a decorative glow that bled 40px past a full-width
+  card, and `hidden` would have silently killed both scrollytelling sections.
+  Reach for `clip` whenever the goal is "stop this bleeding sideways" rather
+  than "make this scroll".
+- **Do not scrub a video from scroll position.** Seeking an H.264 file lands on
+  the nearest keyframe rather than the requested frame, so a smooth scroll
+  produces jumps whose size is a property of the encode; writing `currentTime`
+  every frame also keeps the decoder mid-seek, which turns each jump into a
+  stall. No amount of damping fixes either. Let the video play and drive the
+  captions from scroll instead.
 - **Every render of user-written text needs `break-words`.** `whitespace-pre-wrap`
   preserves an unbroken run rather than wrapping it, so one long token widens
   its container past the page — measured at **17,665px** inside a 1,190px column

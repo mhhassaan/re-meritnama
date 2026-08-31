@@ -202,9 +202,7 @@ export function AllocationBrowser({
       <p className="mt-3 font-mono text-[11px] leading-relaxed text-fg-subtle">
         Simulated over {activePool.toLocaleString("en-GB")} applicants under{" "}
         <span className="font-bold text-foreground">{scopeLabel}</span> — the
-        whole cycle’s pool, not only those who placed. A candidate holding
-        preferences under both a civilian and an Armed Force quota competes in
-        each, which is why entries can exceed applicants.
+        whole cycle’s pool, not only those who placed.
       </p>
 
       {manual?.preferences.length ? (
@@ -305,7 +303,7 @@ export function AllocationBrowser({
         </Bezel>
       ) : (
         <>
-          <div className="mt-3 grid gap-4 lg:grid-cols-2 2xl:grid-cols-3">
+          <div className="mt-3 grid gap-px bg-border lg:grid-cols-2 2xl:grid-cols-3">
             {visible.slice(0, shown).map((slot) => (
               <SlotCard
                 key={`${slot.specialty}|${slot.hospital}|${slot.quota}`}
@@ -337,7 +335,9 @@ function SlotCard({ slot }: { slot: AllocationSlotView }) {
   const full = slot.placed.length >= slot.capacity;
 
   return (
-    <Bezel innerClassName="flex h-full flex-col p-5">
+    // A cell in the hairline grid above: opaque, so the grid colour shows only
+    // in the seams between cells.
+    <div className="flex h-full flex-col bg-background p-5">
       <div className="flex items-start justify-between gap-3">
         <div className="min-w-0">
           <SpecialtyLabel specialty={slot.specialty} className="text-[13px]" />
@@ -416,7 +416,7 @@ function SlotCard({ slot }: { slot: AllocationSlotView }) {
       <p className="mt-3 font-mono text-[10px] text-fg-subtle">
         {slot.contenders.toLocaleString("en-GB")} still competing
       </p>
-    </Bezel>
+    </div>
   );
 }
 

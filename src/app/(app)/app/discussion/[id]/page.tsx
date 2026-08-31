@@ -120,9 +120,9 @@ export default async function ThreadPage({
             </p>
           </Bezel>
         ) : (
-          <div className="mt-3 flex flex-col gap-3">
+          <div className="mt-3 flex flex-col gap-px bg-border">
             {visibleReplies.map((reply) => (
-              <Bezel key={reply.id} innerClassName="p-5">
+              <div key={reply.id} className="bg-background p-5">
                 <p className="whitespace-pre-wrap text-sm leading-relaxed text-foreground break-words">
                   {reply.body}
                 </p>
@@ -144,7 +144,7 @@ export default async function ThreadPage({
                     )}
                   </div>
                 </div>
-              </Bezel>
+              </div>
             ))}
           </div>
         )}

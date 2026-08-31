@@ -116,9 +116,8 @@ export default async function CandidatePoolPage({
           </h1>
 
           <p className="mt-7 max-w-2xl text-[15px] leading-relaxed text-fg-muted">
-            The whole cycle’s applicants, not only those who reached a
-            merit list. This is the denominator behind every cutoff on the site
-            — and the reason a seat that looks comfortable often is not.
+            Every applicant in the cycle, not just those who reached a merit
+            list.
           </p>
         </Reveal>
 
@@ -154,9 +153,7 @@ export default async function CandidatePoolPage({
             All applicants
           </h2>
           <p className="mt-2 max-w-2xl text-sm leading-relaxed text-fg-muted">
-            Everyone in the cycle with their marks and applied programmes. Click
-            any row to view their full preference list, marks breakdown and
-            certificates.
+            Click a row for marks, preferences and certificates.
           </p>
 
           <RosterTable
@@ -177,9 +174,7 @@ export default async function CandidatePoolPage({
             Who applied where
           </h2>
           <p className="mt-2 max-w-2xl text-sm leading-relaxed text-fg-muted">
-            Counted per applicant, not per preference. Someone who listed
-            fourteen FCPS seats counts once, which is why these add up to more
-            than the pool only when people applied to more than one programme.
+            Counted per applicant, not per preference.
           </p>
 
           <Bezel className="mt-5" innerClassName="p-6">
@@ -195,8 +190,7 @@ export default async function CandidatePoolPage({
               <span className="font-bold text-foreground">
                 {stats.multiProgram.toLocaleString("en-GB")}
               </span>{" "}
-              applied in two or more programmes — they compete in each, which is
-              why entries can exceed applicants in every allocation on this site.
+              applied in two or more programmes.
             </p>
           </Bezel>
         </section>
@@ -207,12 +201,8 @@ export default async function CandidatePoolPage({
             Profile verification
           </h2>
           <p className="mt-2 max-w-2xl text-sm leading-relaxed text-fg-muted">
-            The portal’s own status. Only <Term tone="safe">Accepted</Term>{" "}
-            competes — <Term tone="reach">Pending</Term>,{" "}
-            <Term tone="danger">Rejected</Term> and{" "}
-            <Term tone="plain">No record</Term> are all excluded from every
-            simulation here. Treating any of them as cleared would let
-            unverified people take seats.
+            The portal’s own status. Only Accepted competes in any
+            simulation here.
           </p>
 
           <Bezel
@@ -251,16 +241,12 @@ export default async function CandidatePoolPage({
             Where the marks sit
           </h2>
           <p className="mt-2 max-w-2xl text-sm leading-relaxed text-fg-muted">
-            Aggregate marks across the whole pool, in bands of two. A cutoff is
-            just the point in this shape where a seat runs out, so the mass on
-            the right is what makes a popular specialty hard.
+            Aggregate marks across the whole pool, in bands of two.
           </p>
           <p className="mt-2 max-w-2xl text-sm leading-relaxed text-fg-muted">
             These are <strong className="text-foreground">base aggregates</strong>,
-            before any certificate bonus. A merit list prints the effective mark
-            for the seat it is listing, which is the aggregate plus whatever
-            bonus applies in that discipline — so the numbers there run higher
-            than the top of this range, and correctly so.
+            before any certificate bonus. A merit list shows the effective
+            mark for its seat, so those numbers run higher.
           </p>
 
           <Bezel className="mt-5" innerClassName="p-6">
@@ -301,8 +287,7 @@ export default async function CandidatePoolPage({
             How many seats people listed
           </h2>
           <p className="mt-2 max-w-2xl text-sm leading-relaxed text-fg-muted">
-            A preference list is the only thing an allocation can walk. Listing
-            one seat is a bet on one seat; the longest list this cycle runs to{" "}
+            The longest list this cycle runs to{" "}
             <span className="font-mono font-bold text-foreground">
               {stats.preferenceDepth.longest}
             </span>
@@ -324,10 +309,8 @@ export default async function CandidatePoolPage({
             Records worth a second look
           </h2>
           <p className="mt-2 max-w-2xl text-sm leading-relaxed text-fg-muted">
-            The original flags both of these, and the framing is its: neither is
-            a judgement about a candidate. An empty preference list and an
-            aggregate this low are far more likely to be a profile nobody
-            finished than a real submission.
+            Almost always an unfinished profile rather than a real
+            submission.
           </p>
 
           <Bezel
@@ -360,9 +343,8 @@ export default async function CandidatePoolPage({
           <p className="mt-3 max-w-2xl text-xs leading-relaxed text-fg-subtle">
             The official portal shows{" "}
             <span className="font-mono font-bold text-foreground">100</span> in
-            the first of these. Its counter checks FCPS, MS and MD only, so
-            candidates who applied to MDS alone are counted as having applied to
-            nothing. Ours counts every programme, which is why it is lower.
+            here because it counts FCPS, MS and MD only. This counts every
+            programme.
           </p>
         </section>
 
@@ -377,19 +359,9 @@ export default async function CandidatePoolPage({
             </div>
 
             <p className="mt-4 max-w-3xl text-sm leading-relaxed text-fg-muted">
-              The roster is readable by <strong className="text-foreground">verified
-              accounts only</strong> — not merely signed-in ones — and the
-              database enforces that with a row-level policy rather than this
-              page choosing to be careful. Search, filtering and paging all run
-              in the database, so no single request returns the whole pool.
-            </p>
-
-            <p className="mt-3 max-w-3xl text-sm leading-relaxed text-fg-muted">
-              <strong className="text-foreground">CNIC, email address, contact
-              number and father’s name are not here.</strong> They exist on
-              the candidate record, readable only by that candidate and by staff,
-              and they are not copied into this table — the portal’s own
-              version of this screen does not show them either.
+              Verified accounts only. <strong className="text-foreground">CNIC,
+              email, phone and father’s name are not here</strong> — only the
+              candidate and staff can see those.
             </p>
 
             <div className="mt-5 flex flex-wrap items-center gap-2">
@@ -410,9 +382,8 @@ export default async function CandidatePoolPage({
         <p className="mt-16 flex items-start gap-2.5 border-t border-border pt-6 text-xs leading-relaxed text-fg-subtle">
           <AlertIcon className="mt-px h-4 w-auto shrink-0 text-status-reach" />
           <span>
-            Counts are from the portal export as it stood when the data was
-            captured. Verification status in particular moves during a cycle, so
-            the number that competes today may differ from the number here.
+            From the portal export when it was captured. Verification status
+            moves during a cycle.
           </span>
         </p>
       </div>

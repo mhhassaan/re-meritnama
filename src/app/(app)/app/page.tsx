@@ -88,8 +88,12 @@ export default async function AppHome() {
 
       <div className="mx-auto max-w-[1400px] px-4 py-14 sm:px-6 md:py-20 lg:px-8">
         <div className="grid gap-6 lg:grid-cols-[minmax(0,1.6fr)_minmax(0,1fr)] lg:items-start">
+          {/* No enclosure. This is the page's own opening — its eyebrow, its
+              headline, its two calls to action — and there is nothing here it
+              needs separating from. A box around the top of a page draws a line
+              between the page and itself. */}
           <Reveal>
-            <Bezel innerClassName="p-6 sm:p-8">
+            <div className="lg:pt-1">
               <Eyebrow>Candidate Portal</Eyebrow>
 
               <h1 className="mt-6 max-w-[18ch] font-sans text-[2rem] font-black leading-[1.05] tracking-[-0.02em] sm:text-4xl lg:text-5xl">
@@ -117,7 +121,7 @@ export default async function AppHome() {
                   New here? Start here
                 </Link>
               </div>
-            </Bezel>
+            </div>
           </Reveal>
 
           <Reveal delay={120}>
@@ -168,9 +172,8 @@ export default async function AppHome() {
                     created after a credential reaches the address already on
                     the candidate record. */}
                 <p className="mt-4 text-xs leading-relaxed text-fg-subtle">
-                  Linking is verified by sending a single-use link to the
-                  contact address already held on the official record, so it
-                  cannot be requested with an applicant id alone.
+                  Linking is verified by a single-use link sent to the
+                  address on your official record.
                 </p>
               </Bezel>
             )}
@@ -182,7 +185,12 @@ export default async function AppHome() {
             Where to go next
           </h2>
 
-          <div className="mt-6 grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+          {/* Six bordered cards was most of what made this page feel boxy, and
+              a link target does not need an enclosure — it needs a boundary.
+              One shared hairline grid gives each cell an edge without giving it
+              a box: the container paints `--border` and the 1px gaps are the
+              only place it shows through, so there is no outer ring either. */}
+          <div className="mt-6 grid gap-px bg-border md:grid-cols-2 xl:grid-cols-3">
             {[
               {
                 label: "Merit Table",
@@ -239,26 +247,28 @@ export default async function AppHome() {
                   "Orientation: what each area is for, and the order to work through them in.",
               },
             ].map(({ label, href, Icon, figure, figureLabel, description }) => (
-              <Link key={label} href={href} className="group">
-                <Bezel innerClassName="flex h-full flex-col p-5 transition-colors group-hover:bg-surface-sunken/40">
-                  <div className="flex items-center gap-2.5">
-                    <Icon className="h-5 w-auto text-accent" />
-                    <span className="font-sans text-sm font-bold text-foreground">
-                      {label}
-                    </span>
-                  </div>
+              <Link
+                key={label}
+                href={href}
+                className="group flex h-full flex-col bg-background p-5 transition-colors hover:bg-surface"
+              >
+                <div className="flex items-center gap-2.5">
+                  <Icon className="h-5 w-auto text-accent" />
+                  <span className="font-sans text-sm font-bold text-foreground">
+                    {label}
+                  </span>
+                </div>
 
-                  <p className="mt-4 font-mono text-xl font-black text-accent">
-                    {figure}
-                  </p>
-                  <p className="font-mono text-[9px] uppercase tracking-[0.18em] text-fg-muted">
-                    {figureLabel}
-                  </p>
+                <p className="mt-4 font-mono text-xl font-black text-accent">
+                  {figure}
+                </p>
+                <p className="font-mono text-[9px] uppercase tracking-[0.18em] text-fg-muted">
+                  {figureLabel}
+                </p>
 
-                  <p className="mt-3 flex-1 text-xs leading-relaxed text-fg-muted">
-                    {description}
-                  </p>
-                </Bezel>
+                <p className="mt-3 flex-1 text-xs leading-relaxed text-fg-muted">
+                  {description}
+                </p>
               </Link>
             ))}
           </div>

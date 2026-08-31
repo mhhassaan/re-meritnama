@@ -81,9 +81,8 @@ export default async function HospitalsPage() {
         <p className="mt-16 flex items-start gap-2.5 border-t border-border pt-6 text-xs leading-relaxed text-fg-subtle">
           <AlertIcon className="mt-px h-4 w-auto shrink-0 text-status-reach" />
           <span>
-            Seat counts move between rounds as hospitals gain or lose
-            accreditation. Confirm against the official seat notification before
-            choosing preferences on the strength of a count here.
+            Seat counts change between rounds. Confirm against the
+            official seat notification before choosing preferences.
           </span>
         </p>
       </div>

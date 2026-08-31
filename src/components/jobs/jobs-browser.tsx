@@ -165,7 +165,7 @@ export function JobsBrowser({
         </Bezel>
       ) : (
         <>
-          <div className="mt-3 grid auto-rows-fr gap-4 md:grid-cols-2 xl:grid-cols-3">
+          <div className="mt-3 grid auto-rows-fr gap-px bg-border md:grid-cols-2 xl:grid-cols-3">
             {matched.slice(0, shown).map((job) => (
               <JobCard key={job.id} job={job} onOpen={() => setOpen(job)} />
             ))}
@@ -231,7 +231,9 @@ function StatusChip({ job }: { job: JobWithStatus }) {
 
 function JobCard({ job, onOpen }: { job: JobWithStatus; onOpen: () => void }) {
   return (
-    <Bezel innerClassName="flex h-full flex-col p-5">
+    // A cell in the hairline grid above, opaque so the seam colour shows only
+    // between cells.
+    <div className="flex h-full flex-col bg-background p-5">
       <div className="flex flex-wrap items-center gap-2">
         <StatusChip job={job} />
         <span className="font-mono text-[10px] uppercase tracking-wider text-fg-subtle">
@@ -278,7 +280,7 @@ function JobCard({ job, onOpen }: { job: JobWithStatus; onOpen: () => void }) {
           View details
         </button>
       </div>
-    </Bezel>
+    </div>
   );
 }
 

@@ -242,8 +242,8 @@ export function FindMeBar({
           )}
 
           <p className="mt-2 font-mono text-[10px] text-fg-subtle">
-            Your rows are highlighted across the portal. Stored in this browser
-            only — nothing is sent to us, and Clear removes it.
+            Your rows are highlighted across the portal. Stored in this
+            browser only.
           </p>
         </div>
       )}

@@ -195,9 +195,8 @@ export function ShortlistDrawer() {
               )}
 
               <p className="mt-auto pt-8 text-xs leading-relaxed text-fg-subtle">
-                Saved in this browser only. Nothing is sent to the server, so
-                nobody can see what you are considering — and it will not follow
-                you to another device.
+                Saved in this browser only — it will not follow you to
+                another device.
               </p>
             </aside>
           </div>,

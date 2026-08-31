@@ -151,10 +151,8 @@ export function ConsentWhatIfForm({ programs }: { programs: string[] }) {
         </div>
 
         <p className="mt-4 text-xs leading-relaxed text-fg-subtle">
-          This does not predict real PHF consent behaviour. It answers one
-          question: if this candidate is removed from the pool for the
-          selected programme, which seats and candidates change after
-          rerunning the same blank-slate allocation?
+          If this candidate is removed from the pool for the selected
+          programme, which seats and candidates change.
         </p>
 
         <div className="mt-5 flex flex-wrap gap-3 border-t border-border pt-5">

@@ -150,6 +150,12 @@
   /* The shadow cast INTO a recessed control — inputs and selects. Opposite in
      direction to the raised shadows above, and a different value per theme. */
   --field-inset: rgba(23, 23, 23, 0.06);
+
+  /* Text selection. A dedicated pair rather than reusing `--accent-quiet`,
+     which is a 10% wash meant to sit behind a badge — as a highlight it is too
+     faint to read as "selected" at all. */
+  --selection-bg: rgba(13, 148, 136, 0.22);
+  --selection-fg: var(--brand-teal-deeper);
   /* --- 7. Chart tokens (@bklit registry) ---------------------------------- */
   /* The shadcn CLI injects a neutral greyscale ramp and a `.dark` class block.
      Both were replaced: this project has no `.dark` class (theme resolution is
@@ -266,6 +272,10 @@
     --shadow-lifted: 0 2px 4px rgba(0, 0, 0, 0.35),
       0 24px 56px -20px rgba(0, 0, 0, 0.7);
     --field-inset: rgba(0, 0, 0, 0.28);
+    /* Lighter and slightly stronger on the dark ground, where a teal wash at
+       the light theme's weight disappears into the surface. */
+    --selection-bg: rgba(45, 212, 191, 0.26);
+    --selection-fg: #eafffb;
 
     /* The sequential chart scale reverses direction on a dark ground. Every
        other chart token is derived from the semantic tokens above, so nothing
@@ -332,6 +342,8 @@
   --shadow-lifted: 0 2px 4px rgba(0, 0, 0, 0.35),
     0 24px 56px -20px rgba(0, 0, 0, 0.7);
   --field-inset: rgba(0, 0, 0, 0.28);
+  --selection-bg: rgba(45, 212, 191, 0.26);
+  --selection-fg: #eafffb;
 
   --chart-scale-01: #10403c;
   --chart-scale-02: #17605a;
@@ -676,6 +688,30 @@ body {
     transparent 100%
   );
   animation: skeletonSweep 1.6s cubic-bezier(0.32, 0.72, 0, 1) infinite;
+}
+
+/* --- Text selection ------------------------------------------------------
+   The browser default is a hard blue that belongs to no palette on this site,
+   and it is the one colour a reader summons themselves — dragging over a
+   hospital name or a mark is a normal way to read a table.
+
+   `--selection-bg` / `--selection-fg` are their own pair per theme rather than
+   a reuse of `--accent-quiet`, which is a 10% wash sized for sitting behind a
+   badge and vanishes as a highlight.
+   The marketing pages set their own via `selection:` utilities, which are more
+   specific than this and therefore still win.
+
+   `::selection` is not inherited, so it has to be declared for the wildcard as
+   well as for the root, or a selection spanning a child element falls back to
+   the browser default halfway through. */
+::selection {
+  background-color: var(--selection-bg);
+  color: var(--selection-fg);
+}
+
+*::selection {
+  background-color: var(--selection-bg);
+  color: var(--selection-fg);
 }
 
 /* --- Reduced motion ------------------------------------------------------

@@ -177,9 +177,8 @@ export function ArticleEditor({ article }: { article?: Article }) {
             <FieldHint>
               {body.length.toLocaleString("en-GB")} of 60,000. Headings are a
               line starting <span className="text-foreground">##</span>;
-              everything else is a paragraph. No HTML and no Markdown — anything
-              else is shown exactly as typed, which is deliberate: this page is
-              read by every candidate and speaks in the site’s voice.
+              everything else is a paragraph. No HTML and no Markdown —
+              anything else is shown exactly as typed.
             </FieldHint>
           </div>
         </div>

@@ -54,9 +54,8 @@ export default async function PredictionPage({
 
           {/* The original's own description, kept. */}
           <p className="mt-7 max-w-3xl text-[15px] leading-relaxed text-fg-muted">
-            Enter your merit score to see your percentile ranking and a
-            personalised list of safe, target, and reach options — with
-            year-on-year trend and confidence for each combination.
+            Enter your merit score to see your percentile and a list of
+            safe, target and reach options.
           </p>
         </Reveal>
 
@@ -77,9 +76,8 @@ export default async function PredictionPage({
         </div>
 
         <p className="mt-16 border-t border-border pt-6 text-xs leading-relaxed text-fg-subtle">
-          Predictions compare your score against historical closing merits on a
-          normalised scale. They are not a probability of getting a seat — seats,
-          applicant numbers and the scoring formula all change between cycles.
+          Predictions compare your score against historical closing
+          merits. They are not a probability of getting a seat.
           Verify eligibility and official lists with PHF, PMDC and PGMI before
           making application decisions.
         </p>

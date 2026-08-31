@@ -105,7 +105,7 @@ export function SeatsBrowser({ seats }: { seats: Seat[] }) {
             </Select>
           </div>
 
-          <div className="flex flex-col gap-1">
+          <div className="flex flex-col gap-px bg-border">
             <FieldLabel htmlFor="seats-search">Search</FieldLabel>
             <SearchField
               id="seats-search"
@@ -136,7 +136,7 @@ export function SeatsBrowser({ seats }: { seats: Seat[] }) {
       ) : (
         <div className="mt-3 flex flex-col gap-4">
           {groups.map((group) => (
-            <Bezel key={group.specialty} innerClassName="p-5">
+            <div key={group.specialty} className="bg-background p-5">
               <div className="flex flex-wrap items-baseline justify-between gap-3 border-b border-border pb-3">
                 <SpecialtyLabel specialty={group.specialty} className="text-sm" />
                 <span className="font-mono text-xs tabular-nums text-fg-muted">
@@ -166,7 +166,7 @@ export function SeatsBrowser({ seats }: { seats: Seat[] }) {
                   </li>
                 ))}
               </ul>
-            </Bezel>
+            </div>
           ))}
         </div>
       )}
