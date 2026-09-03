@@ -67,9 +67,12 @@ export function AuthView({ initialMode = "signin" }: AuthViewProps) {
   const [reqEmail, setReqEmail] = useState("");
   const [reqApplicantId, setReqApplicantId] = useState("");
   const [reqMsg, setReqMsg] = useState("");
-  const [reqPaymentDeclared, setReqPaymentDeclared] = useState(true);
-  const [reqPayAmount, setReqPayAmount] = useState("2000");
-  const [reqPayRef, setReqPayRef] = useState("");
+  // Sent with the request but not collected: the form has no payment fields
+  // yet, so these three were `useState` whose setters were never called. Plain
+  // constants until that UI exists — state nothing can change is not state.
+  const reqPaymentDeclared = true;
+  const reqPayAmount = "2000";
+  const reqPayRef = "";
   const [reqMatchedCandidate, setReqMatchedCandidate] = useState<{ nameFull: string; applicantId: string } | null>(null);
   const [reqLoading, setReqLoading] = useState(false);
   const [reqError, setReqError] = useState("");

@@ -3,7 +3,7 @@ import { loadSeats } from "@/lib/portal/data";
 import { ConsentWhatIfForm } from "@/components/portal/consent-whatif-form";
 import { PortalQuoteStrip } from "@/components/portal/quote-strip";
 import { Reveal } from "@/components/app/reveal";
-import { Bezel, Eyebrow } from "@/components/app/bezel";
+import { Eyebrow } from "@/components/app/bezel";
 import { AlertIcon } from "@/components/icons/koboyo";
 
 export const metadata: Metadata = {

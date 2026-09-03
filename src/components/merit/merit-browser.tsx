@@ -34,10 +34,6 @@ export function MeritBrowser({
   cycles: Cycle[];
   facets: Facets;
 }) {
-  // The chart and sparkline modules work in induction numbers, because that is
-  // the key into the data. Nothing user-facing prints one.
-  const inductions = useMemo(() => cycles.map((c) => c.induction), [cycles]);
-
   const [selected, setSelected] = useState<MeritRow | null>(null);
   const [query, setQuery] = useState<MeritQuery>({
     scale: "normalised",

@@ -18,9 +18,8 @@ import { WithdrawButton } from "@/components/community/reply-composer";
 import { PortalQuoteStrip } from "@/components/portal/quote-strip";
 import { Reveal } from "@/components/app/reveal";
 import { Bezel, Eyebrow } from "@/components/app/bezel";
-import { Pill } from "@/components/portal/portal-terms";
 import { SpecialtyLabel } from "@/components/merit/merit-badges";
-import { AlertIcon, MessagesIcon } from "@/components/icons/koboyo";
+import { AlertIcon } from "@/components/icons/koboyo";
 
 export async function generateMetadata({
   params,

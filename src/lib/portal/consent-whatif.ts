@@ -120,8 +120,6 @@ export type ConsentWhatIfResult =
 const CHANGED_CAP = 60;
 
 const t = (v: string | null | undefined) => (v ?? "").trim();
-const seatKeyOf = (program: string, specialty: string, hospital: string, quota: string) =>
-  `${t(program)}|${t(specialty)}|${t(hospital)}|${t(quota)}`;
 const recordKey = (applicantId: number, track: QuotaTrack) => `${applicantId}::${track}`;
 
 /** Every placed candidate in a run, keyed by (applicant, track). */

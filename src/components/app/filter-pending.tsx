@@ -40,22 +40,3 @@ export function FilterPending({
   );
 }
 
-/**
- * A one-word cue beside the result count.
- *
- * Reserves nothing and moves nothing: it replaces the count's own line only
- * while a change is in flight, so the row does not grow and push the list down
- * — the layout-shift trap the quote strip already cost this project once.
- */
-export function UpdatingNote({ pending }: { pending: boolean }) {
-  if (!pending) return null;
-
-  return (
-    <span
-      aria-live="polite"
-      className="ml-2 font-mono text-[10px] uppercase tracking-[0.14em] text-accent"
-    >
-      Updating…
-    </span>
-  );
-}

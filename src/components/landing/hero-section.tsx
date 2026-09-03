@@ -111,15 +111,6 @@ export function HeroSection({ heroImageRef, handleNavClick }: HeroSectionProps) 
     },
   };
 
-  const footerItemVariants: Variants = {
-    hidden: { opacity: 0, y: 12 },
-    show: {
-      opacity: 1,
-      y: 0,
-      transition: { type: "spring", damping: 20, stiffness: 130, delay: 1.2 },
-    },
-  };
-
   return (
     <div className="relative min-h-screen w-full overflow-hidden font-sans antialiased bg-brand-cream">
       {/* Custom Medical Residency Vector Landscape Artwork with GSAP Parallax */}

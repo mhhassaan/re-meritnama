@@ -156,10 +156,6 @@ export const FAMILY_CLASSES: Record<
   },
 };
 
-export function specialtyClasses(specialty: string) {
-  return FAMILY_CLASSES[familyOf(specialty)];
-}
-
 /**
  * The raw CSS variable behind each family.
  *

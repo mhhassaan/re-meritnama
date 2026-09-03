@@ -10,7 +10,7 @@ import { SeatsByProgram } from "@/components/portal/seats-by-program";
 import { PortalQuoteStrip } from "@/components/portal/quote-strip";
 import { Reveal } from "@/components/app/reveal";
 import { Bezel, Eyebrow } from "@/components/app/bezel";
-import { Pill, Term } from "@/components/portal/portal-terms";
+import { Pill } from "@/components/portal/portal-terms";
 import { AlertIcon, ArchiveIcon } from "@/components/icons/koboyo";
 
 export const metadata: Metadata = {

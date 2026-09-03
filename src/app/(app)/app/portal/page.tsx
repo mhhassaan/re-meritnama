@@ -10,7 +10,7 @@ import { Reveal } from "@/components/app/reveal";
 import { Bezel, Eyebrow } from "@/components/app/bezel";
 import { HairlineCard, HairlineGrid } from "@/components/app/hairline-grid";
 import { SeatsByProgram } from "@/components/portal/seats-by-program";
-import { Pill, Term, type TermTone } from "@/components/portal/portal-terms";
+import { Pill, Term } from "@/components/portal/portal-terms";
 import { AlertIcon } from "@/components/icons/koboyo";
 
 export const metadata: Metadata = {
@@ -178,63 +178,6 @@ const KEY_CONCEPTS: Array<{ term: string; meaning: ReactNode }> = [
   {
     term: "Carry-forward",
     meaning: "Candidates rejected in one round stay ineligible in every later one.",
-  },
-];
-
-/**
- * Tones carry the outcome, not the wording.
- *
- * Each of these four resolutions either keeps a seat or takes it away, and the
- * colour says which before the sentence is read.
- */
-const CONSENT_RESOLUTION: Array<{ term: string; meaning: string; tone: TermTone }> = [
-  {
-    term: "Exact match",
-    meaning: "the consent status recorded for this specific slot.",
-    tone: "plain",
-  },
-  {
-    term: "Accepted elsewhere",
-    meaning: "the candidate consented to a different slot, so this seat is vacated.",
-    tone: "danger",
-  },
-  {
-    term: "Rejected in same track",
-    meaning: "rejected for this programme and quota, so the seat is vacated.",
-    tone: "danger",
-  },
-  {
-    term: "No match",
-    meaning: "no decision recorded — awaiting one.",
-    tone: "reach",
-  },
-];
-
-const QUEUE_TAGS: Array<{ term: string; meaning: string; tone: TermTone }> = [
-  {
-    term: "Q1, Q2, Q3…",
-    meaning: "queue position. Q1 has the highest marks and takes the seat first.",
-    tone: "plain",
-  },
-  {
-    term: "Fresh placement",
-    meaning: "not currently placed anywhere, so can take this slot directly.",
-    tone: "safe",
-  },
-  {
-    term: "Upgrade chance",
-    meaning: "currently at a worse preference, so can move here and vacate the old seat.",
-    tone: "reach",
-  },
-  {
-    term: "At higher pref",
-    meaning: "already at a better preference. Will not move, and is shown dimmed.",
-    tone: "plain",
-  },
-  {
-    term: "Locked to other programme",
-    meaning: "a multi-track candidate who consented elsewhere. Cannot take this slot.",
-    tone: "danger",
   },
 ];
 
@@ -461,29 +404,6 @@ export default async function PortalOverviewPage() {
         </p>
       </div>
     </div>
-  );
-}
-
-function DefinitionList({
-  items,
-}: {
-  items: Array<{ term: string; meaning: string; tone: TermTone }>;
-}) {
-  return (
-    <dl className="mt-4 flex flex-col gap-3 border-t border-border pt-4">
-      {items.map(({ term, meaning, tone }) => (
-        <div key={term} className="flex flex-col gap-0.5 sm:flex-row sm:gap-3">
-          <dt className="w-44 shrink-0">
-            <Term tone={tone}>
-              <span className="font-mono text-[10px] uppercase tracking-wider">
-                {term}
-              </span>
-            </Term>
-          </dt>
-          <dd className="text-xs leading-relaxed text-fg-muted">{meaning}</dd>
-        </div>
-      ))}
-    </dl>
   );
 }
 

@@ -5,7 +5,7 @@ import { SlidersHorizontal, X } from "lucide-react";
 import type { MeritScale } from "@/lib/merit/types";
 import type { Cycle } from "@/lib/merit/data";
 import type { CycleRange, MeritQuery } from "@/lib/merit/query";
-import { SearchField, Select } from "@/components/app/field";
+import { Select } from "@/components/app/field";
 
 export type Facets = {
   programs: string[];

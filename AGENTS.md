@@ -427,8 +427,8 @@ different class sitting beside the hero, which is exactly the case an enclosure
 is for.
 
 **This is now the whole app, not one page.** `Bezel`'s default *is* the flat
-card and the enclosure is opt-in behind `enclosed`, which nothing currently
-uses — so all 183 call sites moved at once. On top of that, every repeated grid
+card. The tray-and-plate enclosure was kept behind an `enclosed` prop for a
+while, nothing opted into it, and it has since been deleted — so all 183 call sites moved at once. On top of that, every repeated grid
 or stack was converted to a hairline: `HairlineGrid` / `HairlineCard`
 (`src/components/app/hairline-grid.tsx`), or its construction written out where
 the markup needs a real `<ul>`.

@@ -50,7 +50,7 @@ export function RosterTable({
   programs: string[];
   selected: { search: string; program: string; status: string; sort: string };
 }) {
-  const { go, pending } = useFilterNav();
+  const { go } = useFilterNav();
   const me = useIdentifiedApplicant();
   const { ref: icon, handlers } = useActionIcon();
 

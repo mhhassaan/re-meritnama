@@ -12,7 +12,6 @@ import { MANUAL_ID_BASE, type ManualCandidate } from "./manual-candidate";
 import {
   runPlacement,
   type PlacementApplicant,
-  type PlacementPreference,
   type PlacementResult,
   type PlacementSeat,
   type SlotResult,

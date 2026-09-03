@@ -35,10 +35,11 @@ import { useEffect, useState } from "react";
  *   already knows and the only cue visible if they have scrolled away from the
  *   thing they clicked.
  * - A local one on the control itself, so the answer to "did that register?" is
- *   where the pointer already is. `variant` picks which, and the position is
- *   part of the variant rather than something a call site passes in: an
- *   override would land on the same properties as the base and win or lose by
- *   stylesheet order rather than by intent.
+ *   where the pointer already is. `variant` picks which — a rule under a tile,
+ *   or a spinner beside a button's label — and the position is part of the
+ *   variant rather than something a call site passes in: an override would land
+ *   on the same properties as the base and win or lose by stylesheet order
+ *   rather than by intent.
  *
  * Both ease toward the far edge and stop short of it, like `NavPending` in the
  * app: the page does not know how long the read will take, and a bar that
@@ -49,10 +50,9 @@ export function LinkPending({
 }: {
   /**
    * `card` — a rule inset from the edges of a large tile.
-   * `control` — flush across the foot of a button.
    * `dot` — a spinner, for a control that already has an icon slot.
    */
-  variant?: "card" | "control" | "dot";
+  variant?: "card" | "dot";
 }) {
   const { pending } = useLinkStatus();
   const [mounted, setMounted] = useState(false);
@@ -90,11 +90,7 @@ export function LinkPending({
       ) : (
         <span
           aria-hidden
-          className={`pointer-events-none absolute overflow-hidden rounded-full bg-brand-teal/20 ${
-            variant === "card"
-              ? "inset-x-6 bottom-3 h-px"
-              : "inset-x-0 bottom-0 h-0.5"
-          }`}
+          className="pointer-events-none absolute inset-x-6 bottom-3 h-px overflow-hidden rounded-full bg-brand-teal/20"
         >
           <span className="block h-full w-full origin-left bg-brand-teal motion-safe:animate-[navPending_1.4s_cubic-bezier(0.32,0.72,0,1)_forwards] motion-reduce:opacity-70" />
         </span>

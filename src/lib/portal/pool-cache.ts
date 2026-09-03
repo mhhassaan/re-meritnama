@@ -79,11 +79,6 @@ async function cached<T>(key: string, load: () => Promise<T>): Promise<T> {
   return promise;
 }
 
-/** Drops everything. Call after an ingest run if the process stays up. */
-export function clearPortalCache(): void {
-  store.clear();
-}
-
 const PAGE = 1000;
 
 export type PoolRow = {

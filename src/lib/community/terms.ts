@@ -17,8 +17,6 @@ export const THREAD_CATEGORIES = [
   { id: "concern", label: "Concern", hint: "Something that looks wrong." },
 ] as const;
 
-export type ThreadCategory = (typeof THREAD_CATEGORIES)[number]["id"];
-
 export const CATEGORY_LABEL: Record<string, string> = Object.fromEntries(
   THREAD_CATEGORIES.map((c) => [c.id, c.label])
 );
@@ -48,8 +46,6 @@ export const POST_KINDS = [
   { id: "resource", label: "Resource or tip", hint: "Something worth passing on." },
   { id: "result_update", label: "Result update", hint: "What a round actually did." },
 ] as const;
-
-export type PostKind = (typeof POST_KINDS)[number]["id"];
 
 export const POST_KIND_LABEL: Record<string, string> = Object.fromEntries(
   POST_KINDS.map((k) => [k.id, k.label])
@@ -82,8 +78,6 @@ export const REPORT_REASONS = [
   { id: "spam", label: "Spam or advertising", hint: "" },
   { id: "other", label: "Something else", hint: "Say what in the note." },
 ] as const;
-
-export type ReportReason = (typeof REPORT_REASONS)[number]["id"];
 
 export const REPORT_REASON_LABEL: Record<string, string> = Object.fromEntries(
   REPORT_REASONS.map((r) => [r.id, r.label])

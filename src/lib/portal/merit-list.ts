@@ -8,7 +8,6 @@ import {
   loadSeatRows,
 } from "./pool-cache";
 import { activeScope, eligibleUnder } from "./config";
-import type { PlacementPreference } from "./placement";
 import { quotaTrack, type QuotaTrack } from "./placement";
 
 /**

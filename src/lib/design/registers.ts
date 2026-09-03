@@ -12,33 +12,6 @@
  */
 export type Likelihood = "safe" | "target" | "reach";
 
-export const LIKELIHOOD_LABELS: Record<Likelihood, string> = {
-  safe: "Safe",
-  target: "Target",
-  reach: "Reach",
-};
-
-export const LIKELIHOOD_CLASSES: Record<
-  Likelihood,
-  { text: string; bg: string; border: string }
-> = {
-  safe: {
-    text: "text-status-safe",
-    bg: "bg-status-safe-quiet",
-    border: "border-status-safe",
-  },
-  target: {
-    text: "text-status-target",
-    bg: "bg-status-target-quiet",
-    border: "border-status-target",
-  },
-  reach: {
-    text: "text-status-reach",
-    bg: "bg-status-reach-quiet",
-    border: "border-status-reach",
-  },
-};
-
 /**
  * Simulation confidence register.
  *
@@ -54,26 +27,3 @@ export const LIKELIHOOD_CLASSES: Record<
  */
 export type SimRegister = "cascade" | "estimate";
 
-export const SIM_REGISTER_LABELS: Record<SimRegister, string> = {
-  cascade: "Verified cascade",
-  estimate: "Quick estimate",
-};
-
-export const SIM_REGISTER_CLASSES: Record<
-  SimRegister,
-  { text: string; bg: string; border: string }
-> = {
-  cascade: {
-    text: "text-sim-cascade",
-    bg: "bg-sim-cascade-quiet",
-    // Solid border: this is the round-accurate result.
-    border: "border-sim-cascade border-solid",
-  },
-  estimate: {
-    text: "text-sim-estimate",
-    bg: "bg-sim-estimate-quiet",
-    // Dashed border: a visual, not merely textual, marker that this is an
-    // estimate — copy alone is too easy to skip past.
-    border: "border-sim-estimate border-dashed",
-  },
-};

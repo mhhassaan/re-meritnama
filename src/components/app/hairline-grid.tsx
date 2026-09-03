@@ -63,6 +63,10 @@ export function HairlineGrid({
  * grid's seams — see the note above for why they live here rather than on the
  * container. Padding is the call site's, which is the only thing that knows how
  * much room its content wants.
+ *
+ * A cell that cannot use this component — a list needing real `<li>` elements,
+ * or a card that is already its own component — repeats the same four classes
+ * inline: `-ml-px -mt-px border-l border-t border-border` over an opaque fill.
  */
 export function HairlineCard({
   children,
@@ -72,17 +76,11 @@ export function HairlineCard({
   className?: string;
 }) {
   return (
-    <div className={`${HAIRLINE_CELL} ${className}`}>{children}</div>
+    <div
+      className={`-ml-px -mt-px border-l border-t border-border bg-background ${className}`}
+    >
+      {children}
+    </div>
   );
 }
 
-/**
- * The cell recipe, for the places that cannot use `HairlineCard` — a list that
- * needs real `<li>` elements, or a card that is already its own component.
- * Pair it with `HAIRLINE_TRACK` on the container.
- */
-export const HAIRLINE_CELL =
-  "-ml-px -mt-px border-l border-t border-border bg-background";
-
-/** The container recipe, for the same cases. */
-export const HAIRLINE_TRACK = "overflow-clip";

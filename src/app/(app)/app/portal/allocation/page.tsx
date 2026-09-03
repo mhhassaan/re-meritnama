@@ -5,7 +5,7 @@ import { activeScope } from "@/lib/portal/config";
 import { AllocationBrowser } from "@/components/portal/allocation-browser";
 import { PortalQuoteStrip } from "@/components/portal/quote-strip";
 import { Reveal } from "@/components/app/reveal";
-import { Bezel, Eyebrow } from "@/components/app/bezel";
+import { Eyebrow } from "@/components/app/bezel";
 import { AlertIcon } from "@/components/icons/koboyo";
 
 export const metadata: Metadata = {
