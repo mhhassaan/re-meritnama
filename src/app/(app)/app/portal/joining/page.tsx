@@ -102,7 +102,7 @@ export default async function JoiningStatusPage({
 
         <Bezel
           className="mt-12"
-          innerClassName="grid grid-cols-2 gap-px bg-border sm:grid-cols-4"
+          innerClassName="grid grid-cols-2 overflow-clip sm:grid-cols-4"
         >
           <Meta label="Tracked" value={summary.tracked.toLocaleString("en-GB")} />
           <Meta
@@ -262,7 +262,7 @@ function Meta({
   tone?: string;
 }) {
   return (
-    <div className="bg-surface p-3">
+    <div className="-ml-px -mt-px border-l border-t border-border bg-surface p-3">
       <p className="font-mono text-[9px] uppercase tracking-[0.18em] text-fg-muted">
         {label}
       </p>

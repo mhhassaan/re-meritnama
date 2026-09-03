@@ -56,7 +56,7 @@ export function MeritSlotCard({ slot }: { slot: MeritSlot }) {
   return (
     // A cell in the merit list's hairline grid: opaque, so the seam colour
     // shows only between seats.
-    <div className="flex h-full flex-col bg-background p-5">
+    <div className="flex h-full flex-col -ml-px -mt-px border-l border-t border-border bg-background p-5">
       <div className="flex items-start justify-between gap-3">
         <div className="min-w-0">
           <SpecialtyLabel specialty={slot.specialty} className="text-[13px]" />

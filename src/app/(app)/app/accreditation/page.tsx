@@ -76,7 +76,7 @@ export default async function AccreditationPage({
 
         <Bezel
           className="mt-12"
-          innerClassName="grid grid-cols-2 gap-px bg-border sm:grid-cols-4"
+          innerClassName="grid grid-cols-2 overflow-clip sm:grid-cols-4"
         >
           <Meta
             label="Accredited programmes"
@@ -204,7 +204,7 @@ export default async function AccreditationPage({
 
 function Meta({ label, value }: { label: string; value: string }) {
   return (
-    <div className="bg-surface p-3">
+    <div className="-ml-px -mt-px border-l border-t border-border bg-surface p-3">
       <p className="font-mono text-[9px] uppercase tracking-[0.18em] text-fg-muted">
         {label}
       </p>

@@ -122,7 +122,7 @@ export default async function HospitalProfilePage({
 
         <Bezel
           className="mt-10"
-          innerClassName="grid grid-cols-2 gap-px bg-border sm:grid-cols-3"
+          innerClassName="grid grid-cols-2 overflow-clip sm:grid-cols-3"
         >
           <Meta label="Total seats" value={hospital.seats.toLocaleString("en-GB")} />
           <Meta label="Specialties" value={String(hospital.rows.length)} />
@@ -346,7 +346,7 @@ function Meta({
   mono?: boolean;
 }) {
   return (
-    <div className="bg-surface p-3">
+    <div className="-ml-px -mt-px border-l border-t border-border bg-surface p-3">
       <p className="font-mono text-[9px] uppercase tracking-[0.18em] text-fg-muted">
         {label}
       </p>

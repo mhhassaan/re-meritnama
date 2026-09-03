@@ -89,7 +89,7 @@ export function SimulationBar() {
             </button>
           </div>
 
-          <div className="mt-4 grid grid-cols-2 gap-px bg-border sm:grid-cols-3 lg:grid-cols-6">
+          <div className="mt-4 grid grid-cols-2 overflow-clip sm:grid-cols-3 lg:grid-cols-6">
             <Stat label="New placements" value={result.placed.length} tone="text-status-safe" />
             <Stat label="Upgrades" value={result.upgraded.length} tone="text-status-reach" />
             <Stat label="Removals" value={result.removed.length} tone="text-status-danger" />
@@ -214,7 +214,7 @@ function Stat({
   tone?: string;
 }) {
   return (
-    <div className="bg-surface p-3">
+    <div className="-ml-px -mt-px border-l border-t border-border bg-surface p-3">
       <p className="font-mono text-[9px] uppercase tracking-[0.18em] text-fg-muted">
         {label}
       </p>

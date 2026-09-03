@@ -66,10 +66,10 @@ export function SkeletonStats({ cells = 4 }: { cells?: number }) {
   return (
     <Bezel
       className="mt-12"
-      innerClassName="grid grid-cols-2 gap-px bg-border sm:grid-cols-4"
+      innerClassName="grid grid-cols-2 overflow-clip sm:grid-cols-4"
     >
       {Array.from({ length: cells }, (_, i) => (
-        <div key={i} className="bg-surface p-3">
+        <div key={i} className="-ml-px -mt-px border-l border-t border-border bg-surface p-3">
           <SkeletonBar className="h-2.5 w-20" />
           <SkeletonBar className="mt-2.5 h-5 w-16" />
         </div>

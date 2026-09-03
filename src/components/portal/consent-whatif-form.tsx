@@ -222,7 +222,7 @@ function ConsentReportView({ report }: { report: ConsentReport }) {
       {/* ── Summary ────────────────────────────────────────────────────── */}
       <Bezel
         className="mt-6"
-        innerClassName="grid grid-cols-2 gap-px bg-border sm:grid-cols-4"
+        innerClassName="grid grid-cols-2 overflow-clip sm:grid-cols-4"
       >
         <Meta label="Programme" value={report.program} />
         <Meta
@@ -508,7 +508,7 @@ function Meta({
   tone?: string;
 }) {
   return (
-    <div className="bg-surface p-3">
+    <div className="-ml-px -mt-px border-l border-t border-border bg-surface p-3">
       <p className="font-mono text-[9px] uppercase tracking-[0.18em] text-fg-muted">
         {label}
       </p>

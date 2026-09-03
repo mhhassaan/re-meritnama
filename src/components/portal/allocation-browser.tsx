@@ -173,7 +173,7 @@ export function AllocationBrowser({
     <FilterPending pending={pending}>
       <Bezel
         className="mt-12"
-        innerClassName="grid grid-cols-2 gap-px bg-border sm:grid-cols-3 lg:grid-cols-6"
+        innerClassName="grid grid-cols-2 overflow-clip sm:grid-cols-3 lg:grid-cols-6"
       >
         <Meta label="Programme" value={program} />
         <Meta label="Seats" value={activeStats.seats.toLocaleString("en-GB")} />
@@ -303,7 +303,7 @@ export function AllocationBrowser({
         </Bezel>
       ) : (
         <>
-          <div className="mt-3 grid gap-px bg-border lg:grid-cols-2 2xl:grid-cols-3">
+          <div className="mt-3 grid overflow-clip lg:grid-cols-2 2xl:grid-cols-3">
             {visible.slice(0, shown).map((slot) => (
               <SlotCard
                 key={`${slot.specialty}|${slot.hospital}|${slot.quota}`}
@@ -337,7 +337,7 @@ function SlotCard({ slot }: { slot: AllocationSlotView }) {
   return (
     // A cell in the hairline grid above: opaque, so the grid colour shows only
     // in the seams between cells.
-    <div className="flex h-full flex-col bg-background p-5">
+    <div className="flex h-full flex-col -ml-px -mt-px border-l border-t border-border bg-background p-5">
       <div className="flex items-start justify-between gap-3">
         <div className="min-w-0">
           <SpecialtyLabel specialty={slot.specialty} className="text-[13px]" />
@@ -460,7 +460,7 @@ function Meta({
   tone?: string;
 }) {
   return (
-    <div className="bg-surface p-3">
+    <div className="-ml-px -mt-px border-l border-t border-border bg-surface p-3">
       <p className="font-mono text-[9px] uppercase tracking-[0.18em] text-fg-muted">
         {label}
       </p>

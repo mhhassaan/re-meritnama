@@ -165,7 +165,7 @@ export function JobsBrowser({
         </Bezel>
       ) : (
         <>
-          <div className="mt-3 grid auto-rows-fr gap-px bg-border md:grid-cols-2 xl:grid-cols-3">
+          <div className="mt-3 grid auto-rows-fr overflow-clip md:grid-cols-2 xl:grid-cols-3">
             {matched.slice(0, shown).map((job) => (
               <JobCard key={job.id} job={job} onOpen={() => setOpen(job)} />
             ))}
@@ -233,7 +233,7 @@ function JobCard({ job, onOpen }: { job: JobWithStatus; onOpen: () => void }) {
   return (
     // A cell in the hairline grid above, opaque so the seam colour shows only
     // between cells.
-    <div className="flex h-full flex-col bg-background p-5">
+    <div className="flex h-full flex-col -ml-px -mt-px border-l border-t border-border bg-background p-5">
       <div className="flex flex-wrap items-center gap-2">
         <StatusChip job={job} />
         <span className="font-mono text-[10px] uppercase tracking-wider text-fg-subtle">
@@ -327,7 +327,7 @@ function JobModal({ job, onClose }: { job: JobWithStatus; onClose: () => void })
           </button>
         </div>
 
-        <dl className="mt-6 grid gap-px bg-border sm:grid-cols-2">
+        <dl className="mt-6 grid overflow-clip sm:grid-cols-2">
           <Row label="Organization" value={job.organization} />
           <Row label="Location" value={job.location || job.city} />
           <Row label="Posted" value={formatDate(job.posted)} />
@@ -395,7 +395,7 @@ function Row({
   hint?: string | null;
 }) {
   return (
-    <div className="bg-surface p-3">
+    <div className="-ml-px -mt-px border-l border-t border-border bg-surface p-3">
       <dt className="font-mono text-[9px] uppercase tracking-[0.18em] text-fg-muted">
         {label}
       </dt>

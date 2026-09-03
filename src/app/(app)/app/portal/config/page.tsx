@@ -129,7 +129,7 @@ export default async function PortalConfigPage() {
         {/* ── Overview strip ────────────────────────────────────────────── */}
         <Bezel
           className="mt-6"
-          innerClassName="grid grid-cols-2 gap-px bg-border sm:grid-cols-3 lg:grid-cols-5"
+          innerClassName="grid grid-cols-2 overflow-clip sm:grid-cols-3 lg:grid-cols-5"
         >
           <Card label="Merit formula" value="Official" note="Base: marks total" />
           <Card
@@ -282,7 +282,7 @@ function Card({
   tone?: string;
 }) {
   return (
-    <div className="bg-surface p-4">
+    <div className="-ml-px -mt-px border-l border-t border-border bg-surface p-4">
       <p className="font-mono text-[9px] uppercase tracking-[0.18em] text-fg-muted">
         {label}
       </p>

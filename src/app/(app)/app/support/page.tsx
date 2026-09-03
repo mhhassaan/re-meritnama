@@ -76,7 +76,7 @@ export default async function SupportPage() {
 
         <Bezel
           className="mt-12"
-          innerClassName="grid grid-cols-1 gap-px bg-border sm:grid-cols-3"
+          innerClassName="grid grid-cols-1 overflow-clip sm:grid-cols-3"
         >
           <Cost
             value={`$${SUPPORT_TOTALS.raisedUsd.toFixed(2)}`}
@@ -130,7 +130,7 @@ export default async function SupportPage() {
 
           <Bezel
             className="mt-3"
-            innerClassName="grid grid-cols-1 gap-px bg-border sm:grid-cols-3"
+            innerClassName="grid grid-cols-1 overflow-clip sm:grid-cols-3"
           >
             <Cost value="$0.40" unit="per hour" note="cloud machine and proxy" />
             <Cost value="~6 hrs" unit="per full fetch" note="the whole applicant file" />
@@ -249,7 +249,7 @@ function Cost({
   note: string;
 }) {
   return (
-    <div className="bg-surface p-4">
+    <div className="-ml-px -mt-px border-l border-t border-border bg-surface p-4">
       <p className="font-mono text-xl font-bold tabular-nums text-foreground">
         {value}
       </p>

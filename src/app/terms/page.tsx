@@ -35,7 +35,7 @@ export default function TermsPage() {
       standfirst="MeritNama is an independent analytics tool built over published induction records. It is free to use, it is not the official source, and these are the rules that go with it."
       updated="30 August 2026"
     >
-      <LegalCallout title="This is not the official source">
+      <LegalCallout id="disclaimer" title="This is not the official source">
         <p>
           MeritNama is <strong>not affiliated with</strong> the Punjab Health
           Foundation, the Punjab Residency Programme, PMDC, CPSP, or any training

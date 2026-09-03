@@ -254,7 +254,7 @@ export default async function StartHerePage() {
                 <Link
                   key={label}
                   href={href}
-                  className="group flex h-full flex-col bg-background p-4 transition-colors hover:bg-surface"
+                  className="group -ml-px -mt-px flex h-full flex-col border-l border-t border-border bg-background p-4 transition-colors hover:bg-surface"
                 >
                   {body}
                 </Link>

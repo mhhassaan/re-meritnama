@@ -75,7 +75,12 @@ export function LegalPage({
           {eyebrow}
         </p>
 
-        <h1 className="mt-6 font-sans text-4xl font-black leading-[1.05] tracking-tight text-brand-ink sm:text-5xl lg:text-6xl">
+        {/* `text-balance`, like every title in the app. These two cannot be one
+            line — "What we hold, and what we do not" needs about 1,150px at
+            60px and the reading measure here is 896px — so the rule that
+            applies is the other half of it: where a title must wrap, split it
+            evenly rather than leaving two words alone. */}
+        <h1 className="mt-6 font-sans text-4xl font-black leading-[1.05] tracking-tight text-balance text-brand-ink sm:text-5xl lg:text-6xl">
           {title}
         </h1>
 
@@ -120,7 +125,7 @@ export function LegalSection({
         <span className="font-mono text-[13px] font-bold tabular-nums text-brand-teal">
           {String(n).padStart(2, "0")}
         </span>
-        <h2 className="font-sans text-2xl font-black tracking-tight text-brand-ink sm:text-3xl">
+        <h2 className="font-sans text-2xl font-black tracking-tight text-balance text-brand-ink sm:text-3xl">
           {title}
         </h2>
       </div>
@@ -155,14 +160,26 @@ export function LegalList({ items }: { items: React.ReactNode[] }) {
  * record we republish rather than a file we collected.
  */
 export function LegalCallout({
+  id,
   title,
   children,
 }: {
+  /**
+   * Optional anchor. The terms page's opening callout is the disclaimer the
+   * footer links to by name, and a link called "Official Disclaimer" that lands
+   * on the same URL as the one called "Terms of Service" is two labels for one
+   * destination.
+   */
+  id?: string;
   title: string;
   children: React.ReactNode;
 }) {
   return (
-    <div className="rounded-3xl border border-stone-200/80 bg-brand-white p-6 sm:p-8">
+    <div
+      id={id}
+      // Clears the sticky header, the same 96px the numbered sections reserve.
+      className="scroll-mt-24 rounded-3xl border border-stone-200/80 bg-brand-white p-6 sm:p-8"
+    >
       <p className="font-mono text-[11px] font-bold uppercase tracking-[0.24em] text-brand-teal">
         {title}
       </p>

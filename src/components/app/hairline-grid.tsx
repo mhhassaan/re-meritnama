@@ -10,19 +10,38 @@ import type { ReactNode } from "react";
  *
  * A cell in a grid still needs a *boundary* — you have to be able to see where
  * one entry stops and the next begins, especially when each is a link target.
- * It does not need an *enclosure*. This paints `--border` on the container and
- * leaves 1px gaps between opaque cells, so the only place the colour shows
- * through is the seams. Six borders become five rules, and there is no outer
- * ring at all, because the cells cover every edge of the container.
+ * It does not need an *enclosure*.
  *
- * Two things follow from how it works, and both matter:
+ * ## Why the seam is drawn by the cells, not by the container
  *
- * - **Every cell must be opaque**, or the container's border colour shows
- *   through the cell itself and the whole grid tints. `HairlineCard` paints
- *   `bg-background`; a cell written by hand must do the same.
+ * The obvious construction is `gap-px` with `bg-border` on the container, so
+ * the colour shows only through the seams. That is what this was, and it has a
+ * bug that only appears when the item count does not fill the last row: the
+ * empty cells are still inside the container's box, so the border colour paints
+ * them as a large solid block. On `/app/start` that was three quarters of a row
+ * under "What each main area is for", and again under the induction cycles —
+ * a slab of border colour where a reader expects the page.
+ *
+ * Filling the gap with placeholder cells cannot work either, because the number
+ * needed changes with the column count and the column count is a media query.
+ *
+ * So each cell draws its own top and left hairline and is pulled back by a
+ * pixel, which collapses adjacent borders into one line. Cells that do not
+ * exist draw nothing, so an incomplete row is simply empty. The overhanging
+ * rule on the first row and first column is trimmed by the container.
+ *
+ * `overflow-clip`, not `overflow-hidden`: `hidden` creates a scroll container
+ * and `position: sticky` inside one sticks to that rather than to the viewport.
+ * Nothing in these grids is sticky today, and this is not the place to leave
+ * that trap lying.
+ *
+ * Two rules still hold for anything written by hand:
+ *
+ * - **Every cell must be opaque.** `HairlineCard` paints `bg-background`; a
+ *   cell written by hand must do the same, or a card behind it shows through.
  * - **Hover is a fill, never a border.** A border that appears on hover puts
- *   back exactly the box this removes, and it also shifts nothing else on the
- *   row, so the change reads as a flicker rather than as feedback.
+ *   back exactly the box this removes, and shifts nothing else on the row, so
+ *   it reads as a flicker rather than as feedback.
  *
  * Column counts belong on the call site — `md:grid-cols-2 xl:grid-cols-3` —
  * because they are about that page's content, not about this pattern.
@@ -34,12 +53,16 @@ export function HairlineGrid({
   children: ReactNode;
   className?: string;
 }) {
-  return <div className={`grid gap-px bg-border ${className}`}>{children}</div>;
+  return (
+    <div className={`grid overflow-clip ${className}`}>{children}</div>
+  );
 }
 
 /**
- * One cell. Opaque by necessity — see above — and padded by the call site,
- * which is the only thing that knows how much room its content wants.
+ * One cell. Opaque by necessity, and carrying the two hairlines that become the
+ * grid's seams — see the note above for why they live here rather than on the
+ * container. Padding is the call site's, which is the only thing that knows how
+ * much room its content wants.
  */
 export function HairlineCard({
   children,
@@ -48,5 +71,18 @@ export function HairlineCard({
   children: ReactNode;
   className?: string;
 }) {
-  return <div className={`bg-background ${className}`}>{children}</div>;
+  return (
+    <div className={`${HAIRLINE_CELL} ${className}`}>{children}</div>
+  );
 }
+
+/**
+ * The cell recipe, for the places that cannot use `HairlineCard` — a list that
+ * needs real `<li>` elements, or a card that is already its own component.
+ * Pair it with `HAIRLINE_TRACK` on the container.
+ */
+export const HAIRLINE_CELL =
+  "-ml-px -mt-px border-l border-t border-border bg-background";
+
+/** The container recipe, for the same cases. */
+export const HAIRLINE_TRACK = "overflow-clip";

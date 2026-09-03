@@ -55,7 +55,7 @@ const defaultColumns: Footer15Column[] = [
     links: [
       { label: "Privacy Policy", href: "/privacy" },
       { label: "Terms of Service", href: "/terms" },
-      { label: "Official Disclaimer", href: "/terms" },
+      { label: "Official Disclaimer", href: "/terms#disclaimer" },
       { label: "GitHub (@itskaero)", href: "https://github.com/itskaero" },
     ],
   },

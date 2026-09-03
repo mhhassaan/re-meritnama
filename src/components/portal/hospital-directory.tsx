@@ -111,7 +111,7 @@ export function HospitalDirectory({
         <>
           {/* `auto-rows-fr`: both cells in a row take the same height, so a
               short card never leaves a gap beneath it. */}
-          <div className="mt-3 grid auto-rows-fr gap-px bg-border lg:grid-cols-2">
+          <div className="mt-3 grid auto-rows-fr overflow-clip lg:grid-cols-2">
             {visible.slice(0, shown).map((hospital) => (
               <HospitalCard
                 key={hospital.slug}
@@ -148,7 +148,7 @@ function HospitalCard({
       // A cell in a hairline grid, not a card: opaque so the grid's border
       // colour does not show through it, and hovered with a fill rather than a
       // border, which would put the box back.
-      className="group flex h-full flex-col bg-background p-5 outline-none transition-colors duration-[200ms] hover:bg-surface focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ring"
+      className="group flex h-full flex-col -ml-px -mt-px border-l border-t border-border bg-background p-5 outline-none transition-colors duration-[200ms] hover:bg-surface focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ring"
     >
         {/* ── Identity, on a fixed two lines ───────────────────────────── */}
         <div className="flex min-h-[2.75rem] items-start gap-2">

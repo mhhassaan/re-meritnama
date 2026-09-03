@@ -760,7 +760,7 @@ function TargetMode({
             </div>
           </div>
 
-          <div className="mt-4 grid gap-px bg-border sm:grid-cols-2 lg:grid-cols-4">
+          <div className="mt-4 grid overflow-clip sm:grid-cols-2 lg:grid-cols-4">
             <Metric
               label="Average cutoff"
               value={`${req.avgPct.toFixed(1)}%`}
@@ -805,7 +805,7 @@ function Metric({
   highlight?: boolean;
 }) {
   return (
-    <div className="bg-surface p-3">
+    <div className="-ml-px -mt-px border-l border-t border-border bg-surface p-3">
       <p className="font-mono text-[9px] uppercase tracking-[0.18em] text-fg-muted">
         {label}
       </p>

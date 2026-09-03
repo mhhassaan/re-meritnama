@@ -28,9 +28,9 @@ export function SupportersList({ supporters }: { supporters: Supporter[] }) {
           written out here because a list wants a real `<ul>`: the container
           paints the border colour and shows through only the 1px gaps between
           opaque cells. */}
-      <ul className="mt-4 grid gap-px bg-border sm:grid-cols-2">
+      <ul className="mt-4 grid overflow-clip sm:grid-cols-2">
         {visible.map((s, i) => (
-          <li key={`${s.name ?? "anon"}-${s.date}-${i}`} className="bg-background">
+          <li key={`${s.name ?? "anon"}-${s.date}-${i}`} className="-ml-px -mt-px border-l border-t border-border bg-background">
             <div className="flex items-center gap-3 p-3">
               <span
                 aria-hidden

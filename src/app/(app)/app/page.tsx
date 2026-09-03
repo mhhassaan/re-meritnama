@@ -190,7 +190,7 @@ export default async function AppHome() {
               One shared hairline grid gives each cell an edge without giving it
               a box: the container paints `--border` and the 1px gaps are the
               only place it shows through, so there is no outer ring either. */}
-          <div className="mt-6 grid gap-px bg-border md:grid-cols-2 xl:grid-cols-3">
+          <div className="mt-6 grid overflow-clip md:grid-cols-2 xl:grid-cols-3">
             {[
               {
                 label: "Merit Table",
@@ -250,7 +250,7 @@ export default async function AppHome() {
               <Link
                 key={label}
                 href={href}
-                className="group flex h-full flex-col bg-background p-5 transition-colors hover:bg-surface"
+                className="group flex h-full flex-col -ml-px -mt-px border-l border-t border-border bg-background p-5 transition-colors hover:bg-surface"
               >
                 <div className="flex items-center gap-2.5">
                   <Icon className="h-5 w-auto text-accent" />

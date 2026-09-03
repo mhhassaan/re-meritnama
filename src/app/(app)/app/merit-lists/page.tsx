@@ -125,7 +125,7 @@ export default async function MeritListsPage({
                 counts describe the ROUND as published, not the current filter —
                 a total that moved when you picked a programme would be
                 answering a different question. */}
-            <Bezel className="mt-6" innerClassName="grid grid-cols-2 gap-px bg-border sm:grid-cols-3 lg:grid-cols-6">
+            <Bezel className="mt-6" innerClassName="grid grid-cols-2 overflow-clip sm:grid-cols-3 lg:grid-cols-6">
               <Meta label="Induction" value={cycleLabel ?? "—"} />
               <Meta label="Round" value={`Round ${round}`} />
               <Meta
@@ -264,7 +264,7 @@ function Meta({
   tone?: string;
 }) {
   return (
-    <div className="bg-surface p-3">
+    <div className="-ml-px -mt-px border-l border-t border-border bg-surface p-3">
       <p className="font-mono text-[9px] uppercase tracking-[0.18em] text-fg-muted">
         {label}
       </p>

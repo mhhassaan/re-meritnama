@@ -85,7 +85,7 @@ export default async function DataChangesPage() {
 
         <Bezel
           className="mt-12"
-          innerClassName="grid grid-cols-2 gap-px bg-border sm:grid-cols-5"
+          innerClassName="grid grid-cols-2 overflow-clip sm:grid-cols-5"
         >
           <Meta
             label="Previous pool"
@@ -136,7 +136,7 @@ export default async function DataChangesPage() {
             blanked as the portal caught up on data entry.
           </p>
 
-          <div className="mt-4 grid gap-px bg-border sm:grid-cols-3">
+          <div className="mt-4 grid overflow-clip sm:grid-cols-3">
             <Meta
               label="Record filled in"
               value={summary.marks.appeared.toLocaleString("en-GB")}
@@ -204,7 +204,7 @@ function Meta({
   tone?: string;
 }) {
   return (
-    <div className="bg-surface p-3">
+    <div className="-ml-px -mt-px border-l border-t border-border bg-surface p-3">
       <p className="font-mono text-[9px] uppercase tracking-[0.18em] text-fg-muted">
         {label}
       </p>

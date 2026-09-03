@@ -123,7 +123,7 @@ export default async function CandidatePoolPage({
 
         <Bezel
           className="mt-12"
-          innerClassName="grid grid-cols-2 gap-px bg-border sm:grid-cols-4"
+          innerClassName="grid grid-cols-2 overflow-clip sm:grid-cols-4"
         >
           <Meta label="Applicants" value={stats.total.toLocaleString("en-GB")} />
           <Meta
@@ -207,7 +207,7 @@ export default async function CandidatePoolPage({
 
           <Bezel
             className="mt-5"
-            innerClassName="grid grid-cols-2 gap-px bg-border sm:grid-cols-4"
+            innerClassName="grid grid-cols-2 overflow-clip sm:grid-cols-4"
           >
             <Meta
               label="Accepted"
@@ -315,7 +315,7 @@ export default async function CandidatePoolPage({
 
           <Bezel
             className="mt-5"
-            innerClassName="grid grid-cols-1 gap-px bg-border sm:grid-cols-2"
+            innerClassName="grid grid-cols-1 overflow-clip sm:grid-cols-2"
           >
             <Flag
               label="Applied to no programme"
@@ -403,7 +403,7 @@ function Meta({
   tone?: string;
 }) {
   return (
-    <div className="bg-surface p-3">
+    <div className="-ml-px -mt-px border-l border-t border-border bg-surface p-3">
       <p className="font-mono text-[9px] uppercase tracking-[0.18em] text-fg-muted">
         {label}
       </p>
@@ -429,7 +429,7 @@ function Flag({
   note: string;
 }) {
   return (
-    <div className="bg-surface p-4">
+    <div className="-ml-px -mt-px border-l border-t border-border bg-surface p-4">
       <div className="flex items-baseline justify-between gap-3">
         <p className="font-sans text-sm font-bold text-foreground">{label}</p>
         <p

@@ -404,12 +404,22 @@ it to `/app`:
   eyebrow, headline and calls to action; there is nothing there it needs
   separating from, and a box around the top of a page draws a line between the
   page and itself.
-- **A grid of link targets needs boundaries, not boxes.** Six bordered cards was
-  most of what made that page feel boxy. `grid gap-px bg-border` with
-  `bg-background` cells gives every cell an edge from a shared hairline, and
-  because the container only shows through the 1px gaps there is no outer ring
-  at all. Hover is a fill (`hover:bg-surface`), not a border change — a border
-  that appears on hover reintroduces the box being removed.
+- **A grid of link targets needs boundaries, not boxes.** Hover is a fill
+  (`hover:bg-surface`), not a border change — a border that appears on hover
+  reintroduces the box being removed.
+- **The seam is drawn by the cells, never by the container.** `gap-px` with
+  `bg-border` on the container looks equivalent and has a bug that only shows
+  when the items do not fill the last row: the empty cells are still inside the
+  container's box, so it paints them as a slab of border colour. Five items in
+  four columns is three such cells. Each cell carries `-ml-px -mt-px border-l
+  border-t border-border` instead, so a cell that does not exist draws nothing,
+  and the container is `overflow-clip` to trim the overhanging first row and
+  column. `HairlineGrid` / `HairlineCard` do this; `HAIRLINE_CELL` and
+  `HAIRLINE_TRACK` are exported for the places that need a real `<li>` or an
+  existing card component. Cells on the page take `bg-background`, cells inside
+  a `Bezel` take `bg-surface`.
+- **A single-column `flex flex-col gap-px bg-border` stack is still correct** —
+  a column has no incomplete row, so there is no empty cell to paint.
 
 What survives on `/app`: the eyebrow pill, the secondary button's outline, and
 the one aside carrying the candidate record or its absence — content of a
@@ -1642,6 +1652,17 @@ and where this site and PHF disagree, PHF is right.
 **`updated` is a printed string, not a computed date.** A page that silently
 claims to have been revised today, every day, is worse than one with an honest
 date — the date is the reader's only handle on which version they agreed to.
+
+**The titles wrap, and that is correct.** Neither fits one line inside a 896px
+reading measure, and the measure is worth more than the line count on a document
+people read top to bottom. They carry `text-balance` so the wrap is even rather
+than an orphan.
+
+**The footer's "Official Disclaimer" points at `/terms#disclaimer`, not
+`/terms`.** It used to be `#trust`, a landing-only anchor that did nothing once
+the footer began appearing on the legal pages; repointing it at `/terms` fixed
+the dead link but left two labels on one destination. `LegalCallout` takes an
+`id`, so the terms page's opening callout is the thing that link actually names.
 
 Two things the owner should confirm before this goes anywhere near production:
 the contact address (currently the one already published on the original site)
