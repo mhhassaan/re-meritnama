@@ -54,9 +54,9 @@ export default async function NotificationsAdminPage() {
       <Reveal>
         <Eyebrow>Staff</Eyebrow>
 
-        <h1 className="mt-6 max-w-[18ch] font-sans text-[2.5rem] font-black leading-[0.95] tracking-[-0.03em] sm:text-5xl">
-          Tell everyone
-          <span className="block text-accent">something</span>
+        <h1 className="mt-6 font-sans text-[2.5rem] font-black leading-[0.95] tracking-[-0.03em] sm:text-5xl text-balance">
+          Tell everyone{" "}
+          <span className="text-accent">something</span>
         </h1>
 
         <p className="mt-7 max-w-2xl text-[15px] leading-relaxed text-fg-muted">

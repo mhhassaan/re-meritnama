@@ -133,7 +133,7 @@ export default async function StartHerePage() {
             <div className="lg:pt-1">
               <Eyebrow>New to MeritNama?</Eyebrow>
 
-              <h1 className="mt-6 max-w-[20ch] font-sans text-[2rem] font-black leading-[1.05] tracking-[-0.02em] sm:text-4xl lg:text-5xl">
+              <h1 className="mt-6 max-w-[20ch] font-sans text-[2rem] font-black leading-[1.05] tracking-[-0.02em] text-balance sm:text-4xl lg:text-5xl">
                 Start here to understand the portal, your merit, and your
                 options.
               </h1>

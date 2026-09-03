@@ -301,7 +301,7 @@ export default async function PortalOverviewPage() {
             <div className="lg:pt-1">
               <Eyebrow>What this shows</Eyebrow>
 
-              <h1 className="mt-6 max-w-[20ch] font-sans text-[2rem] font-black leading-[1.05] tracking-[-0.02em] sm:text-4xl lg:text-5xl">
+              <h1 className="mt-6 max-w-[20ch] font-sans text-[2rem] font-black leading-[1.05] tracking-[-0.02em] text-balance sm:text-4xl lg:text-5xl">
                 The published merit list, with consent and simulation.
               </h1>
 

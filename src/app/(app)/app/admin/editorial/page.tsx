@@ -69,7 +69,7 @@ export default async function EditorialAdminPage({
           </Link>
         </div>
 
-        <h1 className="mt-6 max-w-[18ch] font-sans text-[2.5rem] font-black leading-[0.95] tracking-[-0.03em] sm:text-5xl">
+        <h1 className="mt-6 font-sans text-[2.5rem] font-black leading-[0.95] tracking-[-0.03em] text-balance sm:text-5xl">
           {editing ? "Edit a piece" : "Write a piece"}
         </h1>
 

@@ -95,7 +95,7 @@ export default async function HospitalProfilePage({
           </div>
 
           <div className="mt-4 flex items-start gap-3">
-            <h1 className="max-w-[22ch] font-sans text-[2rem] font-black leading-[1.05] tracking-[-0.03em] sm:text-5xl">
+            <h1 className="max-w-[22ch] font-sans text-[2rem] font-black leading-[1.05] tracking-[-0.03em] text-balance sm:text-5xl">
               {hospital.name}
             </h1>
             {/* Beside the name, where the original puts it. */}

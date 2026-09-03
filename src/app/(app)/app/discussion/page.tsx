@@ -77,9 +77,9 @@ export default async function DiscussionPage({
         <Reveal>
           <Eyebrow>Community</Eyebrow>
 
-          <h1 className="mt-6 max-w-[16ch] font-sans text-[2.5rem] font-black leading-[0.95] tracking-[-0.03em] sm:text-6xl">
-            Ask the people
-            <span className="block text-accent">who went first</span>
+          <h1 className="mt-6 font-sans text-[2.5rem] font-black leading-[0.95] tracking-[-0.03em] sm:text-6xl text-balance">
+            Ask the people{" "}
+            <span className="text-accent">who went first</span>
           </h1>
 
           <p className="mt-7 max-w-2xl text-[15px] leading-relaxed text-fg-muted">

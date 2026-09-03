@@ -47,9 +47,9 @@ export default async function PredictionPage({
         <Reveal>
           <Eyebrow>My Prediction</Eyebrow>
 
-          <h1 className="mt-6 max-w-[18ch] font-sans text-[2.5rem] font-black leading-[0.95] tracking-[-0.03em] sm:text-6xl">
-            Where your score
-            <span className="block text-accent">actually lands</span>
+          <h1 className="mt-6 font-sans text-[2.5rem] font-black leading-[0.95] tracking-[-0.03em] sm:text-6xl text-balance">
+            Where your score{" "}
+            <span className="text-accent">actually lands</span>
           </h1>
 
           {/* The original's own description, kept. */}

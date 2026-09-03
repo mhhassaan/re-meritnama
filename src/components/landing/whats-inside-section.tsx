@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { LinkPending } from "@/components/landing/link-pending";
 import Image from "next/image";
 import { motion } from "framer-motion";
 
@@ -63,6 +64,10 @@ export function WhatsInsideSection() {
             href={item.href}
             className="group relative p-6 sm:p-7 rounded-3xl border-0 transition-colors duration-200 hover:bg-brand-cream-deep/80 flex flex-col justify-between items-center text-center"
           >
+            {/* These four go straight into the app, which needs seconds to
+                render. Without this the card is inert from the click until the
+                new page paints. */}
+            <LinkPending />
             <div className="flex flex-col items-center text-center w-full">
               {/* Baseline-aligned Centered SVG Illustration Container */}
               <motion.div

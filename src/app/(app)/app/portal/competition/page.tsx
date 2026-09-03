@@ -54,9 +54,9 @@ export default async function CompetitionPage({
         <Reveal>
           <Eyebrow>Induction Portal</Eyebrow>
 
-          <h1 className="mt-6 max-w-[18ch] font-sans text-[2.5rem] font-black leading-[0.95] tracking-[-0.03em] sm:text-6xl">
-            Where the
-            <span className="block text-accent">demand actually is</span>
+          <h1 className="mt-6 font-sans text-[2.5rem] font-black leading-[0.95] tracking-[-0.03em] sm:text-6xl text-balance">
+            Where the{" "}
+            <span className="text-accent">demand actually is</span>
           </h1>
 
           <p className="mt-7 max-w-2xl text-[15px] leading-relaxed text-fg-muted">

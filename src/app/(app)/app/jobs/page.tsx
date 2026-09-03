@@ -44,9 +44,9 @@ export default async function JobsPage() {
         <Reveal>
           <Eyebrow>Resources</Eyebrow>
 
-          <h1 className="mt-6 max-w-[16ch] font-sans text-[2.5rem] font-black leading-[0.95] tracking-[-0.03em] sm:text-6xl">
-            Medical jobs,
-            <span className="block text-accent">honestly dated</span>
+          <h1 className="mt-6 font-sans text-[2.5rem] font-black leading-[0.95] tracking-[-0.03em] sm:text-6xl text-balance">
+            Medical jobs,{" "}
+            <span className="text-accent">honestly dated</span>
           </h1>
 
           <p className="mt-7 max-w-2xl text-[15px] leading-relaxed text-fg-muted">

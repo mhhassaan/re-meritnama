@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { LinkPending } from "@/components/landing/link-pending";
 import { motion } from "framer-motion";
 import { ArrowRight } from "lucide-react";
 import {
@@ -118,6 +119,7 @@ export function WhyTrustSection() {
               className="group inline-flex items-center gap-2.5 rounded-sm bg-brand-teal-deep px-7 py-3.5 text-sm font-bold text-white shadow-md hover:bg-brand-teal-deeper transition-all active:scale-[0.96]"
             >
               <span>Verify Official Gazette Data</span>
+              <LinkPending variant="dot" />
               <ArrowRight className="h-4 w-4 text-white transition-transform duration-200 group-hover:translate-x-1" />
             </Link>
           </div>

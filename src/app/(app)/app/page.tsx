@@ -96,7 +96,7 @@ export default async function AppHome() {
             <div className="lg:pt-1">
               <Eyebrow>Candidate Portal</Eyebrow>
 
-              <h1 className="mt-6 max-w-[18ch] font-sans text-[2rem] font-black leading-[1.05] tracking-[-0.02em] sm:text-4xl lg:text-5xl">
+              <h1 className="mt-6 font-sans text-[2rem] font-black leading-[1.05] tracking-[-0.02em] text-balance sm:text-4xl lg:text-5xl">
                 {firstName ? `Welcome back, ${firstName}.` : "Welcome to MeritNama."}
               </h1>
 

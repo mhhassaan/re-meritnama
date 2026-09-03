@@ -1801,6 +1801,26 @@ placeholder, just a still one. Deliberately not a blanket `animation: none`:
 that would also kill the icon animations, which already check the preference
 themselves in `use-icon-animation.ts`.
 
+**The landing page has its own pending cue**, `LinkPending`
+(`src/components/landing/link-pending.tsx`), on every link that enters the app.
+The app's skeletons cannot help there: they belong to the destination segment
+and only appear once Next.js has begun rendering it, which from `/` means
+loading a whole other layout first. Measured on Slow 3G, a What's Inside card
+left the reader on the landing page for **8.7 seconds** before the URL changed.
+
+It paints two things -- a bar across the top of the viewport, and a local cue on
+the control. The top bar is **portaled into `document.body`** because
+`useLinkStatus` only reports inside its own `<Link>`, so a page-wide cue has to
+be painted by whichever link is actually pending. Only one can be
+mid-navigation, so they cannot stack.
+
+**A hard load of an app page still shows no skeleton**, and that is structural:
+`loading.tsx` is a Suspense fallback below the layout, and `(app)/layout.tsx`
+awaits session, profile, roles, avatar and notices before returning markup, so
+nothing can stream until it resolves. Fixing it means moving the shell's
+non-gating reads behind their own boundaries, keeping only the auth gate
+blocking. Not yet done.
+
 **`NavPending` uses `useLinkStatus`**, which only reports while its own `<Link>`
 is navigating — so it fires on a real route change and never on a filter change.
 The bar eases toward the far edge and stops at 92%: the app does not know how
@@ -2055,6 +2075,25 @@ observations — the scale changed, not the sample.
   every frame also keeps the decoder mid-seek, which turns each jump into a
   stall. No amount of damping fixes either. Let the video play and drive the
   captions from scroll instead.
+- **Never use a semantic colour token on a marketing surface.** `--accent`
+  flips to `brand-mint` under a dark colour scheme, and the landing page is
+  theme-invariant cream. `text-accent` on the hero therefore painted the
+  emphasis word mint on cream for any reader in dark mode -- while the sketch
+  underline beneath it is a data URI with `#0D9488` baked in, so the word and
+  its own underline were different colours. Use `brand-teal`. The rule already
+  existed in the design-tokens section; this is where it had drifted.
+- **A page title is one line, and the accent span is inline.** The display
+  headline used to be a plain first line plus a `block text-accent` second line
+  inside a `max-w-[16ch]` clamp. The clamp forced the *intended* lines to wrap
+  again, orphaning two words onto a third line on some titles and not others.
+  No clamp, accent inline, `text-balance` so a genuine wrap on a phone splits
+  evenly. `/app/merit` is the only headline in a column rather than across the
+  page, so its figures panel is sized to leave the title room.
+- **JSX strips a trailing whitespace run containing a newline.** `Closing
+  merits,\n<span>2020-2026</span>` renders as `Closing merits,2020-2026`. Any
+  text immediately followed by an element on the next line needs an explicit
+  `{" "}`. This is the same class of bug as the HTML-entity one below and it
+  hit all 33 titles at once.
 - **Every render of user-written text needs `break-words`.** `whitespace-pre-wrap`
   preserves an unbroken run rather than wrapping it, so one long token widens
   its container past the page — measured at **17,665px** inside a 1,190px column

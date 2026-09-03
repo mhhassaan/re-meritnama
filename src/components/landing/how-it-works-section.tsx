@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { LinkPending } from "@/components/landing/link-pending";
 import Image from "next/image";
 import { useState } from "react";
 import { ArrowUpRight } from "lucide-react";
@@ -100,6 +101,7 @@ function AccordionRow({
                 <span className="border-b border-stone-300 pb-px transition-colors duration-200 group-hover/link:border-brand-teal group-hover/link:text-brand-teal">
                   {step.cta.label}
                 </span>
+                <LinkPending variant="dot" />
                 <ArrowUpRight className="w-4 h-4 transition-all duration-200 group-hover/link:translate-x-0.5 group-hover/link:-translate-y-0.5 group-hover/link:text-brand-teal" />
               </Link>
               </div>
@@ -166,6 +168,7 @@ export function HowItWorksSection() {
               <span className="font-mono text-[11px] font-bold tracking-[0.3em] uppercase border-b border-stone-400 pb-1 transition-colors duration-200 group-hover/cta:border-brand-teal group-hover/cta:text-brand-teal">
                 START CALCULATING
               </span>
+              <LinkPending variant="dot" />
             </Link>
           </div>
         </div>

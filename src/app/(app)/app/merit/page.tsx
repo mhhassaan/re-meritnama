@@ -41,9 +41,9 @@ export default async function MeritTablePage() {
           <Reveal>
             <Eyebrow>Merit Table</Eyebrow>
 
-            <h1 className="mt-6 max-w-[16ch] font-sans text-[2.5rem] font-black leading-[0.95] tracking-[-0.03em] sm:text-6xl lg:text-7xl">
-              Closing merits,
-              <span className="block text-accent">
+            <h1 className="mt-6 font-sans text-[2.5rem] font-black leading-[0.95] tracking-[-0.03em] text-balance sm:text-6xl">
+              Closing merits,{" "}
+              <span className="text-accent">
                 {first.label}–{last.label}
               </span>
             </h1>
@@ -55,7 +55,7 @@ export default async function MeritTablePage() {
           </Reveal>
 
           <Reveal delay={120}>
-            <Bezel className="lg:min-w-[19rem]">
+            <Bezel className="lg:min-w-[15rem]">
               <dl className="divide-y divide-border">
                 <Figure
                   label="Records"

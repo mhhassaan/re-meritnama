@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import { LinkPending } from "@/components/landing/link-pending";
 import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 import { ArrowRight } from "lucide-react";
@@ -61,6 +62,7 @@ export function FinalCtaSection() {
                   className="group inline-flex items-center justify-center gap-2.5 px-8 py-4 rounded-sm bg-brand-teal-deep text-white font-bold text-base hover:bg-brand-teal-deeper transition-all shadow-md active:scale-[0.96]"
                 >
                   <span>Launch Candidate App</span>
+                  <LinkPending variant="dot" />
                   <ArrowRight className="w-5 h-5 text-white transition-transform duration-200 group-hover:translate-x-1" />
                 </Link>
               </div>

@@ -32,9 +32,9 @@ export default function AppNotFound() {
     <div className="mx-auto max-w-[760px] px-4 py-20 sm:px-6 md:py-28 lg:px-8">
       <Eyebrow>404</Eyebrow>
 
-      <h1 className="mt-6 max-w-[14ch] font-sans text-[2.5rem] font-black leading-[0.95] tracking-[-0.03em] sm:text-5xl">
-        Nothing here
-        <span className="block text-accent">to show you</span>
+      <h1 className="mt-6 font-sans text-[2.5rem] font-black leading-[0.95] tracking-[-0.03em] sm:text-5xl text-balance">
+        Nothing here{" "}
+        <span className="text-accent">to show you</span>
       </h1>
 
       <p className="mt-7 max-w-xl text-[15px] leading-relaxed text-fg-muted">

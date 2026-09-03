@@ -73,9 +73,9 @@ export default async function EditorialPage({
             )}
           </div>
 
-          <h1 className="mt-6 max-w-[16ch] font-sans text-[2.5rem] font-black leading-[0.95] tracking-[-0.03em] sm:text-6xl">
-            Longer than
-            <span className="block text-accent">a merit table</span>
+          <h1 className="mt-6 font-sans text-[2.5rem] font-black leading-[0.95] tracking-[-0.03em] sm:text-6xl text-balance">
+            Longer than{" "}
+            <span className="text-accent">a merit table</span>
           </h1>
 
           <p className="mt-7 max-w-2xl text-[15px] leading-relaxed text-fg-muted">

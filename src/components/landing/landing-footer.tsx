@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
+import { LinkPending } from "@/components/landing/link-pending";
 import { motion, type Variants } from "framer-motion";
 import { ArrowRight, ArrowUp } from "lucide-react";
 
@@ -163,6 +164,7 @@ export function LandingFooter() {
                 className="group flex min-h-[44px] items-center justify-between gap-2.5 rounded-sm bg-brand-teal-deep px-5 py-3 text-[14px] font-bold text-white shadow-sm transition-all duration-150 ease-out hover:bg-brand-teal-deeper active:scale-[0.96]"
               >
                 <span>Request Access</span>
+                <LinkPending variant="dot" />
                 <ArrowRight className="h-4 w-4 text-white transition-transform duration-200 ease-out group-hover:translate-x-1" />
               </MotionLink>
 
@@ -173,6 +175,7 @@ export function LandingFooter() {
                 className="group flex min-h-[44px] items-center justify-between gap-2.5 rounded-sm border border-stone-700/80 bg-stone-800/80 px-5 py-3 text-[14px] font-bold text-brand-ivory shadow-sm transition-all duration-150 ease-out hover:bg-stone-700 active:scale-[0.96]"
               >
                 <span>Support Project</span>
+                <LinkPending variant="dot" />
                 <ArrowRight className="h-4 w-4 text-brand-ivory transition-transform duration-200 ease-out group-hover:translate-x-1" />
               </MotionLink>
             </div>
@@ -216,9 +219,12 @@ export function LandingFooter() {
                       <motion.li key={link.label} variants={linkItem}>
                         <Link
                           href={link.href}
-                          className="inline-block text-xs leading-none font-medium text-brand-mist transition-colors duration-200 hover:text-white"
+                          className="inline-flex items-center gap-2 text-xs leading-none font-medium text-brand-mist transition-colors duration-200 hover:text-white"
                         >
                           {link.label}
+                          {/* A text link gets the top bar and the spinner; a
+                              rule under a 12px label would be invisible. */}
+                          <LinkPending variant="dot" />
                         </Link>
                       </motion.li>
                     ))}

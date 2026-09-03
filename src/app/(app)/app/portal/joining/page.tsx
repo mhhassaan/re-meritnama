@@ -84,9 +84,9 @@ export default async function JoiningStatusPage({
         <Reveal>
           <Eyebrow>Induction Portal</Eyebrow>
 
-          <h1 className="mt-6 max-w-[16ch] font-sans text-[2.5rem] font-black leading-[0.95] tracking-[-0.03em] sm:text-6xl">
-            Who actually
-            <span className="block text-accent">turned up</span>
+          <h1 className="mt-6 font-sans text-[2.5rem] font-black leading-[0.95] tracking-[-0.03em] sm:text-6xl text-balance">
+            Who actually{" "}
+            <span className="text-accent">turned up</span>
           </h1>
 
           <p className="mt-7 max-w-2xl text-[15px] leading-relaxed text-fg-muted">

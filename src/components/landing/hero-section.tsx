@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { LinkPending } from "@/components/landing/link-pending";
 import { AnimatePresence, motion, type Variants } from "framer-motion";
 import { ArrowRight, ArrowDown, Menu, X } from "lucide-react";
 import {
@@ -178,6 +179,7 @@ export function HeroSection({ heroImageRef, handleNavClick }: HeroSectionProps) 
               className="group flex min-h-[40px] items-center gap-2 rounded-sm bg-brand-teal-deep px-5 py-2.5 text-[14px] font-medium text-white shadow-[0_2px_10px_rgba(0,0,0,0.1)] transition-all duration-150 ease-out will-change-transform hover:bg-brand-teal-deeper active:scale-[0.96]"
             >
               <span>Launch App</span>
+              <LinkPending variant="dot" />
               <ArrowRight className="h-4 w-4 text-white transition-transform duration-200 ease-out group-hover:translate-x-0.5" />
             </Link>
 
@@ -250,7 +252,7 @@ export function HeroSection({ heroImageRef, handleNavClick }: HeroSectionProps) 
                       setMenuOpen(false);
                       handleNavClick(e, link.href);
                     }}
-                    className="flex min-h-[52px] items-center border-b border-stone-200/80 text-base font-semibold text-brand-ink transition-colors active:text-accent"
+                    className="flex min-h-[52px] items-center border-b border-stone-200/80 text-base font-semibold text-brand-ink transition-colors active:text-brand-teal"
                   >
                     {link.label}
                   </a>
@@ -331,8 +333,14 @@ export function HeroSection({ heroImageRef, handleNavClick }: HeroSectionProps) 
                   </div>
                 ))}
               </div>
-              <p className="text-base font-semibold tracking-tight text-brand-ink">
-                <span className="font-black text-accent">+3,475</span> Candidate Doctors Tracked
+              {/* The figure is mono and tabular, like every other number on
+                  this site. It was sans-black here, which is a weight nothing
+                  else uses for a numeral and read as a different product. */}
+              <p className="text-[15px] font-medium text-stone-600">
+                <span className="font-mono font-bold tabular-nums text-brand-teal">
+                  3,475
+                </span>{" "}
+                candidate doctors tracked
               </p>
             </motion.div>
 
@@ -341,12 +349,23 @@ export function HeroSection({ heroImageRef, handleNavClick }: HeroSectionProps) 
               variants={titleContainerVariants}
               initial="hidden"
               animate="show"
-              className="mb-8 max-w-4xl text-5xl sm:text-7xl lg:text-[5.5rem] leading-[1.02] font-black tracking-tight text-brand-ink"
+              // One weight and one colour across both lines. It was `font-black`
+              // on the first and `font-extrabold text-stone-800` on the second,
+              // which made the sentence look like two elements that happened to
+              // sit together. The only break is the teal on the word the
+              // sketch underline is already marking — `brand-teal`, not
+              // `accent`, because this page is theme-invariant and `accent`
+              // flips to mint under a dark colour scheme.
+              // `max-w-5xl`, matching the column this sits in. At `max-w-4xl` the
+              // 88px display could not fit "Know where you stand" and broke
+              // "stand" onto a line of its own, which orphaned the verb from
+              // its subject and left the sketch underline marking a fragment.
+              className="mb-7 max-w-5xl text-5xl font-black leading-[1.05] tracking-tight text-brand-ink sm:text-7xl lg:text-[5.5rem]"
             >
-              <motion.span variants={titleLineVariants} className="block text-brand-ink">
-                Know where you <span className="sketch-underline text-accent">stand</span>
+              <motion.span variants={titleLineVariants} className="block">
+                Know where you <span className="sketch-underline text-brand-teal">stand</span>
               </motion.span>
-              <motion.span variants={titleLineVariants} className="block text-stone-800 font-extrabold">
+              <motion.span variants={titleLineVariants} className="block">
                 in Punjab residency induction.
               </motion.span>
             </motion.h1>
@@ -358,11 +377,18 @@ export function HeroSection({ heroImageRef, handleNavClick }: HeroSectionProps) 
               animate="show"
               className="flex flex-col items-start gap-10"
             >
+              {/* `font-medium` on `stone-600`, which is what every other body
+                  paragraph on this page is. It was `font-bold text-stone-900`
+                  at 24px — the loudest body text on the site, stacked directly
+                  under a 88px headline, so the two competed and neither read as
+                  the lead. A step larger than a section body is the hero's
+                  licence; a second weight of black is not. */}
               <motion.p
                 variants={bodyItemVariants}
-                className="max-w-2xl text-xl sm:text-2xl leading-[1.4] font-bold text-stone-900"
+                className="max-w-xl text-lg font-medium leading-relaxed text-stone-600 sm:text-xl"
               >
-                Calculate your merit score with official PHF rules, predict hospital cutoffs, and simulate seat allocations round by round.
+                Your merit under the official PHF formula, what every seat
+                actually closed at, and how the next round is likely to fall.
               </motion.p>
 
               {/* Dual Hero Buttons */}
@@ -376,6 +402,7 @@ export function HeroSection({ heroImageRef, handleNavClick }: HeroSectionProps) 
                   className="group flex min-h-[52px] items-center gap-2.5 rounded-sm bg-brand-teal-deep px-8 py-3.5 text-[16px] font-bold text-white shadow-[0_4px_14px_rgba(0,0,0,0.15)] transition-all duration-150 ease-out will-change-transform hover:bg-brand-teal-deeper active:scale-[0.96]"
                 >
                   <span>Launch Candidate App</span>
+                  <LinkPending variant="dot" />
                   <ArrowRight className="h-5 w-5 text-white transition-transform duration-200 ease-out group-hover:translate-x-1" />
                 </Link>
 
