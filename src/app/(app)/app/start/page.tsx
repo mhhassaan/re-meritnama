@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { loadCycleSummaries } from "@/lib/merit/data";
+import { StepLink } from "@/components/app/step-link";
 import { VerseStrip } from "@/components/app/verse-strip";
 import { Reveal } from "@/components/app/reveal";
 import { Bezel, Eyebrow } from "@/components/app/bezel";
@@ -100,14 +101,14 @@ const AREAS = [
   {
     label: "Accreditation",
     description: "Check training recognition before shortlisting hospitals.",
-    href: null,
+    href: "/app/accreditation",
     Icon: SealIcon,
   },
   {
     label: "Discussion",
     description:
       "Ask the community about hospitals, preferences, and updates.",
-    href: null,
+    href: "/app/discussion",
     Icon: MessagesIcon,
   },
 ] as const;
@@ -151,13 +152,12 @@ export default async function StartHerePage() {
                   Calculate my merit
                 </Link>
 
-                <span
-                  aria-disabled
-                  title="Not built yet"
-                  className="flex min-h-[48px] cursor-default items-center rounded-sm border border-border-strong px-5 text-sm font-bold text-fg-subtle opacity-70"
+                <Link
+                  href="/app/guide"
+                  className="flex min-h-[48px] items-center rounded-sm border border-border-strong px-5 text-sm font-bold text-foreground transition-colors hover:border-accent"
                 >
                   Read the full guide
-                </span>
+                </Link>
 
                 <Link
                   href="/app/portal"
@@ -203,12 +203,7 @@ export default async function StartHerePage() {
               </p>
 
               {href ? (
-                <Link
-                  href={href}
-                  className="mt-4 inline-flex items-center gap-1 font-mono text-[11px] font-bold text-accent transition-colors hover:text-accent-hover"
-                >
-                  {action} →
-                </Link>
+                <StepLink href={href} label={action} className="mt-4" />
               ) : (
                 <span className="mt-4 inline-flex items-center gap-1 font-mono text-[11px] font-bold text-fg-subtle">
                   {action} · soon

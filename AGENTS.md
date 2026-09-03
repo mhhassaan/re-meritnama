@@ -2115,6 +2115,15 @@ observations — the scale changed, not the sample.
   text immediately followed by an element on the next line needs an explicit
   `{" "}`. This is the same class of bug as the HTML-entity one below and it
   hit all 33 titles at once.
+- **Tailwind v4 puts translate utilities on the `translate` property, not
+  `transform`.** Reading `getComputedStyle(el).transform` to check whether
+  `group-hover:translate-x-0.5` fired returns `none` and looks like a broken
+  hover. Read `translate`.
+- **To prove a transient animation fires, record it, do not poll for it.** The
+  animated icons play a 0.5s one-shot; any tool round trip outruns it, so
+  sampling after the hover always finds the settled state and reads as a
+  failure. Install a `MutationObserver` on the icon's subtree *before* the
+  hover.
 - **Every render of user-written text needs `break-words`.** `whitespace-pre-wrap`
   preserves an unbroken run rather than wrapping it, so one long token widens
   its container past the page — measured at **17,665px** inside a 1,190px column
